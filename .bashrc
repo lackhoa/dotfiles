@@ -126,3 +126,4 @@ fi
 
 export PATH="$PATH:/home/khoa/.local/bin"
 export PATH="$PATH:/usr/local/texlive/2017/bin/x86_64-linux"
+bind 'set completion-ignore-case on'
