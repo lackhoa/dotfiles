@@ -36,3 +36,5 @@ alias conky-conf='sudo subl /etc/conky/conky.conf'
 # this does everything I want to do about updating
 # this command is stored in the root user's script path
 alias khoa-update='sudo sh /usr/local/sbin/khoa-update'
+#This command deals with updaing the hash of tex:
+alias texhash='texhash & texhash ~/texmf'

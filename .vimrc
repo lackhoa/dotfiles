@@ -1,6 +1,6 @@
 "Key maps for .tex files
 " So what does this do? It saves the current vim file, compiles latex files twice and then output the pdf result
-autocmd Filetype tex map <F2> :up <bar> !pdflatex *.tex && pdflatex *.tex <CR>
+autocmd Filetype tex map <F2> :up <bar> !pdflatex *.tex <CR>
 "This will read the pdf file:
 autocmd Filetype tex map <F3> :!xreader *.pdf <CR>
 
