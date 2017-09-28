@@ -27,3 +27,5 @@ let loaded_matchparen = 1
 :  autocmd BufLeave,FocusLost,InsertEnter   * set norelativenumber
 :augroup END
 
+" System clipboard:
+:set clipboard=unnamedplus
