@@ -1,0 +1,23 @@
+[preferences]
+show-hidden-files=true
+context-menus-show-all-actions=true
+show-location-entry=true
+
+[window-state]
+side-pane-view='places'
+devices-expanded=true
+sidebar-width=197
+my-computer-expanded=true
+geometry='681x692+333+0'
+network-expanded=false
+sidebar-bookmark-breakpoint=6
+maximized=true
+start-with-sidebar=true
+
+[desktop]
+volumes-visible=true
+home-icon-visible=false
+network-icon-visible=true
+show-orphaned-desktop-icons=false
+font='Norasi 12'
+trash-icon-visible=true

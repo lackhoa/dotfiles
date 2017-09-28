@@ -1,0 +1,15 @@
+[settings/file-chooser]
+sort-column='name'
+sidebar-width=148
+window-position=(303, 27)
+show-size-column=true
+show-hidden=true
+window-size=(750, 643)
+sort-directories-first=true
+date-format='regular'
+sort-order='ascending'
+location-mode='path-bar'
+
+[settings/color-chooser]
+selected-color=(true, 0.66666666666666663, 0.66666666666666663, 0.66666666666666663, 1.0)
+custom-colors=[(0.66666666666666663, 0.66666666666666663, 0.66666666666666663, 1.0), (0.66666666666666663, 0.0, 0.0, 1.0)]

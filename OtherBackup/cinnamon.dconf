@@ -1,0 +1,226 @@
+[/]
+desktop-effects-unmaximize-transition='easeOutBounce'
+desktop-effects-maximize-transition='easeInBack'
+desktop-effects-map-effect='scale'
+command-history=['khoa-update', 'sudo khoa-update', 'touch dick', 'subl', 'gnome-terminal -x sleep 10h', 'bash', 'shell', 'sudo apt-get install --reinstall gnome-terminal', 'sudo apt-get install xterm', 'sudo apt-get instsall gnome-terminal', 'terminal-emulator', 'terminal', 'wireless', 'conky-config', 'conky-conf', 'coqtop', 'coqide', 'sudo wireshark-gtk', 'sudo', 'gksu', 'gksudo', 'pt', 'conky', 'gnome-terminal', 'redshift', 'packettracer', 'python3 ~/pywal-master/khoa_wal.py', 'python3 /home/khoa/pywal-master/khoa_wal.py', 'i3', 'keynav']
+hotcorner-layout=['expo:false:0', 'scale:false:0', 'scale:false:0', 'desktop:false:0']
+desktop-effects-close-effect='blend'
+desktop-effects-style='blend'
+desktop-effects-unmaximize-time=100
+enabled-desklets=@as []
+desktop-effects-map-time=250
+panels-scale-text-icons=['1:true', '2:true']
+desktop-effects-minimize-effect='flyDown'
+alttab-switcher-style='coverflow'
+workspace-osd-duration=400
+prevent-focus-stealing=true
+panels-height=['1:42', '2:25']
+enable-vfade=true
+next-applet-id=58
+panel-launchers=['DEPRECATED']
+desktop-effects-map-transition='easeOutQuart'
+desktop-effects-unmaximize-effect='scale'
+panels-enabled=['1:0:bottom']
+desktop-effects-maximize-time=100
+overview-corner=['expo:false:false:0', 'scale:false:false:0', 'scale:false:false:0', 'desktop:false:false:0']
+desktop-effects-tile-transition='easeInBack'
+desktop-effects-maximize-effect='scale'
+desktop-effects-on-menus=true
+panels-resizable=['1:true', '2:false']
+enabled-applets=['panel1:left:2:window-list@cinnamon.org:50', 'panel1:center:0:menu@cinnamon.org:51', 'panel1:right:0:notifications@cinnamon.org:4', 'panel1:right:1:separator@cinnamon.org:55', 'panel1:right:3:removable-drives@cinnamon.org:6', 'panel1:right:5:systray@cinnamon.org:12', 'panel1:right:6:keyboard@cinnamon.org:7', 'panel1:right:7:network@cinnamon.org:9', 'panel1:right:8:separator@cinnamon.org:41', 'panel1:right:9:calendar@cinnamon.org:13', 'panel1:right:10:windows-quick-list@cinnamon.org:53']
+desktop-effects-minimize-time=250
+alttab-switcher-delay=100
+desktop-effects-tile-effect='scale'
+desktop-effects-close-transition='easeInQuart'
+desktop-effects-minimize-transition='easeInQuart'
+panel-edit-mode=false
+panels-show-delay=['1:0', '2:0']
+panels-hide-delay=['1:0', '2:0']
+desktop-effects-close-time=250
+no-adjacent-panel-barriers=true
+workspace-osd-y=50
+favorite-apps=['gnome-terminal.desktop', 'nemo.desktop', 'xviewer.desktop']
+workspace-osd-x=50
+desktop-effects-tile-time=100
+panels-autohide=['1:false', '2:false']
+
+[settings-daemon/plugins/power]
+lid-close-suspend-with-external-monitor=false
+sleep-inactive-battery-timeout=0
+lock-on-suspend=false
+lid-close-ac-action='nothing'
+idle-dim-battery=true
+sleep-display-battery=600
+sleep-display-ac=300
+lid-close-battery-action='nothing'
+sleep-inactive-ac-timeout=1800
+
+[settings-daemon/plugins/xsettings]
+buttons-have-icons=true
+hinting='full'
+
+[settings-daemon/peripherals/touchpad]
+horizontal-edge-scrolling=true
+motion-acceleration=10.0
+custom-acceleration=true
+custom-threshold=true
+two-finger-click=0
+three-finger-click=0
+horizontal-two-finger-scrolling=true
+motion-threshold=1
+touchpad-enabled=true
+
+[settings-daemon/peripherals/touchscreen]
+orientation-lock=true
+
+[settings-daemon/peripherals/keyboard]
+repeat-interval=uint32 19
+delay=uint32 405
+numlock-state='off'
+repeat=true
+
+[settings-daemon/peripherals/mouse]
+locate-pointer=true
+left-handed=false
+drag-threshold=10
+motion-acceleration=10.0
+custom-acceleration=true
+custom-threshold=true
+double-click=400
+motion-threshold=1
+
+[muffin]
+button-layout=':minimize,maximize,close'
+resize-threshold=24
+tile-hud-threshold=25
+edge-tiling=false
+
+[sounds]
+maximize-enabled=true
+unmaximize-enabled=true
+map-enabled=true
+close-enabled=true
+minimize-enabled=true
+
+[desktop/interface]
+text-scaling-factor=1.0
+cursor-size=35
+clock-use-24h=true
+font-name='Norasi 12'
+cursor-theme='oxy-blue'
+toolkit-accessibility=false
+clock-show-seconds=false
+cursor-blink-time=1200
+icon-theme='Numix'
+gtk-theme='Chrome OS'
+clock-show-date=true
+
+[desktop/keybindings/media-keys]
+restart-cinnamon=@as []
+touchpad-toggle=['<Primary>Escape']
+screensaver=['XF86ScreenSaver']
+shutdown=['XF86PowerOff']
+
+[desktop/keybindings/wm]
+maximize=@as []
+push-snap-left=@as []
+toggle-maximized=@as []
+unmaximize=@as []
+switch-to-workspace-left=['<Primary><Super>Left', '<Primary><Alt>Left']
+switch-to-workspace-down=['<Super>Tab']
+switch-to-workspace-right=['<Primary><Super>Right', '<Primary><Alt>Right']
+toggle-fullscreen=['<Shift>F11']
+push-snap-right=@as []
+switch-to-workspace-up=['<Alt>F1']
+minimize=@as []
+
+[desktop/media-handling]
+autorun-x-content-start-app=['x-content/unix-software', 'x-content/image-dcf']
+autorun-never=false
+autorun-x-content-ignore=@as []
+autorun-x-content-open-folder=['x-content/image-dcf']
+
+[desktop/screensaver]
+screensaver-name=''
+layout-group=0
+lock-enabled=false
+
+[desktop/applications/terminal]
+exec='gnome-terminal'
+
+[desktop/session]
+idle-delay=uint32 3600
+
+[desktop/privacy]
+recent-files-max-age=30
+remember-recent-files=false
+
+[desktop/wm/preferences]
+theme='Esco'
+num-workspaces=4
+action-scroll-titlebar='opacity'
+auto-raise=true
+visual-bell=false
+min-window-opacity=30
+workspace-names=['Entertainment & Note', 'Main work', 'References', 'Others']
+audible-bell=false
+titlebar-font='Linux Biolinum Keyboard O Bold Italic 14'
+
+[desktop/a11y/magnifier]
+mouse-tracking='proportional'
+lens-mode=true
+mag-factor=1.0
+lens-shape='horizontal'
+scroll-at-edges=false
+
+[desktop/a11y/applications]
+screen-keyboard-enabled=false
+screen-magnifier-enabled=true
+screen-reader-enabled=false
+
+[desktop/a11y/keyboard]
+slowkeys-beep-press=true
+mousekeys-accel-time=1200
+bouncekeys-beep-reject=true
+slowkeys-beep-reject=false
+disable-timeout=120
+enable=false
+bouncekeys-enable=false
+stickykeys-enable=false
+feature-state-change-beep=false
+slowkeys-beep-accept=true
+bouncekeys-delay=300
+mousekeys-max-speed=500
+mousekeys-enable=false
+timeout-enable=false
+slowkeys-delay=300
+stickykeys-modifier-beep=true
+stickykeys-two-key-off=false
+mousekeys-init-delay=160
+slowkeys-enable=false
+
+[desktop/a11y/mouse]
+secondary-click-enabled=false
+secondary-click-time=1.2
+dwell-time=1.2
+dwell-threshold=10
+dwell-click-enabled=false
+
+[desktop/sound]
+event-sounds=false
+
+[desktop/background]
+picture-uri='file:///home/khoa/Pictures/thumb-1920-202536.jpg'
+picture-options='zoom'
+
+[desktop/background/slideshow]
+image-source='directory:///home/khoa/Pictures'
+random-order=true
+delay=10
+slideshow-enabled=true
+
+[theme]
+name='Glass-Fedora-Classic'
+
+[cinnamon-session]
+quit-time-delay=60
