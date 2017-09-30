@@ -9,6 +9,11 @@ autocmd Filetype tex map <F3> :!xreader $(cat proj_name).pdf <CR>
 "Spell check
 map <F6> :setlocal spell! spelllang=en_us<CR>
 
+"Autocomplete brackets
+imap { {}<Esc>i
+imap ( ()<Esc>i
+imap [ []<Esc>i 
+
 "No more matching parentheses
 let loaded_matchparen = 1
 
