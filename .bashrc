@@ -125,7 +125,7 @@ if [ -x /usr/bin/mint-fortune ]; then
 fi
 
 # This is my local bin
-export PATH="$PATH:/home/khoa/.local/bin"
+export PATH="$PATH:/home/khoa/bin"
 # This is tex path
 export PATH="$PATH:/usr/local/texlive/2017/bin/x86_64-linux"
 # Ignore case on completion
