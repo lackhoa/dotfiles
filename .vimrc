@@ -14,7 +14,7 @@ map <F6> :setlocal spell! spelllang=en_us<CR>
 "Autocomplete brackets
 imap { {}<Esc>i
 imap ( ()<Esc>i
-imap [ []<Esc>i 
+imap [ []<Esc>i
 
 "No more matching parentheses
 let loaded_matchparen = 1
@@ -68,5 +68,11 @@ endfunction
 nnoremap  ;  :
 
 "====[ Make tabs, trailing whitespace, and non-breaking spaces visible ]======
-exec "set listchars=tab:\uBB\uBB,trail:\uB7,nbsp:~"
+" For some reason the line below doesn't work
+" exec "set listchars=tab:>_,eol:\⏎,trail:\uB7,nbsp:~"
+
+" So this is the fix: Tab identified by a bar and trailing spaces identified by middle dot
+:set lcs=tab:\|\ ,trail:·,nbsp:~
+
+" If you can handle it, set it on default
 set list
