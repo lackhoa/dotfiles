@@ -72,7 +72,10 @@ nnoremap  ;  :
 " exec "set listchars=tab:>_,eol:\⏎,trail:\uB7,nbsp:~"
 
 " So this is the fix: Tab identified by a bar and trailing spaces identified by middle dot
-:set lcs=tab:\|\ ,trail:·,nbsp:~
+:set lcs=tab:\|\ ,trail:·,space:·,nbsp:~
 
 " If you can handle it, set it on default
 set list
+
+"Fix pasting behavior:
+nnoremap p P
