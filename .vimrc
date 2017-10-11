@@ -77,5 +77,8 @@ nnoremap  ;  :
 " If you can handle it, set it on default
 set list
 
-"Fix pasting behavior:
+"Fix pasting behavior (p -> P):
 nnoremap p P
+
+"Fix append behavior (a -> A):
+nnoremap a A
