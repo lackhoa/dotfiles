@@ -72,7 +72,7 @@ nnoremap  ;  :
 " exec "set listchars=tab:>_,eol:\⏎,trail:\uB7,nbsp:~"
 
 " So this is the fix: Tab identified by a bar and trailing spaces identified by middle dot
-:set lcs=tab:\|\ ,trail:·,space:·,nbsp:~
+:set lcs=trail:·,space:·,nbsp:~,tab:\|\ 
 
 " If you can handle it, set it on default
 set list
@@ -82,3 +82,13 @@ nnoremap p P
 
 "Fix append behavior (a -> A):
 nnoremap a A
+
+"replace all occurences on one line by default (still needs to specify range for the entire file)
+set gdefault
+
+""""""
+" Sage settings (from Franco Saliola)
+autocmd BufRead,BufNewFile *.sage,*.pyx,*.spyx set filetype=python
+autocmd Filetype python set tabstop=4|set shiftwidth=4|set expandtab
+autocmd FileType python set makeprg=sage\ -b\ &&\ sage\ -t\ %
+
