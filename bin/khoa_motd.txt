@@ -1,0 +1,1267 @@
+Thought 1-35
+
+- Mod 2 polynomial arithmetic is the same thing as transmission error
+- The degree of a polynomial is its length... Nah, its length is1 more than that because degree can go all the way to zero
+- The medium access sublayer
+- Mean time delay (how much does a frame take to get to the otherend): 1 / [(channel capacity) * (1/mean bit pretty frame) -(arrival rate, you must wait for other frames)]
+- The specs for D Flip-Flop uses assertion-level logic, whichmeans that when you see an input like ~S, you know that it is anactive-low input and the thing it is trying to do (in this case,setting the flip-flop) can be achieved by setting it to Low andvice-versa
+- Yes, you can design your own SR Latch from the ground up, andit looks totally different too (albeit not as cool). Man I love SRLatches so much!
+- I think I've said this already, but the stair lighting switchsystem can be implemented by a simple XOR operation. The two HIGHstates are distant 2 from each other and so are the two LOW states.The true usefulness of this switch is that to change from HIGH toLOW or vice-versa you only need to flip one bit. Ooh, you knowwhat? With XOR we can even install 3, 4 or as many switches as wewant and they still work the same way as the 2 system (even the 1system is XOR-based if you wanna be rigorous).
+- To prove the previous thing, we call a system of switches aunidistant system if toggling any single switch in the systemtoggles the output also. 1-switch system is obviously unidistant;and if an n-switch system is uni-distant then obviously ann+1-switch (the last switch is connected by XOR to form the output)is also unidistant. Thus... QED I guess
+- In expanding to the uni-distant thing, AND and OR shares thesame property. Why? We can describe an OR system with EXISTS, anAND system with FORALL. We can see that OR preserves EXISTS and ANDpreserves FORALL, thus we can do these operations however welike.
+- in two's complement number scheme,  we increment one toget to the biggest number to the smallest (negative) number. Therest goes on like normal (-1 increment to get 0, etc). The "sign"bit acts like normal bit, except it is a minus. For example, 1100is -4 because --8 + 4 = 4 (owned). NEVER underestimate simplearithmetic
+- It's funny how you have a model of something and it candescribe a simple case and you're confident that it works; but whenconfronted with a more complicated case it collapses to a merecoincidence
+- Even if someone tries to fool you into thinking that you've gotthe right answer, would you be truly happy then?
+- The thing is: in any implicant, if 2 variables change at thesame time then we cannot do anything to predict the states (will xchange first or will y change first?): We must ban thiscompletely
+- If no two inputs of ANY gate change simultaneously, we thenmetastability is...
+- Expecting something to turn out the way you want it to is likebanging your head against a brick wall: STOP DOINGIT!
+- There is a reason why I cannot make the counter reset to theinitial state like I want it to without preset and set: it's simplybecause of the edge-triggered nature of the flip-flop. You can onlychange the state of the flip-flops once the it's triggered, whichmeans the next clock cycle. You can't simply say: "Hey this thing'sreached the state I don't want it to, let's change it to xyzIMMEDIATELY because I want to
+- Some genius thought of the idea of preemptively detect theupper bound (do it one number earlier) and hope that the next clockcycle we can just set-reset synchronously like normal: Nope! Didn'twork either because the you can't provide the clock to moresignificant digits. It just doesn't work according to the clock,you know?
+- Dude, if the flip flop detects rising edge, then it will countbackward, that is so fucking cool!
+- Fixed it anyway! I wouldn't have noticed it had it not been forthe homework lol!
+- Gray code is what we call "distant 1 counting"
+- post-fix or reverse polish notation is the best: no parenthesesneeded! you have the stack
+- An n-bit codeword has log(n) + 1 Hamming parity bit:r = log(n) + 1 = log(m + r) + 1 (*).
+- The theoretical limit is: m + r + 1 <= 2^r.Â There you have it! m + r + 1 = 2^(log (m + r) + 1)
+- The hamming code can pin-point the error by checking the paritybit since each parity position error combination can be deduced toa single position. For example, we know that bit 10 is wrongbecause parity bits 2 and 3 are wrong.
+- Since the log function we use is a round-down function (seeequation * above), we can minimize waste by using n that is 1 lessthan a power of two (3, 7, 15, 31...)
+- By the way, if we detect an error at a power of two position,then the parity bit is wrong.
+- Proof the the minimum distance between each code-word is 3: ifwe change 1 bit, that is trivial because we can correct it, if wechange 2 bits, the only fun situation we can have is that oneparity bit and one message bit are changed (because otherwise weflat out have an error). You know what? We don't need to prove itthis way because we know that every 1 bit error can be correctedand so the minimum distance between each valid code-word must be3.
+- But still, we must know that we can detect 2 errors (even if wecan't correct it). And still, we know that we can because we'veproven that the minimum distance is 3
+- What I'm trying to say is: since each message bit is checked byat least 2 other parity bits, we can guarantee in an intuitive waythat each valid code-word is 3 bits apart: We can change a validcode-word into another valid one without changing 3 bits.
+- We can send a frame of bits columns by columns (meaning thateach line will be a code-word that can be checked separately). SoBurst errors can be corrected, too (I know of this but it's stillamazing!).
+- In short, if you want to correct 1 error and the block size isn (including the parity bits that somehow you know), take log2of n
+- Some good news: the bigger the block size, the lower the numberof parity bits needed to correct a single error (provided that ONLYONE error can occur on the entire block)
+- One mechanical way to find the Hamming parity is to scan r onthe natural domain. Sure it isn't really mathematical but thefunction is still O(log(m)) since the parity method scales sowell
+- That being said, error detecting is still way better: usingmatrix parity with n bit wide, the probability of false-negative is1/2^n (in a long burst or in multiple shorter burst)
+- When you've sweat blood and tears on something, you will startto love it. No matter what it is: a bicycle, a computer system, ora child
+- If the future is darkness, and the present is the light. Thenwhat is the past? And how do I turn on the light?
+- More on SR latch: every state must support input (0,0). Why?Because that's the default input, like, in the case of poweroutage, everything will be zero and so your data should be that,too
+- The perfect Gray code: 00, 01, 10
+- Or: 11, 10, 01 (SR latch with NAND)
+- More perfect code: 000, 001, 010, 100 (not as interesting as Ithought)
+- Wait, you CAN jump from (0,0) to (1,1), and the state you canbe in is deterministic. It's not like you can't jump from (1,1) to(0,0), but then you have 2 states you can be in. But, if we analyzethe situation in the q way, we can determine the state! Of course,it there are various delays then there's no discussion. But what ifthere is none?
+- Remarks: even if there are stable states for a particular setof inputs, there is no guarantee that you can enter that state. Youmust have down the intermediate states first
+- The state of a circuit should be determined by all the gates'output
+- The state is illegal NOT because of the propagation delay, butit's because of something more fundamental
+- EXACTLY, the simulated circuit fluctuates from a to d, just asthe flow table predicts. The flow table with every gates' states ISthe Oracle
+- It's fun to describe nature with simple mathematics. It is sucha huge pain to keep the simulation in your head. The compressionthat math brings is similar to Revelation
+- Everybody can be wrong, every document can be misleading. Sodon't trust everything you read.
+- So, yeah, you've pushed yourself to work all-day on thevim/latex transition. Now you've done it. Got anything to say? Howam I feeling right now? Do I even have feelings right now? Whatdoes anything mean anymore? Should I be working this hard? This isthe hardeset I've ever worked in my life, will I ever see it payoff?
+- yeah, I miscalculated it, guys! I should have focused on thebibliography part because that part is the most volatile tochanges. Instead, I did the layout & formatting and ended upburning my soul down to the ground. BUT! I must be convincedbeforehand that LaTex can format the page because otherwise it willbe too fucking dangerous to make the switch. Anyways, there is noanswer to life at all. Hindsight is always 10/10 and we can onlylive one life
+- "Tell me something about yourself" is a really good question toask on introduction
+- Using DroidCam for cutting your own hair is a pretty goodoption
+- The USB is asynchronous, so I think that's why we can sendcamera signal from the phone to the laptop, but not from the laptopto the phone. Laptop is called a host, the phone is a device
+- Oh my god that's how you build counter? That's just...ingenious!
+- In sequential circuits, "triggering" means "changing":pulse-triggered means "changeable during pulse"; and edge_triggeredmeans "changeable right before pulse"
+- "x AND 1" is also "x OR 0" is x
+- Tri-state logic has 3 states: state high, state low, and statedon't-care-about-me-I'm-not-outputting-anything
+- Charging up the capacitor for the clock is quite likeunclogging the toilet
+- 1Hz 90% duty cycle can still switch the d flip flop?
+- You don't need to cite facts you moron!
+- Life truly sucks the most out of you! But in the end of theday, you're the observer
+- Is it better to just use the command line entirely? It is justtoo hard to get jump from windows to windows when you have a lot ofthings going on
+- Seems like the more variety of things I do, the better it goes.Time for me to alter my build (just a little bit, don't end up likelast year)
+- The bus architecture in the computer is exactly the same kindas the bus topology in Networking; Just look at the computer busfile!
+- If you want to go far, you must believe in your tools: be itthinking tools, or even other people
+- Everything we do, accept the possibility that we can fail.Accept also the possibility that we will fail, that way we won't bepressured
+- Life is fun again: how about using networking technology to cutyour own hair, eh?
+- Life is fun again: sometimes you should ask a question, wait'til tomorrow, then read the answers instead of finding outeverything yourself!
+- Default gateway has netmask 0.0.0.0, what does that mean(grin)Â
+
+Behold! The Boolean-Natural Isomorphism (this was definitelyproven before me but I can't bother to actually find thatout)
+
+- How to know if the natural number's operations are identicalto AND and OR:
+- We say that boo(n) the function to convert a natural numberto boolean values, it converts 0 to F and every other number toT
+
+We need to prove that the boolean operations preserve whenconverting natural numbers to binary:
+which means: addition is preserved, multiplication ispreserved:
++ additions is preserved: prove that boo(a + b) = boo(a) ORboo(b):
+destruct boo(a + b), if boo(a + b) = F, we can see that thisholds; if boo(a + b) = 1 then a or b > 0, we can also see thatthis holds
++ product is preserved: prove that boo(a * b) = bin(a) ANDbin(b)
+destruct boo(a * b), if ab = 0 then a = 0 or b = 0 then wealready see the proof; if a*b = 1 then... we already saw theproof
++ complementation is preserved boo(1 - n) = NOT boo(n)
+I don't wanna do this again, QED.
+
+So that's it! We've proven that the methods we use work: wecan use PLUS for OR, MULT for AND and [1-n] for NOT(n)
+But wait! How can we actually use natural number's subtractionin Excel?
+In conclusion: just use normal Excel boolean functions, yourmethod sucks anyway
+
+boo((1 - 2) + 1) = FALSE with integer subtraction and TRUEwith natural subtraction
+NOT(boo(2)) OR 1 = TRUE... so integer subtraction is totallywrong
+
+- Soo, how are 2D tables (like Karnaugh maps) different from 1Dtables really? They're not that different, in fact, 1D tables canbe converted to 2D maps easily by breaking the verticle line downto two or more pieces, then stack them on top of each otherhorizontally
+- Your life is not pre-planned, it is as free as the wind
+- Transition table is just like Karnaugh map, but for internaloutputs instead of external output
+- The flow table can determine how we can change the state of theexternal output
+- SR-latch: there are two different ways to determine thefeedback path, but you only need to choose ONE. Actually, you canchoose both of them, both of them have their own beauty
+- It funny how you think you know something but you actuallyfucking don't. But finally every makes sense
+- NOW nothing can stop me from analyzing the shit out ofsequential circuit, motherfucker!
+- There is no "most efficient" way to construct IPv4 subnetmechanism. Using a bit to represent public and private? No, that islike... Wasting 2 billion addresses; plus there is nothing concretesuch as public and private, really. After all, the Internet is justa giant network with some address space dedicated for private use.That's exactly the same as subnetting your small company network:after you've subnetted, you can't use that address space outside ofthat subnet! Exactly like how you can't use 192.168... foraddressing public devices.
+- How come the router remembers who sent the message on theprivate Network? First of all, the server only knows about thepublic network address of the client. And the router only needs toknow just that. Because all it does is check the destination IPagainst its routing table. If there's a match on one of its directinterfaces, it will just send the packet there. Doesn't matter ifthere are multiple computers behind the network: that's layer 2'sjob, the switch's job, the MAC address's job! Oh man this thing isso beautifully designed!
+- Well, the last two bullets were kinda... wrong.
+- All I know is that the packet doesn't change IP for everyrouter it encounters, so why is it that the IP changed from aprivate to a public network?
+- NAT and port forwarding are the particular suspects. Routersneed a port number to remember the connection. So... ports arekinda important, guys
+- I also noticed Law I (or whatever number that is) of ThermoDynamics: signals are never created or destroyed. All logics gatesdraw their power from the 5V source. One example of the NOT gate:when there seems to be no input signal, it will output a high powerlevel drawn directly from source
+- Dude, you need to stop going to the wrong toilet, man!
+- Btw, relax, there's nothing to get upset about
+- Quantum entanglement can transfer information faster than thespeed of light?Â
+- Well, I take the StarCraft thing back: but take it as a form ofregulated entertainment; not mandatory business. I'll only watchGSL or events with Tastosis
+- I guess not everything must be genuine to be enjoyable: afterall, the specials come from the norms. Take the norms as thestepping stone for the specials to come
+- Lesson learned today: don't blame your shit on some soullessthings (and anything, really); also, help people and let peoplehelp you
+- Can you understand the system? = If you don't have anyknowledge about the system, can you deisgn it by yourself?
+- The result for the subnet problem is here: on a network with mbits, we reserve an address with n flexible bits for privateconnections
+    - The initial # of hosts: 2^m
+    - # of public hosts after reserved: 2^m - 2^n (no good way towork out the math, but apparently it's a small difference beforeand after)
+    - # of hosts / private network: 2^n
+    - Wait for it...
+    - the total # of devices we can serve: 2^n * (2^m - 2^n) = 2^(n +m) - 2^(2n)
+    - How many times that numer increased: 2^n - 2^(2n - m)
+    - Graph for the above function:Â
+Plot[2^n (1 - 2^(-32 + n)), {n, 0, 10}]
+    - It is not really different from an exponential function
+    - And another graph which shows how many public addresses we lostvs how many hosts we can gain:
+    - Plot[{4294967296 - 2^n, 2^n - 4^(-16 + n)}, {n, 0, 31}]
+    - We lost BARELY anything! And we gain so much
+    - Conclusion: Network Address Translation is great!
+- The principle of locality (the law which says that we tend toreuse things we used recently): has it been proven Â byevolution (by the fact that we tend to remember things we justdid)?
+- I'm afraid that my working cycle does not correspond with thesun and the moon
+- Turing recognizer will always accept, it just won't halt onsome inputs it doesn't accept
+- If I hadn't recognized this fallacy, the there is a recognizerfor every languages: a machine that runs forever on all inputs
+- We can't make a machine that recognizes that a machine does notaccept an input
+- Regarding proof by construction: There are two kinds ofobjects, the constant and the variables
+- So the ports can be used by the router, even though they'relevel 4, to work out which machine ordered what. It matchesoriginal ports with its own kind of port... bla bla bla the OSImodel costs money so nobody cares
+- And I thought I couldnt' make my terminal look better: enterPywal! OMG it is so beautiful! Makes we love playing around withprogramming again.
+- How to make grey code in excel: make an indexed column for theworking table. First enter 01, then copy it down below, then useinverted sort on the index column to invert the copied area. Movethe index column to the left. populate the original table with 0and the copied one below with 1 (if you're quick you can reuse theprevious 0s and 1s to speed things up). Repeat until you haveenough digits.
+- I'm doing quite fine today. Wait, has this finally become adiary? Nah, the point is that I like Gray code, I like applicationof it as well. And also, it was created in Bell Lab
+- I've observed a lot and come to conclusion: the ones smilingand relaxing the most are always the top. You must have lots ofconfidence and strong mentality to pull that off. No need tointimidate anyone when you actually feel strong.
+- Another hard fact: I don't think my greedy strategy is gonnawork lol. I don't have enough time for that much thinking
+- The use of MAC address: devices in a LAN can change IP, sowhat? If all the end device know is IP then you can't use MACanywhere else, right? Ooh, you can't really use switch ports toidentify devices on a network because... there are many switchesinvolved in a LAN. There are many network protocols other than IP,so... flexibility problem. The adapter will have to reconfigure itsIP every time (and it can be moved, too). And the Internet layerhas to deal with crap that wasn't even intended to be sent to it.In short, keep the layers separated as well as possible
+- Proof of methodology: Q holds only if there exists a P suchthat P holds and P -> Q. Including False and itself
+- What about "destruct" (It's match)? What about "forall"(It's just function application)?
+- Encounter problem with negative subtraction? Just take a 2'scomplement at the end like you do with decimal. This shit is easy,don't be scared
+- Mechanically solving problem is fine, but sometimes you need tobe flexible and creative to overcome errors and fallacies
+- You do need subnet mask along with the network address to fullydescribe the network
+- Ask a question, take on a challenge: that's how you learn.Playing is a serious thing
+- Trying to solve the "subnet problem" is probably the motivationof classful address
+- Levels of consciousness:
+    - Level 0 : absolutely no control (unconscious)
+    - Level 1 : daytime consciousness
+    - Level 2 : reflection (think about how you think)
+    - Level n... controls level n-1
+- Why can't we control everything? We don't have enough brainpower for that. That's why we must group some fundamentalfunctionality of the body and hand it to the reptilian brain.Absolutely zero alternation allowed!
+- Of course we can group other thoughts together as well to formmethods or abstractions. Allowing higher leveled thinking
+- Oops, I think I mixed up level of control and level ofabstraction.
+- Sarcasm from the author against himself can be seen assomething deep... Like the author thinking he's evil. Roster teethshirts anyone? Oh my God my dreams are hilarious
+- Stop overextending!
+- Communication is hard man, so cringy. But don't give up justyet!
+- Time to kiss StarCraft II goodbye...
+- Your reason to exist is the same as the sun's, the moon's, thesky's and the sea's.
+- Every time you want to give up, think about the reason why youstarted.
+- Why is the sky blue = ignore the fact that the sky is blue,prove that it is blue
+
+Thought 1-22
+Author: lackhoa
+
+Map
+
+- Hell was invented to balance the world
+- I know everything about math because I know where to findeverything about math (definition of knowledge). Now Ionly have to memorize them to get on with my life and for fun andto enhance my self-esteem
+- Phonetic writing system reduces the symbol table andlengthen the message. When hiergraph increases the symbol time ofspace and reduces the message length
+- We can prove the tension force of the rope by thinking ofthem as one object so they have same acceleration
+- Your actions shouldn't be merged with your thoughtbecause then you would do really crazy and dangerousthings
+- A question is the information that we know exist but wedon't know (?)
+- Unless I know something, I would not know definitely whoknows it (this is wrong)
+- From here on, I shall write down all the definition ofmath, regardless of how much time it will take (doesn't matter LOLjust look at the index in a math book)
+- I will stay with the problem like Einstein
+- Just realized that one cubic square meter of water weighsone ton
+- My struggle always revolve around cautiousness anddecisiveness
+- I'll admit it: mastering only one thing isn't the onlyway (but you can't hope to play the piano by... Asking forhelp
+- The entire chapter of proposition calculus is now sosmall to me (back then it was huge). That's the power ofrepetition
+- Dude, you can't solve problem by definitionalone
+- You're trying to prove that you're better than yourprevious self and you failed. BUT, if you don't increase the depthof your search (you give up too soon), you CAN'T do hard stuff. Andif you only focus on one thing, that thing could be wrong andyou'll waste your time
+- Principle on finding: 1. Make progress 2. Don't traversethe same node twice (don't repeat yourself)
+- Chamelon problem: transfer to stick and peg and use the 2even, 1 odd rule
+- Associative law: no parentheses needed can be prove viainduction. And division is not associative
+- Conflict of interest: you must resolve first theinterest
+
+Thought 2
+
+Map
+
+- Powerful brain: with enough sleep (and no eating ormoving), my brain is getting more focused recently. I can solvepuzzle and dream spectacular dream, like the time when I was in thePhys team. But now, I'm alone
+- Never assume that your good intention will beappreciated
+- Friction transfer part of the Force to the surfacebeneath it, too. That's how the light bulb holder works (theplastic part)
+- In werewolf: the possibility of the thief becoming thewerewolf is about 50% for 10 people in play
+- It's back! The machine is back! The target is theWorld.
+- Folding the tissue in half' is a good puzzle to tell yourfriends, if you have any
+- Archimedes is such a god: he used so many technique tofind pi (but he couldn't invent Arabic numbers)
+- Whether making estimates or writing software, perhaps youcan startwith a rough version and improve it over time (some dude who I'mgonna bookmark later)
+- Definition oflimit: https://betterexplained.com/articles/an-intuitive-introduction-to-limits/
+- Derivative: so finally I've understood
+- I found out that Newton and his senpais hacked the shot out ofcalculus
+- You should put your milk bottle close to the Fridge's doorhinge, because when you close the door, the angular velocity isconstant across the door and so the velocity is lower near thehinge. So the acceleration is clearly lower, and your milk won'tspill all over the place due to the inertia... Dude that wasawesome by me
+
+Thought 3
+
+- Proved the derivative power rule by induction: from x^2 induceto the rest
+- I thought the author would do the same thing, but he used themultiply rule
+- It's all about the neighbor: you don't attack the problem, youattack its neighbor
+- Chain rule: if you have function g ->  h  -> f.You make a chain from all of them
+- Shouldn't really neglect the requirements of life
+- You really need to rest after eating
+- Beware of ego: you have limited time and brain power
+- ByuN doesn't know wing-chun
+- Can learn to be more patient
+- Omg ants on a log: tipping point math rims my day (but I mayhave figured St out if i change ants movement into numbers). Btw myhead is pretty stacked now.
+- Perhaps I can use pattern theory to prove prime number has nopattern
+- Why I failed (in terms of comp science): only relying onRAM.
+- Focus on either speed or accuracy and when you get complacent, then focus on the other. Continue alternating until you've improved as much as you want to.
+- I think learning about process scheduling shall help mestrategize my learning more effectively
+- Young's modulus moment: a string extending by weight. It can beseen as a bunch of small part extending separately
+
+Thought 4
+
+- If we put a weight on a steel bar, will it automatically moveto the middle on its own?
+- When talking about types (verb types, people types) we mustalso specify the characteristic that we're focusing on, because aset can be divided into groups in more than one way (it's actuallymore complicated than I thought)
+- Hatred might help you
+- When yo table is too big to fit the page: don't shrink it,break it in half
+- When you sleep with Swan lake: Total chaos! We have new food,basic aunt, and more
+- It is proven that you feel tired after you sleep.
+- Function composition: I have some lingering feelings aboutrelational database
+- Equality is a function which maps a set of numbers to Booleanvalue, hence it is a not an operation
+- The composition of functions is associative?: is it a even anoperation?: yes it is, because for example f * g = h: here we havef and g are parts of the set of functions (yep, it exists, it'scalled the function space), and the result is mapped to anotherelement of that same set
+- More about function space of X x Y: it is a set of all functionwhich maps X to Y (called Z). If X has m members, Y has n members,then the n(Z) = m^n. So this set is often called "X^Y" or "X ->Y". We can make up any operations we want, we only need a table forit!
+- Nope, you're not that funny, don't be fooled ( notice thelatency)
+- Tips: don't give out until you've already taken
+
+Thought 5
+
+Map
+
+- Unlimited computational and storage: check. Now ya need one manto control it
+- Before lending st: tell the dude to return it ASAP
+- "Lockscreen shortcuts" is the settings for apps you can openwith the lock screen, except there is not the word "apps" onit.
+- Every day, an endless horror game
+- You need axioms to prove s.t. (but you can't proveeverything)
+- Problem arises, you can't remember all the axioms and thetheorem deduced by it
+- We're writing mathematic concept the wrong way, so sad
+- My whole study time right now is just about memorizingconcepts, so sad
+- I understand now, the way of prolog
+- It's Possible to prove using prolog (theoretically)
+- More fun with Young: I'm talking about the extending steelstring. We can assume the process is like "zooming in" in 2D.Because the string stretches out uniformly. Then we can relate thatto the sunlight and how it does the same thing with shadows. Thenwe can use Thales's theorem
+- When you're slowing down, you're actually speeding up
+- Blind
+- Of course you love people, you don't even have the choice tohate them
+- What a drag! Why do I have to help you?
+- Are you sure everyone was dead?
+- Weak and cute, no wonder everyone pities you
+- You're not happy?
+- Play something.
+- In the end, nothing was solved. Nothing changed. But I feellike something did
+- Back to normal
+- Now I understand why, guy's voice sped up sound like girl.Because when you increase the angular speed, frequency is increasedlinearly as well
+- Another reason of failure: so many ideas, so littledetermination.
+- "I think he planned too far ahead" - INnoVation
+- The deciding factor is courage: prepare for all the shit thatcomes next and hold on to the most important thing
+- Be nice to flaws: if you insist on being perfect with everystep, you are missing on something (as with the piano playing: it'snot perfect, and not every try is imperfect in the same way)
+- That's it! You're stuck here in the mud. You must continueswimming forever. There's no turning back. There's no getting.There's no glory or reward at the end. There's no gsl title togain.
+- Do NOT let the competition blind your eyes
+- Failure doesn't mean going backward, it's actually goingforward
+- Just sat back and resolve the javelin problem. It's reallyhard: shows how much of a monster I was back then
+- It's wonderful, a conceited human being getting stopped on histrack
+- I sometimes forget that if I really lock my key, and I have torecheck. But what if I do this: recreating the scene when Iactually did it, and then see: if it is distinct and can't possiblybe something I created on my own -> it has a high chance ofbeing real, otherwise it is bad
+- Another failure caused by stupid assumption: When people borrowsomething, they actually remember it and want to repay it somehow.In reality, they don't and you kinda have to nag their ass out ifyou want some of that money back. Another assumption is that thereis something called "common sense", it doesn't fucking exist. Towrap it up in practical term: when talking about big money, bringout some paper, tell 'em to sign it and then when they ask aboutit, you show them the fucking paper: see? No problem arises and ifthey ask about it shove it up their face. It's not because I'mstupid. it's because I WAS stupid.
+- Being an shameful attacker is better than being a stupiddefender
+- "You don't have to do that". Yeah but I want to do that youidiot. Why must everything I do serve a "greater purpose"? I willnever repeat this mistake again.
+
+Thought 6
+
+Map
+
+- I hated him and I was actually relieved when he died. I don'twant to think the same about you
+- You are limited and you always will be, all you can do is keeppushing the limit further until you're dead and be forgiven
+- I know about love but I don't know where it is. I try to findlove but the more I find, the more impossible it is. And now Iknow, that love is within me only.
+- The blub paradox is pretty good: explains why you only seeflaws and never see strength (you can't)
+- How to explain... You're always changing, you're always lovely,you're always understanding, you're always so smart, and you'realways a woman: you really don't exist, do you?
+- Well actually, another failure that wasn't obvious: you don't haveto defend attack, you can just counter attack right into the base,go for the "throat" of the production facility. That's how you win.I'm gonna milk out everything single strategy from this failure. Ifyou feel like you can't control yourself then stop, rest, take adeep breath, then go again.
+- It's not about good or bad, it's about better or worse. Youthink you're righteous? I am more righteous than you
+- Javelin problem finale:
+    - First, prove that in a tetragon with center inside: the squareis the best. The area is dictated by the angle. Ha, this problemseems solid because they are for triangles, go for the throat andkill each one
+    - Second: prove that the center inside is better than outside.You can do this by duplicating a center outside tetragon and seethat it's futile against the strongest piece: a square. How do weknow if we can duplicate and they won't overlap. Through thedefinition of convex and a really tricky move when you must assumethat a point is on both tetragon. Blows my mind how hard itis.
+- With the above victory, I am confident that I've defeatedmyself 3 years ago
+- About the shape of the spring:
+    - Long story short: yes, the shape is sinusoida, when you look atit from the side
+    - Let's name 3 dimension here: z is the stretching length, y isthe diameter, and x is the other dimention (I mean, there's no needto distinguish x and y)
+    - We can see it as an object orbiting another object that ismoving forward in the 3rd dimension
+    - we have y = A * sin (w*t) (A being the diameter of the spring wis the x-y angular velocity)
+    - x = A * cos (w*t) (see, no difference from y)
+    - z = v * t (v being the velocity of the straight-movingobject)
+    - What you need to do? substitute t=z/v to y or x, you have asinusoidal function of z: y = A * cos (w/v*z), hooray
+    - Well, there may be some other stuff to experiment like howimaginary number wraps all this into a function.
+    - And INVERSE of trigonometric functions(they're just gonnathemselves again, I know) (Oh wait, they look different, with thedomain of sin and cos being restricted, and they don't look likeanything) (oh, here I am being silly again, it just look exactlylike that, but 90 degree rotated)
+    - Oh, and there's more, when you stretch the spring out, you'reactually decreasing w (or increasing v). And w/v is like the 3rddimensional velocity of the spring
+- When a kid fucking stole your money, you punch him in the face."That wasn't worth it" well no shit man. I didn't punch him to getthe money back, I showed him who he's fucking with
+- If nature doesn't like intelligence: fuck nature, fuckyouuuuuuuuu!!!!!!!!!!
+- Heuristic: don't lend amount of money larger than 4 euro -might change depending on the closeness but generally it is 4 euro.And the person must pay back to you in 1 week at the latest (if thedude isn't someone you meet often then no deal)
+- Fundamental why you're pissed when you encounter stupidity:your brain needs to remind yourself not to do the same thing
+- I might be disgusted in my stupidity in the past, doing my bestto solve that problem (self-analysis is the ultimate weapon)
+- There is no reason to lose your calm though
+- If you're stupid because of your circumstance -> then fuckyou, too for being in that circumstance in the first place.Seriously, fuck you. No, I'm not another hypocrite like you. It'slike dogs have the excuse to be stupid: because they're dogs.
+- Fuck this, I'll go learn statistics now
+
+Thought 7
+
+Map
+
+- When I go blind, I can use the gomoku board for children tostore my thought
+- Due to the vast number of routes, what I'm doing right now isnot depth first or breadth first search. It's heuristic search:learning & biased. Sometimes I spend time digging deep,occasionally I jump to other things, but the rules of searchingmust always apply (read thought 1 for detail)
+- Another rule for path finding: minimize the branch switchingbecause it causes overhead (you tend to forget things, that's whydigging deeper is more effective because you remember what you'redoing). Only switch branch when you get stuck. Bonus: you shouldalso minimize the number of branches you dig because unfamiliaritycan cause overhead as well.
+- Pattern recognition can help machines get out of a dead loop:branch A stuck -> B -> dig -> stuck -> A stuck > C(because B is stuck now)
+- A whole new strategy: assign each branch a value S (stuck) or P(potential). An unexplored branch is P. We select 1 branch A(profession) as primary:
+    - Dig branch A until stuck
+    - If stuck: mark A as S, dig another branch marked P (in alphabetorder).
+    - If stuck, mark as S, dig another P branch until exploredsucceed. Mark all branches as P and return to dig primary branch,which should be P now.
+- Note:
+    - the previous can be reduced to a simple Turing machine withonly two states. Like this:
+        - state 1: explored -> dig branch A
+        - state 2: stuck -> dig next branch
+    - The Turing machine version sure is absurdly plain and easy toknow prove that it won't go into a dead loop. But it doesn't showwhat I had in my mind when I designed it, it doesn't show therequirements of the search:
+    - This algorithm won't make sure you will get to the end of theprimary branch.
+    - It does make sure that you won't dig the same hole withouthaving gained additional knowledge from the last time
+    - It makes sure you make progress (getting stuck does not mean noprogress)
+    - It minimizes the switching branch process and the number ofbranches
+- "Alan Turing proved in 1936 that a general algorithm to solvethe halting problem for all possible program-input pairscannot exist". Ha, it means that I can solve the halting problem aslong as I can restraint either the program or the input, orboth.
+- Turns out I don't know crap about probability. But it's okay aslong as I accept it
+- Dream: put me into situations that I fear the most so that Ican devise a plan while on pressure
+- Password: what if I turn some text into bar code and use it aspassword? It'll be good (Nope)
+- Concept of a key: you keep with yourself or in your memory. Asimple text is not enough because it's so easy to guess. By usinganother account, the key is hard to get because you have to knowwhich account to get, which file I stored the pass in. This can'tbe found without my memory.
+- Stop trying to race against time! Be relaxed and do yourbest
+- Being productive for a whole day is impossible
+- Sometimes, sit back and read your notes, they'reentertaining
+- Math and theory is kinda boring now, I'll switch to Linux
+- I am unconsciously trying to get rid of empathy in my dream bycreating the most pitiful girl ever. But then I wake up in themiddle and actually feel sorry for her
+- I'm not interested in people, I'm interested in what they canachieve
+- Overextension is almost as bad as not doing anything atall
+- Hotkey: you may think that you don't do it often so you don'tneed hotkey but maybe it's because you don't have hotkey so youdon't do it often
+
+Thought 8
+
+- Can't even envision my goal. It's blurry like that
+- Was the tool even developed to handle the job?
+- Writing notes like this help me not to not repeat my thinkingpattern (repetition reduction)
+- My path finding rule applied to real problem solving of Turing:one machine with the same state should never try to solve the sameproblem it's already failed at before (rule 2: don't traverse thesame node twice)
+- + Should I change completely to using Linux:
+- - Linux first:
+- - Definitely beneficial for my profession
+- - It's free, so I don't have to suffer from moral issues
+- - It runs fine
+- - I no longer do programming stuffs
+- - You know what, I don't know why I prefer Windows in the firstplace
+- - In Windows' defense:
+- - It has the 'windows jumping' ability (but it lacks multipledesktops)
+- - It has Office?
+- - It has a lot of programs right now: I'll jump to Windows tosee if there's anything I missed
+- energijate is plastic, dirty cardboard or paper
+- Every machine serves a
+- purpose. There is no perfect
+- machine, so stop looking for it
+- New RAM system: use pen-paper for RAM, use digital note formass storage. I hope this will provide more freedom for themind
+- Hide & seek, with human
+- SC 2: if the number of worker increases steadily over time, theresources gathered should be a jagged version of a parabola.That's why increasing the number of workers in the beginningincreases the pace of the game so much... I give up on proving thisone. But I find that any given time, the total resources gatheredwill be larger by k*T (k is the number of initial workerincreased).
+- I also learned about inverse function and how to change thegraph to get inverse function (tilt to the left 90 degree, flip tothe right and then change the axes name)
+- How to draw a jagged parabola: start from point (0;0), forevery grid on the paper, go up as you you progress: horizontal line-> go up 1 -> go up 2 -> go up 3 -> go up 4 -> go up5 -> ... -> tada! This shows the amazing beauty ofmathematics and how the parabola works in StarCraft. if you havereally small grid line, you will get a smooth parabola
+- Drawing: to explain why the heck this happen, we should learnabout jagged function
+    - x-axis:              0 | 1   | 2 | 3    | 4   | 5     |6
+    - f=x^2/2:           0 | 0.5 | 2 | 4.5 |8  | 12.5 | 18
+    - jagged f (f+):   0 | 0   | 1 | 3 | 6 | 10 | 15
+    - f - f+ (=x/2):    0 | 0.5 | 1 | 1.5   | 2  | 2.5 | 3
+- In mathematics, every time you ask 'why?' you mean 'prove it'.So what you should is formalize the statement to prove and thenprove it
+- Sum(0->n-1, 2*n + 1) = n². Prove: induction. So that's howit works.
+- The jagged function: must use "the largest integer that doesn'texceed x"
+- I still wanna know how to use the logarithmic paper. But I mustmake the system first.
+- I want to learn about ENTROPY and INFORMATION! But I must makethe system first.
+- Art is something that doesn't repeat
+- The water will show us the way out of the maze (you don't evenneed to know any end of the maze)
+- Infinite paper folding technique
+- Entropy: the particles will spread out because there are morepossible combinations that way. According to the second law ofthermodynamics, the particles CANNOT get in one place again
+- BUT, people said that it is not true. Meh, I don't know
+- Operational amplifier: the output voltage takes the plusterminal voltage and minus the negative terminal voltage, thenmultiply that to a really large number.
+- If we have feed back, the output will increase/decrease thevoltage of the minus terminal to be equal to the other terminal. Sothe output is minus the output times some constant
+- Man FUCK that basic electronics class. What the heck are youthinking? What am I suppose to spend 8 hours a day understandingconcepts of integral? WHY? Why must I memorize shit?
+
+Thought 9
+
+Author: lackhoa
+
++ Building a math machine is really hard. Programming isreally hard, but I won't give up
++ Is it true? Is it in the program or not?
++ I can start making knowledge file NOW
++ integral must've come from "integrate" (add in) andderivative must've come from "derive"
++ Somebody told me you have to learn marketing in order to getjob
++ 3rd rule of path finding: you must balance breadth anddepth. Dig too deep and you get stuck, jumping over so many fieldstoo frequently and you won't remember shit and it will cost a lotof time to adjust
++ Lesson from failures: don't think that the things you do areset in stone. There is room for improvement in a cycle of creationand destruction. Don't just look at the result
+
+- Don't limit yourself: you don't have to use just one language,one philosophy, one rule.
+- Fuzzy logic: there's no good and bad; there's only better orworse
+- Language is a river. Don't try to control how the riverflows.
+- I strongly believe that the language of human is built from thetop down. And the language of computer is built from the groundup
+- There are two types of people. WRONG! You must specify: dividedby what?
+- What a structure is: expression is {[field1] in [type],[field2] in [type]}
+- I've found something I truly enjoy doing from the depth ofcomputer science and I'm proud that I've made it this far.Weep.
+- I guess if you truly invest in something, you can find the joyin it.
+- The best way you can learn about something is to break it
+- Heaven is where nothing ever happens
+- Recycling: only food waste goes to biojäte: that means the onlykind of paper that goes to biojäte is kitchen towel, ornapkins
+- Great, my knowledge of programming has finally come into play.This is only possible through mastery and dedication.
+- I need to write some 'helper function' for the program: it'sgetting so big and so complicated
+- The 'what is' question: what set does the constant belong &which statement (boolean expression) is true about it.
+- The 'nested Russian doll': a in b in c which is d in e...
+- I should continue learning to program: it helps writing thelanguage with the terminology (I wouldn't have come up with lambdaex myself) and actually implementing the language (python)
+- OS should help with the practical using of the computer. Andeverything else will be broken into the knowledge engine
+- I have to admit though: this is slow (I don't know if it's onlyallow at the beginning but now it's painfully slow
+- What is built-in constant: The rooted constant that belongs tonowhere
+- Talking about function: if the function name is the same andthe arguments are inside: we can substitute
+- Generalization ( equations that we can substitute) can savemore information as the information space increases.
+- Information relation can do the same thing
+- Let's halt programming to dig information theory, shall we?Let's dig Huffman's coding
+- In the bigger view, computers are just tools. Every tools arecreated to solve a problem and the problems that they create. In asense, humans are also tools of ourselves.
+- That said, there's no rule that says a tool can't be used tosolve a problem it wasn't created
+- So the best way to understand a tool is to ask: "what are youtrying to do?"
+- Every time, I work hard for one day and the next day I couldn'tdo anything.
+- The ultimate reason why I failed so hard at coding for telecom:the bastards don't write down all the little details, I have to doit all by myself! I can't do that! But in math, everything is sowell-written so I can only do this to math, right? Conclusion:goddamn life wasted
+- More reasons: the big pictures are usually dismissed: forexample: does that telecom system have a transmission method? Idon't know, seems like yes but people would just assume that we'dknow that. So yeah...
+- The beauty of a dialog: Dung and I were walking out of the lib,guessing I must be heading home, she asked: "Did you walk to schooltoday?". I immediately grabbed onto that and replied: "nah, I wenton bike. BTW, the bike is over there, so we must part way here".Wow, had she not purposefully asked that, things wouldn't have beenso smooth.
+- What if Chau had Noctis' ability?
+- Planning helps, occasionally
+- Awesome bike girl: feel like it's too hard to brake by foot?Just stand on the goddamn pedal
+- someone could give my password away and give it to someoneelse's password database
+- How little we know about the things we see
+- If you think your idea is so unique and awesome that nobody hasevery thought of it, you're so dumb!
+- In my dream, I see you. I see your tiredness and I look away.We're killing each other and we hate it.
+- We tend to get slower over time in path finding because wecan't remember all the stuff we did.
+- If there is an ultimate goal in life, we have to find ittogether (restraint of specialization). Maybe someone has foundyour goal and not know it
+- More failure dissecting: when I was at my peak 2-3 years ago, Istudied so much that I couldn't remember what I had studied, sothat was the reason I was bored and gave up because having torecall put so much strain on my head. Now it's different.
+
+Thought 10
+
+Author: lackhoa
+
+- Heart of the story: like in the case of The Labyrynth ofMagic. At the beginning, every encounter of the main characterscount. There were so many things going on psychologically, notphysically. At the end of season 2: oh my god the fights areextreme, but there isn't any impact at all on the relationship ofthe characters. Those are just events and that's all they are. WhatI'm saying is: many stories keep on elevating in DEPTH andIMPRESSIVENESS and BOOM, but the characters are lackluster andnothing seems to relate to each other anymore so who cares.
+- Bank transactions: Column repetition -> date compare ->fail -> string compare
+- Terminal velocity: every falling object has a maximum fallingvelocity. The squared value of this velocity is proportional tomass and inversely proportional to the project area, the density ofthe medium. This is due to the drag force, which somehow isproportional to velocity squared
+- Live your heart out. Fight till the end.
+- Dream inside dream: every time I wonder about the sanity itall, I keep making things up and that is a loop of insanity
+- Just get it out of your head! There is no Grand scheme, thereis no destiny, the computer wasn't built for you. You aren't thefirst one to think about automation. Get over it!
+- Why is the sky blue = prove that the sky is blue. It is notalways blue, 3k!
+- Note that we can't "prove" in real life. We can only rely onobserved facts and made up theory to derive from the fact to thegoal. Physics is just "fake" math (sounds so backward)
+- Most people think like that: maybe I'm just trying to reassuremyself that the path I've taken is correct and there's nothingelse. Or that I am at least not worthless.
+- The irrational thoughts all come from one source: conceit
+- How do you change digital back to analog?
+- The dilemma or collaboration and duty: humans are limited. Ithink you know that. Will power won't help push your limit. So justrelax.
+- Don't be like that ICANN netorare idol
+- Implementing function in a set based language is a mistake, itshould be a structure. To implement that structure, we needlist
+- List vs set: list has repetition and order
+- Introducing the "has" keyword. Some language needsdesigning!
+- Write out function every time is like writing in byte code: weneed an alias. But we mustn't abandon the logic behind it, either.I need a system of macro: my language isn't good enough to havethat, I need to research how lisp does it
+- Calming strategy
+    - 1) Never feel stressed
+    - 2) When you start feeling stress (when someone yell at you),stop what you're doing immediately. Re-evaluate the situationlogically (and mathematically) and look for something else todo
+    - 3) If you can't come up with anything, don't try; have someoneelse do that (probably the fucker yelling at you)
+- Organizing Evernote by tags is interesting
+- We don't show our true self when we feel at ease. We are ourtrue self when we face something impossible.
+- Facing an impossible challenge, a respectable person is onequal grounds with a despicable person. No matter how hard we trywe'll always end up at the same place: at the very beginning of thetrial.
+- You don't need to stand out and try to be a hero: let thosebitches do it; let them do it, let them do it, let them do it letthem do it let them do it
+- Stop using underscore "_", man. That is quite hard totype. use hyphen instead
+- 3/6 labs a day; almost no preparation; almost no guidance; fuckyes University of Applied Sciences; fuck yes Osmo;
+- When talking about 'understanding'. Simply asking "Do youunderstand this?" makes no sense. You literally can't open my brainlike a HDD and see that the content inside my head is correct ornot. You and I can only get to an understanding by comparing theresult of our work together: 1 + 1 = 2; If I get 10 math problemscorrectly then you are probably sure that for time being I havememorized the concept and I probably knew how things work. Withoutconstantly checking your memory and the logic of everything, youcan't know that you understand shit. That's why the telecom labsare also fucking bullshit: nothing runs, no results given ->what did we do wrong? Not enough time, no guidance
+- Pain keeps the dark thoughts out
+- Always think about the interest. It's just about the otherperson's interest
+- I've made up my mind: I won't rely solely on anyoneanymore
+- See how Alice handled it: when asking for help, she stayedpassive and let the expert do his stuff. I don't know why that hadto be pointed out but bitches don't know how to ask for help
+
+Thought 11
+
+Author: lackhoa
+
+- Up to a new start, shall we?
+- Circle center finder (anti-compass) solves my problems: it'sjust a glass surface that has concentric circles drawn on it and ahole in the center. pocket83 taught me this
+- Patience isn't waiting, it's waiting for something that maynever happen
+- I wanna play like Stats for now
+- Focus on one thing at a time: don't let the competition foolyou. Just think about what you have to do
+- There is no 'should',  is only "what"
+- Lunch time: if you have more than half a glass of wine and halfa glass of water and you wanna mix them together perfectly: how'dyou do that? You can put one into another until those are balance,but how'd you prove that?
+- In theory, it does feel hard: the wine stays below the waterand you spill a lot
+- Can I use computer to do this? Yep
+- You can't listen when you're talking: it's like crosstalk. Youlisten to your own voice
+- Using acronym is like compression: must have processingpower
+- Wow! Those are some good knowledge application of Telecom
+- Wait! i was a badass in grade 12. why am i all scared and shitnow?
+- About a year and a half earlier I was watching videos aboutassembly: hands down best way to waste your time. But now that Iunderstood about how the computer work in general to the hardwarelevel: Oh my god everything makes sense and that was actuallyfun.
+- Ok, I know you're capable of being confident in a conversation.But please don't be overconfident and interrupt people whilethey're speaking
+- Nothing-rule #1: if you know the specific thing you're talkingabout, then make it a separate note. If you are just hitting downrandom things: put that to a general note
+- I just realized Arabic number system is an exponential system,sort of. Why: Len(number) is the Arabic representation of thenumeric value. We have len(a) = int ( log(a) ) + 1
+- Let bel(a) be the exponential representation of a number a.bel(a) - bel(b) = bel(a / b)
+- You've let fear control you for too long, the fear of theinevitable pains
+- Dark's Nydus Worm to counter ByuN's Hellbat push WTF
+- Stand back and observe the world. The more you can observe, themore you can accept, and that pushes you to observe even more.
+- Cutting triangular cake so the area is equal
+- What makes you better than people, try hard? Nope, is theability to store a lot of info and to access them quickly
+- Why you can't recall that math proof even though you've done ityourself: it's like address pointer, too much of those and you'llrun into a memory leak
+- So that's why we tend to memorize the repetitive info: tobetter utilize our limited brain storage and increase speed
+- Worshipping: people worship what they overly rely on, what theybase their entire life style on. Kind of like me worshipping thecomputer. In fact it is just a piece of material like everythingelse
+- In fact, everything's just like everything else
+- Ok, you serious need to divide the work up and rest when you'refeeling stressed out. Solutions magically come when you have enoughrest.
+- Nothingness is the absolute hardest state
+- I want to know more. As knowledge means nothing to anything.Having knowledge doesn't mean you are different, it just means youhave seen more
+- Feels good when you tell the truth. Or perhaps there is notruth? If that's the case, I can say whatever I want.
+- Oh yeah, nothing new. I'm still gonna die. No one cares.Building some stupid program is going to help me escape that... Inmy mind at least.
+- You know what? I don't care about the truth anymore. Just getthe job done. Have some fun. Your life is good either way
+- There should be a term for not saying the truth, intentionallyor not: bullshitting?
+- Or perhaps there's no true or false, only uncertainty. Theysounds nice and practical
+- Should I stop being so demanding?
+
+Thought 12
+
+Author: lackhoa
+
++ Being an adult, it's not just about 'what will happen if Ido' anymore. It's about 'what will happen if I don't' --- LouisCK
++ Be careful when you store new information: not only do youhave to create connection to other values, you also have to avoidactually overwrite some other concepts. Because, well: if twoconcepts have the same relation, then how can you distinguish themfrom one another?
+
+- I wish I were in charge of everything in the world, but then Iwouldn't be here so that's a paradoxical wish
+- This is it, this is the final life I'm gonna live. I sacrificedeverything to be here. And I will not be here again.
+- I'm not gonna ensure the bullshit silently anymore. Becausethat's not honest
+- It's insane to think how one little text-to-speech plugin canchange the way I work and the way I read notes. Reminds me of SteveJobs saying: 'You sometimes don't even know what you need'
+- When working, you have to constantly evaluate your performance.But when you play games, something else does that for you and youonly have to focus on improving yourself
+- Thinking like I'm a spirit controlling a robot known as myself,in this game called the world.
+- My junior high English teacher got the right idea: you don'tlearn the rules for irregular verbs, you would spend way lesseffort learning every single verb than you would learning everysingle rules
+- There's only doubt in science. You must be skeptical at everyangle and test your statement. There is no room for trust. Whereasin human relation, you can't fix anything
+- A case for the Servant of Devil: he did not hate the queen foracting for being evil. He didn't try to stop him because he knewthat it would be futile. He knew that the Queen was such a goodgirl but she was driven by her situation to madness. Therefore, heoffered to exchange his situation with her at the end: "I am theQueen and you're the escapee"
+- I'd argue that situation is everything you need to define aperson
+- Osmosis is a fun phenomenon: if we place two salt-water partside-by-side separated by a semipermeable membrane (which onlypermits water to pass through and not salt). The side with moresalt concentration will 'suck' the water from the side with lesswater and won't even give it back. Plants use this to attractwater: they store up some solute in cells which are guarded bymembranes and thus attract water and balance their water nutrition.How do human use this? We can use membranes as a kind of diode. Weput salt water on one side and apply pressure to it: pure waterwill flow to the other side and won't come back. Why won't theycome back? Because of the pressure which has to be higher than theosmotic pressure. I modified the the wine-water program tostimulate this in python (because this can be explained through theprobability theory)
+- You can get into situations such that ever the self-monitoringsystem malfunction. And you will not remember anything happening inthat specific period of time. You will never know how to get out ofthat situation, ever!
+- But there is a way: by monitoring other minds, you can pick upthe pattern
+- Maybe people won't actively try to help you, or they may try toharm you even. They might help you unintentionally or allow you tohelp yourself
+- Information, no matter true or false, is information
+- I hope you all go to jail
+- Every time you encounter a ridiculous or unfair situation.Don't ask why. Just keep calm and lower your standards
+- Oh great, so the number of electrons the shells and subshellscan hold also relates to sequences and series: subshells: (a_k) =4k - 2. The shell's electron count is just nth partial sum ofsubshells: (s_n) = 2n^2
+- Information is just about sets and how to map sets to representthings. Why is information in bits? Because that's logarithmic andit's for computers
+- You cannot feel safe forever. safe = sorry
+- We sought different things: I wanted to find a way to work moreefficiently, he wanted me around to boost my ego. Those two thingswere conflicting
+- Perhaps that was a mistake on my part. I should have made itclear next time
+- Using my ears for working is more efficient than staring at thecomputer screen
+- People DO go crazy from sleep deprivation
+- Now that I understand the true value of Mainframe, when I'vedealt enough with banks
+- I remembered dreaming about doing ON A CALCULATOR last night.That was goddamn horrible: I can't even look at the numberscorrectly. Shows that you're not that good in your dream
+- My brain is really good with storing number and thenincrementing it. I take pictures for my labs and then name themwith incrementing number and my brain just nails the number everytime, even the time interval between the pics are not short
+- When you are exposed to something long enough, you think thatit's the right thing. This fact is crucial in both marketing andhuman relation: if you don't talk to anyone, then no one is gonnatalk to you
+- Yesterday I went to the bank to ask about the daily transactionlimit of my account. The worker there doesn't speak English sowell, so I knew that she wasn't going to understand what 'dailytransaction limit' is. So I said something along the lines of:'when somebody get my visa card they shouldn't be able to spend allthe money at once' and she immediately understood what I wastalking about. The reason behind that is that I transformed ahighly complicated but short term into some normal situation thatis the cause of that specific term. It's like decompression incomputing
+- There is something that distinguishes the excel from thenormal: the sense of satisfaction. The most crucial that holds anormal person back is that they feel comfortable. And even thoughthey may feel good, they are not doing good.
+- The gambling strategy: 'bet double every time' doesn't workwith high-risk-high-reward games. Even if you can win by bettingsome really little amount. Then guess what: you can only win youinitial little amount and it's not worth your time
+- Another psychological pitfall: everyone is gambling, everyoneis losing. I should be able to do something different, right? No,you're just an average Jack
+- The best way to stop gambling: it's not psychology, it'sscience, it's probability. Just kill your stupid irrationalself
+
+Thought 13
+
+Author: lackhoa
+
+- Just work as if there is a tomorrow.
+- Nostalgia series starto:
+- Patience is waiting for something that you know may nevercome.
+- Thomas Edison risked his life to save a boy. Then the father ofthat boy gave him a job as a grateful gift. Well, now I have to begpeople to give me job with suits and ties and Bachelor degrees andshit
+- Saving one is killing one
+- Doing anything more slowly is better and it feels better,too
+- There is something constant about every living thing, everyreligion, every political party and every society. That everythingmust sustain itself. And the best way to do it is to out-reproduceother things
+- Inverse functions: how to think about inverse functions: if youcan wrap a function f^(-1)(x) around another function f(x) and thenit returns x. then f^(-1) is the inverse function of f(x)
+- Symmetry, something about dihedral symmetric group, grouptheory: I used those in tic-tac-toe machine
+- Wanna stay truly focused? Don't breathe
+- I know why Mikalo has several one account on 4 banks: theprocess of transferring money between banks takes a really longtime because banks could go bust in the middle of thetransaction
+- AlphaGo: the idea of constraining the problem space is used:there is are actually two parts of the program: one explores theprobability of the moves, and one plays the games from those moves.The one that explores the possibility picks restraint the movesthat are possible for the other to use that to make a move
+- How to represent combinations: prime numbers! Multiply themtogether and you'll get a unique combination. It can work withgroups of 4, 5, or anything you can come up with.
+- A logical operation on with 3 nodes can be represented onlywith 2 numbers: a number for the parent the a number for thechildren
+- I want to create a mapping function, an efficient mappingfunction. Which is redundant because functions map one input toonly one output. BUT, can I make it so that one output onlycorresponds to one input? That means that there can be an inversefunction created from the first function.
+- Using prime number is efficient because there is an inversefunction which can map one number to a group of prime number
+- When mapping a group with order, it is clearly efficient usinga string with characters in space n (the number of possiblechoices)
+- How to formally describe the term 'efficient': a function isefficient if its domain is as large as its co-domain.
+- But what if one of them is infinitely large? We must somehowset up some kind of constraint. Then we continue to say that: withany constraint, the domain must be as large as the co-domain
+- Another obvious thing: the domain must always be at least aslarge as the co-domain in order for it to be classified as afunction (There is nothing such as a function mapping a smaller setto a bigger set)
+- What I mean by co-domain: the set of all the possible output ofthe mapping. The square root of x function doesn't map the integerset to the real number set. All it does is map the integer set tosome subset of the positive part of the real number set
+- I kind of want to make a machine that takes in numbers from 0to infinity and then outputs the number of prime elements ithas.
+- 1 prime can represent 2 number (not counting squares or cubes),2 primes can represent 4, 3 can represent 8, 4 can represent16
+- Is there a way to predict how many prime numbers there will bebased in the next l numbers on the combinations of prime numbers?Squares seem to be a really big obstacle for this.
+- Maybe the function to map expressions to number is as hard astrying to look at a number and say: 'Is it a prime?' Doing that islike being able to know the answer before even computing it
+- Hmm, then how can I know the number of combination before doingthe combinations myself?
+- There must be a way to expand the stream efficiently byevaluating each node (the left must be less than or equal to theright)
+- In fact, the 'combination' problem can also be solved byordering values of nodes
+- I've found a way to absolutely eliminate symmetry inexpression: search nodes of the same level. If two or more nodeshave identical paths, they must be put in order
+- I don't care about consciousness, I don't care about thingsbeing freaky or weird. I follow the rules and crack all thecodes
+- How to remove similar destination on the fly with tic-tac: justorder the location of the moves: move n must be to the left and/orabove move n+1. But this doesn't remove symmetry
+- Principle of locality: a specific group of functions and datais so regularly that it's better to improve a small area ratherthan improving everything
+- That's right: you only need the page table for the pages you'regonna use, why not load them when loading the pages, also
+- There's no differences between understanding and memorization.Understanding is just memorization of more generalizedinformation
+- A machine cannot be the most efficient (to some criterion) andbe smart at the same time.
+- Sooner or later, you will realize that what you're doing iswrong. There is no reason to stop realizing
+- A hash function can replace a table
+- We tend to use the word 'except' as a way of both stating anddismissing. Like the phrase: 'everyone except me is stupid'. Thatsentence is used as 'everyone except me is stupid, BUT I am notstupid'.
+- Sometimes (I'm not saying 'always') storing information usingVenn diagram is more efficient than memorizing every fact abouteverything, if one portion of the Venn diagram tends to cluster.Like this: if x is a bird then x can fly, except if x is a penguinor a chicken. But I don't know if it's worth drawing the Venndiagram or not
+- One of the reason why education fails is that they can beexploited. Schools tell us when to do this and when to do that andwhat to do, and at the end of the year everything is reset. Butthat is not life. Life tends to reward the resilient ones, the onessticking to himself and keep going steadily at every moment.
+- The 'you can have freedom as long as you don't violate other'sfreedom' mantra doesn't work. In a world with limited resources,one's freedom is another's restriction
+- You may think I don't like competition. I actually do, but notwith you pretty humans.
+- Do I really like networking? I don't know
+- Now I understand why file handling is done like that: it'sactually disk reading, it's I/O. Why it's it on the disk? Becauseof the restriction of main memory, of the hardware level below
+- I feel like sometimes it's beneficial to over-exert yourself.Because when you get out of your comfort zone a little bit, youstart to get out there and try out crazy things. If everything istoo methodological and mechanical, the state of your mind justwon't change
+- What does integral have anything to do with the area under itsderivative. well, the integral is the accumulated sum of itsderivative. the derivative shows the rate of change of theintegral. notice the three ideas sum, area, and rate ofchange
+
+Thought 14
+
+Author: lackhoa
+
+- Holy shit! Taylor series makes sense now! (Thanks 3b1b). Howthis works: we take a sample point then try to match the polynomialthat we're trying to get at at different orders of derivative.That's why factorial happens: when we take derivative of x^n ntimes, we should get (n! * x)
+- It's just a series of shameful and sad days
+- I hope I can at least salvage one hope by eliminating all ofthe others
+- Taylor series: I see what you did there with x - a: you'retrying to map the graph to another coordinate system so that when x= a, t = 0. Therefore, t = x - a. Note that you must try buildingthe series FROM THE GROUND UP to be able to fully grasp why thepoint of focus must be at t = 0
+- Sometimes, re-reading a part of a book helps in memorizing
+- Why one-to-one mapping coding machine can fail miserably: wecan crack it by simply looking at the letter frequency of thelanguage
+- How to describe the Von Neumann bottleneck (or the intellectualbottleneck): it's like how you can't read or write as fast as youcan think. Or that your hand can move faster than the eye cansee
+- Dude, even Morse Code used Huffman Coding, the letter 'e' isonly a dot, all the vowels are two letter long and the consonantscan be up to five characters long (I guess)
+- A million dollars, but... Every time you do something, you mustset the timer for it and you must complete the job working thattime. If you set it to short, you must stop the job immediately andcannot do it again for the rest of the day. If you set too long,you must keep doing it until the timer goes off
+- He was right all along. You are driven by desperation, nothope. You are driven by pain, not passion
+- You can describe logic with set
+- Object orientation, inheritance sounds pretty good in setlanguage
+- Be patient, be open. And keep on trying
+- Why drop I feel so weak when switching from one job to anothercompletely different one: I have to wash all my short termed memoryto make room the new ones. The algorithm needed for definitioncrunching is different from the one needed fordecision-making.
+- How to not panic: I have the tendency to disregard theinevitable outcome that I have previously deemed "impossible".However, that is irrational thinking because no outcome that youcan think of is impossible
+- Fairness is not equality. Jeff Mowatt
+- Honesty vs integrity (according to me): honesty is not lying;integrity is not trying to cover up any mistake
+- A lie vs a spin: a spin is basically manipulate truth in yourfavor
+- You do what you think is true. Even if there is no easyexplanation for why what you think is true will benefit you. Youstill do what you think is true
+- Lower frequency travel for further distance
+- I wash my clothes once every five days. They don't it once aweek. Turns out we don't collide with each other very often becausethose are prime numbers
+- Similarly to my previous thoughts: The function of the brain issimilar to that of a computer program. We can divide the code intomultiple functions so that each person knows one specific functionand they can communicate through a common language. You can dig asdeep as you want, depending on how many functions you're willing tofully comprehend. Comprehending a function means replicating theentire function in your brain (every variables and loops...)
+- what if we build a genetic mutant with the ability to storeinformation and receive it at the speed of a machine through avisual - audio device
+- The rest of this note was moved from Methods of ScientificResearch. Because I think it's much better to accumulate valuablethought in one place
+-  + The thing you are reading is not the same thing youhave read: if that's the case, why would the author bother?
+- + It's ok to skip some part, as long as you don't intend onskipping it forever: Because sometimes the author can make mistakesby providing misinformation or not clarifying his terminologybefore-hand (we would be stupid to try to understand something wecan't understand)
+- + We don't have to prove everything, coach
+- + Split your project into many small pieces, NEVEROVEREXTEND
+- + As I expected, understanding meansmemorizing as much as possible. Sure you can use tricksto memorize the relations between things by asking questions, butthat won't beat brute memorization.
+- + Extended from the text above, I often try to not memorize byrelating knowledge from the one I have memorized to another, butthere are times when this method is so deadly: completely new andunrelated knowledge. So don't feel guilty when you skip some partsor not understand something completely: that's not your fault
+- While you're at it: take notes moderately. Only key pointsshould be noted
+- When you read something and you think that you don't understandshit: back off and find out the reason why, as studying should be aflow line of water. Anyways I'm just saying it as if we're livingin a perfect world
+- Don't be overeager to learn like a perfectionist
+
+Thought 15
+
+- Never expect things to be good. To be honest, don't expect themto be that bad either. Remember that things happen today won'tchange how things will be in the future
+- I don't know how dumb you must be to abuse other's good will,but that's a thing
+- In modern world, it's better too not disclose information aboutyourself. Information is money
+- How you can rescue someone on the phone who can't talk. Firstestablish some binary system. Then use binary search on thedictionary to locate the address: then you're done. That is likeprotocol negotiation in Networking, only without predefinedstandard.
+- In computing Levenchstein distance they also used a matrix assome sort of "recursion signing". Or as formally termed: dynamicprogramming
+- The Levenchstein distance program is kind of like: well let'ssee if I delete this: see how that goes!
+- There's nothing such as trust. There's only possibilityweighing
+- The question 'WHY' is not a function with single output
+- Imagine this scenario: you smile and greet to a guy, he punchesyou in the face. Then you punch him back in the face. Pause thisand ponder, according to a lot of stupid people both of you areequal based on the fact that both of you punched the shit out ofeach other. That's just stupid: treating people the same way theytreat you is not the same thing as beating the shit out of eachother
+- My new policy of living: every turn benefits me. If yourlifestyle depends on how others treat you, then your lifestylesucks
+- people don't just suddenly like you, everybody wants you to dosomething for them
+- Crocodile embedded the ground!
+- ya know, I don't know that much about life, or what is rightand wrong. but i think now my  job is to try out new things tochange my internal state of mind and hopefully i will look back oneday and said i did a good job
+- why can't i go back and fix my mistakes? is this world reallyfor me?
+- Okay, whatever but this is pretty cool of me: how do you get alight bulb off a the ceiling when you actually cannot find a way tofucking reach it to pull it out? Take a step back, shine some lighton it, notice how the "plugger" is connected to the electricitywire that you couldn't see before? That's it, you can use a hook topull that out. Well I ended up using the bicycle locker butanyways, that was cool
+- Don't be fooled by human's appearance because they are allsnakes
+- Even transistors and stuffs have relation to computer logic (ofcourse they do physically but I'm trying to be vague here)
+- What's the goal of justice: to cut down crime. But justice canalso define crime to be nothing. That way nothing is crime
+- don't think of knowledge as some diamond or golden jewel thatyou obtain once and then you put it in the safe. Think of it as apower source that can be enhanced and transformed into otherthings
+- there is definitely a way to list out all the theoremspossible
+- the digit grouper is kinda like a quick 'sanity' check
+- Some stupid theory of 'Computation Vector': the vector add1(x)which takes one number x and returns x+1 is the inverse vectorsub1(x) which takes x and returns x-1. If this theory goes live, Ican see it predicting the behavior of a series of program. x can bethe starting point of the vector and the end point is the output(if the vector has multiple end points then I'm screwed)
+- You thought that was easy solving one of the 'millenia mathproblem', eh?
+- we need about 3.3 bits to represent one decimal digit. becauselog10/log2 = 3.3
+- let's get into the heart of probability
+- metamath proof explorer is a wonderful thing
+- You can prove the Law of Great Number through Chebyshev'sinequality (though I don't understand what the heck is going on).Probably wants to hit Khan Academy even though they still don'tprove shit
+- And I tried again to systematically write down mathematics-> failed miserably again because the syntax is simply toogoddamn long (If you don't want to include semantics then you'rejust fucking dead). If you want to systematically write thingsdown, you must write a really long interpreter. And theonly way that an interpreter for everything could be written downis in my own head.
+- I'm really far from cracking the code of nature. Way furtherthan I thought. But let's start from something, even though wemight end up nowhere.
+- Wait! Let's not be discouraged. Even though we're never gonnawrite everything down, perhaps we can include it with our regularstudy and only write down the things that are really important
+- Theory of cooperation:
+    - A and B should cooperate if they aim at the same goal. You maysay that this can be disproved by the rival of, say Samsung andGoogle. Nope, they don't aim at the same goal, they only share acommon greed (which is money) which differs at the subject of thatgreed
+    - In a conflict of methods, there should be a way of determiningwhose method to follow. This can be anarchy (obeys the king) ordemocracy (obeys the mass)
+- Don't expect that everything would work out quickly, don't betoo greedy. Here is the method for choosing what to do: ahierarchical list
+    - Most important: Vital to your self-esteem
+    - Secondary important: Vital to your survival
+    - Least important: Vital to your interest
+- What to focus on as a machine
+    - Data: what kind data will help you?
+    - Algorithm: what kinda method is the most effective?
+
+Thought 16
+
+- Balance between looking for materials and actually studyingthem
+- Finding 2's complement is like switching sign (the input plusthe output is 0). And 1's complement is like the easiestsubtraction and it is 2's complement minus one
+- listening to music is like thinking: you are presented withnotes and then you compress them into abstract ideas. Mysteries liewith the audience, and the performer holds the key to one of thedoors
+- how can I know what weekday it will be on my next washing turn?Since the washing days are 5 days apart, I can use the repetitionof seven days of the week to my advantage: add five is like minustwo
+- Hash tree is better than hash lists if you only want to check asmall portion of the file. Because with hash list you have to havethe entire remaining hash list in order to check one block.
+- Both hash tree and hash list reduces the amount of data youneed to store for integrity check (instead of storing a copy of thedata and then check it, you only need to store the informationabout blocks of data - which is a bunch of data bundledtogether)
+- The bed-wetting incident: used hair dryer, they blew up at thesame time due to overheating -> google says it's just automaticand normal function. NEVER PUT WATER ON THE BED AGAIN! Furtherprove that if you're calm and collected you can solve anything
+- You can't beat Flash with your grandmother in mind. What doesFlash think about when he's playing? His fans, the ones who believein an invincible God.
+- The incident today made me think about Shine, how he gotflustered when every didn't go according to his plan. I was reallysure that the origin of funds documents were optional. But somehow,someway they're required. I don't know anymore, but I must maintainmy composure. Be like Flash
+- The memory management mechanism of the brain the the computers:most used and most recent
+- You think math is conceptual? You're wrong! I'll prove how youcan do math with basically anything: now gsl code S has theseplayers: gumiho, maru, classic, stats, soo and rogue. How do youdetermine the possible matchup? Will first we define a matchup,then we realize that there can be a way to map the set of matchupsto the set of unordered pairs of players. Then from that we definethat the see of matchups has the same numbers of elements as theset of pairs. Then we go from there to apply math to theproblem.
+- Note that there is no reason to "convert" the matchups to thepairs: we can totally apply math on real life subjects
+- The bicycle uses some sort of "fiber mechanics" just like thehuman muscle to pass commands from our hands to the brakes and thegear shifts
+- If something can't affect us in any way, then it practicallydoesn't exist
+- Hasse diagram is pretty awesome
+- Doing useless thing can be useful
+- stop watching stupid vids when you're working man!
+- Impossibility of a future diary: supposed there is oneexisting, and by exciting I mean it can change the action ofsomeone (otherwise it would be completely useless). From that wecan immediately conclude that it cannot exist. Information whichcan't be interpreted isn't information.
+- Unless the diary can update itself (Mirai Nikki). But then itwould be significant less useful, eh?
+- And if there's one all-knowing being which has all theinformation about everything and how the interact with each other.Even he wouldn't know what the outcome of everything. Because everypossibility takes time to calculate. It will take him infiniteamount of time to calculate what hours best action is, and it willimpact everything else. So Mirai Fuukin, you won this time
+- What about somebody who knows about his destiny, and won'tbother trying to change it, or tell anybody about it? Then he couldexist, but again, his knowledge cannot be proven to be existed, notcan it be able useful for us
+- Reason why I can't do dsin(x)/dx: I don't understand limit
+- The two functions (2x-1)/x and (2x-2)/x both have limit at2.
+- The idea of infinity was derived from limit, something,something approaching infinity means that that something must getbigger than some pivot to be within the range
+- the algebraic limit theorem is what i need
+- Vectors are just arrays, guys.
+- Everything about vectors can be broken down into unit
+- Another failed model? The relation diagram, can it be used tolink ideas together?
+- Is time a real thing? Is it just about cause and effect? Whatif we represented time with a function: a = t(b), with t being aeffect function. Is this dimension just a infinite sequence offunctions?
+
+Thought 17
+
+- If the world used the same grammar structure, I would considerlearning Chinese, but how then do we type?
+- Probability density function, normal distribution, covariance,Gauss
+- each time you take the derivative of a trigonometric function,it leads the original function by pi/2
+- the real and the imaginary both work together to form theillusion of magnitude and phase
+- The internal resistance really has some impact on the outputvoltage: smaller is better
+- One of the most outstanding advantage of a close-knittedsociety is communication: old generation can transfer knowledgeinto the future. But now in the information age, that's basicallyshit
+- Now that I notice, high-pass filters actually produce leadingoutput, haizz
+- An integral of a triangular wave is a sine wave? Mind=blown,seems like someone need to learn Fourier transform
+- Someone needs to play around with plots, too
+- I wanna know how, I wanna know why. If I can't have that, thenI'd rather not learn it in the first place.
+- Sure knowledge is just about memorization, but if you can proveevery theory you memorized, then you surely only has to memorizeless
+- My DeXi theory: the definitions involve the tokens (those noisythings) and the charging rings. Every time you buy something, youget a token and the  identification of the token will berecorded in the database (including the ID number, type of food,and the order, too). Then on the cook's side, every time they pushout a dish, they will push some corresponding button and the tokenswith the type of food will ring. The order of, well... order can beorganized automatically in the system so that things will befair.
+- Finally, I've found a proof assistant, after so many years ofresearch (not really), I've found it. And I can see that otherpeople have been doing for decades, too. Only real hard work anddiscipline can guide you to the truth
+- Okay, final thoughts on how you should plan on obtainingknowledge: learning the big picture is always better than grindingthrough little things: there's no harm in learning what the machinedoes without knowing what the components do, unless you're tryingto build the machine. If you learn the big picture, not only canyou relate pieces of information much easier, you can even takeadvantage of your curiosity to get things through your skull
+- Gotta find out about that mysterious logic table man
+-  I told ya! I told ya three months ago that writing yourown language will end up helping you exploring others'language
+- If true = false. Then everything is true, and everything isfalse. There's no stopping you from assuming such a thing
+- WOAH! Another way to count in binary: not what I was askingfor
+- Do not be afraid of the time wasted when you mine somepre-conceived information. Because those information are really todigest and won't hog up too much time
+- The brain even puts you into embarrassing situations duringdream to test the normal functioning of your brain: embarrassed =normal. The reason why you even remember some dreams is because thetest was interrupted. Makes me thinks: the human brain have twolevels of functioning: one for the reacting, and one for theprogramming
+- Induction can be proven using the well-ordering rule orwhatever that is
+- Even though it's clear now, I still can't easily believe that n+ 0 = n can't be proven without the axiom of induction
+- Things can either be done or they can't. We can either do is inwhile we're alone or we can't. Either way, I will try my best
+- If you destruct the wrong thing in Coq, your Coq will be gone,that's simply it!
+- goals, systems. yeah, i may need systems, not goals
+
+Thought 18
+
+Author: lackhoa
+
+- You build one thing, and then you implement another. Repeat theprocess and before you know it, we're done! And then you go dosomething else... until the end
+- Hell: Where you can't feel nor hear hear any pain; where youare blessed with eternal bliss
+- I escaped because I saw it beforehand
+- generalization joke
+- Making the opening of the milk bottle small is really a badidea: air pressure will build up and spill milk everywhere
+- The plane is this: learn Coq -> master Coq -> learn DS'sfinal chapter "Algebraic Systems"
+- Don't deny your flaw, just because people haven't seen itdoesn't mean it didn't happen. And just because people know of itdoesn't mean it wouldn't have happened otherwise.
+- Sometimes the truth even depends on a concept, a theorem, thetruth isn't always there. Sounds like incompleteness theorem?
+- set theory is inconsistent? seems like everything is chaotic asheck
+- Another criticism of the "no freedom infringing" system. If Iinfringe somebody's freedom, what happens to me? Turns out nothinghappens because nobody can infringe my freedom so I can't getarrested, I can't be stopped unless there's some dudeoutside of the system to stop me.
+- Then you'll propose another system: "Everybody has freedom todo anything, unless it infringes somebody else's freedom, butunless the freedom you want to infringe, infringes anotherperson's freedom.
+- From contradiction, comes everything else
+- Gödel has a way to sort organize all theorems.
+- I'm at it again with the "freedom" thing. What if I defined my"freedom" as "violating people's freedom"? Is there a way to getout of the system and say "I'm wrong"? I will write a mathematicalproof later
+- introducing the gps tip! it'll... track wherever you are, andit'll give you tips on how to behave in that region
+- Why won't you produce a clone that will... do work for you?Because then,... why would it do work for you if it's exactly likeyou?
+- Don't you know that you're really stupid & can screweverything up in a second? Yeah, now you know.
+- things are getting harder. You can't just rely on geneticsanymore, it's time for hard work to shine
+- Contemplate, Khoa, you need to contemplate at the end of theday
+- Woah, Boolean algebra is dope!
+- Binary search can be used to find the failure point in troubleshooting
+- Map/reduce it's just like performing a recursive operation on alist to reduce it to a single value
+- Don't keep stressing yours yourself out by asking "what if thathappens?". You know what? If it's gonna happen, it will, andthere's nothing you can do to prevent it. Instead, think about whatyou would do. Keep can until the end.
+- change often brings more good than bad, even bad change. sosuck it up and try to smile
+- It can be done, it shall be done, as long as you havestamina
+- let's get back to drawing waves of derivative
+- we exchange pain for memories and knowledge
+- Every truth is a scale from 0 to 1, not a binary value. That'swhy there are infinitely many minds
+- Another freedom dilemma (I really like this, don't I). What ifsomeone take a hostage, yo, what are you gonna do about that? Areyou ready to sacrifice a life to save others? Heck, to confuse thesystem one simply has to say that: "If I ever get caught, I wouldcommit suicide". Now there's no way you can do anything to stop himbecause the book said so, right?
+- No one can capture the ever changing world of dreams
+- there has got to be some ineffeciency somewhere
+- The thing about coq is that you barely has to think. Becauseyou can just try everything out fast enough, you don't even have toenvision the line of thought. In contrast with doing things onpaper, you have to be economical about everything. Well this isnew, but don't get too excited about it
+
+- thing to do after mastering coq: prove the clock numbertheorem
+- my notes are even more entertaining than I thought
+- imagine 2 ponds of goldfish. one has more fish than the other.how would you like to fish? you don't want to fish in the smallone, that's for sure. but you don't want to just fish in the bigone, either because there will come a time where the big pond willhave less fish. that's why you want to fish with accordance to theratio
+- Trace route experiment should be quite fun
+- Theory of connection: (exists node x, for all node y such thatconnected x y) -> for all nodes m and n, connected m n
+- Transcending space and time, behind the door lies where yourheart is.
+- Boolean operation can be viewed as pathways instead of just theplain old truth table
+- My experience so far shows that humans still need to keepreasoning. There's no way to get out of that, yet
+- Carry lookahead adder is just clever: doing things in paralleland all
+- HOW DID THAT YOLO MOVE EVEN WORK? It seemed impossible but whenI cleaned up everything --> The answer appears!
+- Yeah, you CAN run into an infinite loop of darkness within Coq,"symmetry" is an evil concept
+- IMPROVABLE! Because it's wrong, so you're wasting your timeproving something that can't be proven
+- Should you want a dose of discouragement, look at the mirrorand learn the truth
+- the most painful way to pursue your desire is to stop persuingit
+- Never thought lists can be turned to onions. But it doesn'tmatter now
+- I have an opportunity to revive 'onion', but it's kindatough
+- the "tripple break down" existential proper is a promisingidea
+- isn't this like fractal?
+- These two properties mirror each other like fractals
+- Flip it over, then induction
+- Left wing, right wing and the nucleus
+- Focus on the length constraint and evenness, everything makessense now, why he mentions evenness right at the beginning.
+- Yeah, that idea works out, I was trying too hard to generalizeeverything. But breaking things down to even or odd the answer.It's not perfection, but it's GOOD! Walking around in your housereally helps
+- So what does this mean? It means that if you can clear out themisconception in your brain, you can win hard
+- It's not that people are getting more stupid, it's just thatsmart people are getting smarter
+- There are many things to do, many things to enjoy. One youfocus on only one thing, your life is over
+- Proof of work in cryptocurrency is interesting. It also hassome good real life application, too
+- Joy comes from the stupid games of expectation and overcomeit.
+- I felt the "extractor variable" of lambda calculusl'spredecessor function in my BONE!
+- There's a difference between doing something you have alreadydone and trying to do what you haven't done
+- Exercises are not challenges, they're testing tools to see whatyou've missed
+- One limit of the brain is that it cannot experience thedifference between one less and one more of some heap of smallthings
+- Don't shake your head while riding: you'll lose your sense ofbalance
+- Tilt your body accordingly to your footstep while balancing tomake sure you don't get locked
+- Infix to postfix? Sounds simpler than I thought
+- The feedback loop keeps the data alive
+- Bay's theorem: pp a b = (p a * pp b a) / p b
+    - ppa b means probability of a given evidence b
+    - p a is the prior knowledge (before given the evidence)
+    - p b a is the accuracy of the evidence
+    - p b is the frequency of the evidence
+- how to show that all ravens are black: pp black raven = 100%= (p black * pp raven black) / p raven
+    - the number of black things that are ravens should be equal tothe number of ravens
+    - jesus, even this is getting paradoxical: we need the number ofblack things to prove all ravens are black!
+    - i ve seen 5000 things, 10% of which are black, and 1 blackraven:  (10% * 0.2%) / 0.02%
+- so... maybe i don't give a damn about Bay and data science. whynot just find out about everything?
+- Being good is simple, being consistently good is hard
+- Don't agree too easily, man.
+- Never be rushed or forced to do something. Seriously, you'vebeen tricked way to many times. Now you'll truly be punished,buddy
+- I guess I can never make a friend, then. Fine, just get rid ofall the hopes and keep working, until you die, that is
+- StarCraft tournament is kind of like heap sort, isn't it? Thebrackets are random, but the strongest player risers to thetop
+- The fundamental problem is that I always want everything to gosmoothly and perfectly. That's why I came tolerate hickups andbummer that you must expect to encounter
+- No one cares for anyone else for free
+- Dreaming: I was playing a game with my brother. I thought Icould smash him. But I got smashed instead. Standing stilllistening to my goddamn teacher's criticizing voice, I didn't haveany other choice but keep trying in vain to win. Finally my brotherquit playing and lay down listening to a Kanade. I was sofrustrated, but decided to throw the ball down and lay down besidehim. It ends with the song playing
+- What's the importance of introduction in Coq? What does it meanto prove a forall property?
+- Languages and accept states can be useful in describing what Icall "a proof sequence"
+- A set doesn't just mean "a bunch of something". It can alsomean "nothingness" because of the existence of the empty set
+- No more perfection medal! It's just a luck-based thing, and itdoesn't promote anything self-improvement
+- An infinite loop can prove False? Crazy!
+- The chess board can work if you make more winning chance forthe host: if you can corner the opponent, you win
+    - o o o
+    - o o o
+    - 7 oo 9x
+
+              even: remove same
+              odd: remove other
+
+- Would be much simpler to describe that with finite stateautomaton (and I thought they were clunky and abstract anduseless). Now I don't need to write down anything, because themachine DOESN'T HAVE MEMORY
+- In J-K flip-flop, the output can come back and change theinput, that's probably what creates some hairy situation
+- NEVER associate knowledge with real-life or you'll be toostressed out to learn anything
+- induction is like saying: how can you make the next piece giventhe previous piece?
+- less than table
+- a b c d e
+- a 0 0 0 0 0
+- b 1 0 1 1 0
+- c 1 0 0 1 0
+- d 1 0 0 0 0
+- e 1 1 1 1 0
+
+e b c d a
+
+there are n^2 cells
+anti-reflexivity : erase n cells
+anti-symmetry : erase half the remaining number of cells
+transitivity : erase... how many?
+
+it's a really retarded way to waste memory. But I'm trying tofind the lower bound for the number of comparisons in a sortingprogram. We DO have the lower bound for swap instructions
+
+- Another thing is: how exactly do we extract all the necessaryproperty of the relation? If we can do that, then it's trivial toprove the difficulty of the RSA algorithm
+- From the number of leaves to the depth of the binary tree. Thedecision tree is simply too good
+
+- A pushdown automata is basically a finite automata withunlimited stack memory
+- To make a table for a A * B * C -> X * Y  function.Make a table with D(A) * D(B)* D(C) cells. That's why the make thesymbol for products similar for both sets and numbers
+- State diagrams are not just for finite state automaton
+- Everything is a journey of picking gold from piles of rocks.Don't give up just yet, you don't know everything there is toknow
+- The ultimate way to obtain knowledge is trying to solve theproblem people were solving, trying to envision the next move andwondering what's next
+- Suppose we live in a world where there's only pain andsuffering and dying is the only way out, I would still live to finda way out
+- The key to remain calm is to be selfless, try to observe thingsfrom another perspective other than yourself
+- all those proofs in computing machinery are about reducingmachines to a normal form. It's way of shifting the attentiontowards the goal rather than the chaotic beginning
+- I just realized that constructors of the same indictive typecan actually have the same type. This is just a fucking deepcorrespondence
+- A machine recognizes a language is that languages containsevery single strings that the machine accepts and nothingelse
+- The transformation from nondeterministic to deterministicmachines are interesting enough
+- Don't try to sound smart like a cunt
+- Note: the reflection technique is in the IndProp.v file,don't forget it! Reflect carry over both the property and theboolean, what a beautiful thing it is!
+- Yeah, you can definitely introduce new objects to a coq proof.I don't know why I thought that was impossible...
+- The notion that looking at the keyboard while typing slows youdown is dead wrong. Maybe it's useful for beginners, but at ahigher level that is just wrong
+- Don't spend too much time pondering about the worst thing thatcan happen. Take a step forward and act according to the plan.
+- Church numeral is the best way to describe number, really. Youcan pick the succeed function as anything you like, includingfinger counting
+- For propositions P on objects that always split up, say x.State your induction like this: for all x, P holds for x <= k,and induction on k. When you split x up, voila! The inductionhypothesis rules
+- I'm probably more interested in cryptography
+- Sometimes you can solve a problem by simply ignoring somedetails
+- The pumping lemma for regular languages I proved in coq usedregular expressions. The one in the book used finite automata
+- the "relaxing and repeating" and "trying to figure it outyourself" seems to be working really well
+- "Costly signalling" is the reason why people on the Internetare saying such idiotic things. They don't have to pay anythingprice for lying, and so they lie and so we have to adapt oursignalizing systems to deal with them
+- The girl with the knife with the handle with a scabbard -pumping lemma motherfucker. No I didn't try to hard I just woke upand thought of it
+- Music, too, can be pumped. The example is in Tom and Jerry.Think about it, we're trying to explain the nature of computation,but ended up having a way to represent a cartoon joke! All thewhile not having to do anything fancy
+- The way I am doing long math proofs is reducing their size bycompression. But, lossless compression has a limit. So don't hopeto represent everything elegantly or understand everything as awhole thoroughly.
+- Machines don't need to know arithmetic. Codes don't need toexplain themselves, and humans don't need to know what they'redoing. But everything just works
+- INnoVation understands the gits of it all: TvT is mostly aboutluck! That explains his attitude over everything
+- Stack based memory I guess isn't such a good idea afterall...
+- The "universe inconsistency" rule in Coq is there to preventself-calling programs in lambda calculus
+- While I'm listening to music, there's some kind of illusiongoing on that "I know the lyrics before it is sung". But of course,I can't even understand what they're singing, much less memorizethe lyrics. Does that explain the illusion of knowledge, that thereare things that you know "instinctively" even though that's justinformation you obtained from mindless evolution and training?
+- Finally learned how to tie the wire on the flag pole
+- From challenges and hardship comes enlightenment
+- Sometimes what you want is not what you need
+- All groups of horses have the same color theorem: the inductioncase can't be applied on the group with two horses
+- By using multiple tapes, we can represent input and output inTuring machine
+- Lexicographically next string is how we call thehydra string
+- For a tree to be finite it must have finite depth and finitebreadth
+- The only way to prove that two sets are equal is by provingthat they're each other's subset
+- Concatenating any set to the empty set yields the emptyset
+- The star operation on regular expression corresponds to thearrow pointing from a state to itself in DFA. We can choose to notrepeat it and go to another viable state
+- If grammar G were in Chomsky normal form, any derivation of astring of length n would need 2n - 1 steps. We can find this numberby observing that f(1) = 1 and f(n) = f(n - 1) + 2. Then we get tothe concrete formula by telescoping : "f(n) - 1 = f(n - 1) +1"
+- The tendency to concern about algorithm efficiency can end upbeing a deterrent force to theoretical computation
+- There's no such concrete like between competence with andwithout comprehension. It's about how much comprehension thereis
+- Condition P is said to be "weaker or as weak" than condition Qiff Q -> P, and condition Q is stronger or as strong. It can beviewed as if "P <= Q", just like natural number in some sense.It's saying "Q includes P" or "Q is built by adding P and somethingelse". In that sense, True is the weakest condition, becauseeverything implies True
+- how can a 3D object be encoded in 2D?
+- Fractal sky, it's beautiful
+- How to compute factorial by alternating the y combinator: makea new version of loop l, called
+
+l-1 = ∆gkx. g (k - 1) (x g (k - 1) x)
+
+- Use that to make the general function
+
+rec-1 = ∆fn. f n (l-1 f nl-1)
+
+- See what it's doing? It creates a smaller version of itself,just like what we do in a normal programming language (unlike thecleverer version in wiki). Then use that along with the functionmult* (which returns 1 when one of the arguments is 0). That'sit!
+
+fac n = rec-1 mult* n
+
+- I've gotta admit, that was too damn complicated to be writtenon a daily basis. Plus the symmetry is ruined in l-1,but the one in wiki doesn't have symmetry, either
+- "Intelligent design" is just a design based on experience,which in turn is based on evolution
+- Replicating yourself is not enough, you must also replicate thereplication mechanism itself
+- Quit thinking that you have to create the algorithm to proveall of mathematics. You can't do that, you don't know how to, andyou can still learn more theory.
+- Even if you have proven something in the past, it doesn't meanthat you will know how to in the future. So those problems are justchallenges, not really secret doors that you can unlock. There'snothing holy about doing math.
+- The annoying thing about human thoughts is that they overlapsso much. There is no systematic way to assign numbers to thoughts(or is there?).
+- Aqua haired bitch, wpm 180, double personality, iincho/sweetvoice
+- "Touch" is a really interesting command
+- Sequential logic's too complicated to be fully tested: everysingle nooks and crannies must be counted in the state. Truthtables fails and so does flow tables. Sure they're helpful tools tounderstand how the world works, they misrepresent realitycompletely. I think coming up with a theory is a physicists job,not mine. And sure, only one variable can change at a time, but ifthat one variable feeds two or more gates them we're stillfucked
+- Sometimes it is necessary to just dump everything you havelearnt to the trash can, that way you will not have to deal withassumption
+- The reason why online apps like Googld Docs use autosave isbecause of the unstable Internet connection
+- How you write If C Then A Else B in lambda calculus: C AB; How you write that in "logic gate" logicÂ CA + C'B. Now that I think about it, theexpression X * ... + X' * ... describes the behavior we wantbecause only one branch can be True at a time. SO to wrap it up: Weneed two AND gate and one OR gate
+- How binary search is used in the military: to testing soldiersfor syphilis, the U.S. Army took a blood sample of all soldiers,mix them up and tested for antibodies. If none were found, everyoneis healthy. If some were found, you split the soldiers in twogroups and then repeated the process.
+- the Peano arithmetic (with s and 0) is unary counting. binarycounting is more efficient than that (log 2). however, don'tmistake those for number systems, at least be aware that they'redifferent
+- Go Compiler: How does it know about loop initialization?Exactly how a graph cycle detector does it!
+- knowledge isn't about information. it's also about the timingand how exactly you got it. you don't memorize port numbers, youGET FAMILIAR with port numbers
+- Terminal emulators are programs which act like a CLI butthey're actually running on a GUI
+- if a language is unrecognizable (by a Turing machine), does it meanit is empty? Yeah, if the language is unrecognizable then there isno enumerator that prints it. Which means it is empty? However,Some languages are unrecognizable. I disregarded the fact the theset of all languages are UNCOUNTABLE! There are languages that haveinfinitely many strings
+- Enumerators print strings, infinitely many strings, making aninfinite language. But only one language, and there is only acountable set of enumerators
+- You want to print the set of infinite binary sequences? Trythat! You can't even finish one before you do the second.
+- Every problem has a solution, it's either on or it is off
+- The finite state nature prevents the enumerator from generatingsome tables. There are characteristics binary sequences that areinfinitely complex
+- You steal from Audible, Audible steal from you: that's whathappens when you fucking do wrong things. Don't you ever FUCKINGtry that again!
+- You open your eyes from a long sleep and every changes: thewashing hours, the week number... Something must have fuckingchanged! Could be my stupid brain, but how do I know?
+- The concept of a bus goes beyond a typical type of design. Wecan, for example, design a pseudo bus line from in our circuit tocentralize signal communication
+- XOR is a way to construct conditional inverter
+- Troubleshooting is not about figuring what is "wrong", it'sjust like learning about a machine like any other, a faulty machineis still a machine.
+- Even counter and odd counter: you make a counter whichfunctions normally, but then you add a "odd/even" bit at the end(with odd being 1 and even being 0)
+- Why does that work? Because adding a zero at the end of anumber is like doubling the number, adding the 1 at the end is likedoubling the number and add 1 to it. Kind of like in decimal how weadd a 0 at the end and suddenly the number is ten fold.
+- VLAN vs subnetting: the thing about switches is that one switchrepresents one network. When you connect one switch to a router,that router assigns one network address to that port
+- 1 VLAN = 1 subnet
+
+Thought 30
+
+- School is bullshit, BBO is bullshit, LaTex is bullshit,everything is bullshit. But be happy with what you've got
+- MACA (multiple access with collision avoidance): two channelsthat wish to talk send out signals to clear noise around them
+- We can easily transform any finite state machine into a seriesof D flip flop, n flip flop = 2^n states. Note that you need somecombinational logic for the output. And the tricky part is to makethe state represent the output directly
+- We can show down any clock signal by half by feeding it into atoggling edge triggered flip flop
+- The halting problem is recognizable but undecidable, which iswhy loops are unrecognizable
+- Wait, if we don't allow Excluded Middle, doesn't that mean thehalting problem can't be proven to be impossible?
+- Now I understand how decimal to binary conversion works, if youcan divide by 2 then put 0 there, if not then put 1 there
+- explaining deadlock: in concurrency, we may want multiplethread to hold on to the data that it is using, and release it whenit is done with the data. If some thread finds that a piece of datais being used, it goes to sleep and comes back again. Now suppposedthe thread 1 that is locking X wants Y, and the thread 2 that islocking Y wants X. Both of them won't be able to finish their jobif they don't have the piece of data, so both of them goes tosleep, forever... One bad solution is to say... if you don't havethe data, pause your job and release the data that you're holdingon to, but that is ridiculous because... you just can't do that.The real solution is to order the data: say that X < Y. And athread holding a smaller data may only try to acquire a biggerdata. That way, only one of the thread 1 or 2 can try to access theonly thread's property
+- One problem with this,... so what if a thread says: "I'm notinterested in this piece of data anymore, let's hand it to someoneelse!" Then clearly you can't release the data in the middlebecause you may need it again and... deadlock baby! One more rule:you can only release data in reverse order, that way when you needit again you are sure that you're only holding on to smallerdata
+- So what is Task: it is a construct which encapsulates a certainbackground job. The caller of the bg job will never be blockedunless we explicitly says so by await(). You can also say that atask is a promise
+- Async methods are non-blocking, which means that if they mustawait for some other Task, they return control to the caller
+- Asynchronous programming is differenet from multithreading:those are just... different concepts. You certainly can useasynchronous with multithreading, but not necessarily so
+- Discipline wakes you up in the morning; while passion keeps youup at night
+- You should stop thinking of machines as Turing machine, insteadthink of them as state machines. One configuration leads toanother: Oh yes, configuration! You can always predict theconfiguration of every machine on every "input" (initialstate)
+- await can be used in things that don't return task
+- You don't need to block the thread every time you want to makeI/O call
+- View "Subnet + Quine": I did this because I wanted to provethat you don't need to subnet ordered entries. But then I found outan an algorithm that is infinitely efficient given the sorted entrylist. So that is a really good lesson learned
+- Ignore all the bullshit and move on, don't let them get toyou
+- how to generate an arbitrarily long string over the alphabetsigma with a regular expression: (sigma)*. This isequivalent to a state machine that simply accepts everything
+- With law of excluded middle, we can prove that if (M ->R) and (~M -> ~R), we have (M <-> R).This is kind of important to remember, guys! Simple logicaldeduction like these play a super important role in mechanicalproof
+- If a language is decidable then its complement is alsodecidable (by inverting the output of its decider)
+- See [Rice's theorem]: the function (x => M x) is identicalin functionaliity to the function M. But their implementation isdifferenet.
+- Telnet magic is pretty cool, wish I knew something more to dowith it though
+- See [Thought process: Designing the Switch Debouncer]
+- https://learn.sparkfun.com/tutorials/switch-basics/poles-and-throws-open-and-closed
+- Networking: The lower-leveled PDU header always need toidentify what the type of the upper-leveled payload it carries is.So that it can pass the payload to the appropriate upperprotocol
+- Learn some more about formal math definition in Coq: Ensemblesare things that take an object and return a proposition. WTF doesthat have to do with sets? Oh well, sets are just Ensembles, how dothose work? Well, first of all we have an In thing that takes an ensemble and anobject then return the ensemble applied to the object. Union andIntersection can be described as Intersection that two ensemblesand then return a function which take an object x and return an Inproperty that reflects how we want that object to be associatedwith the ensembles. WTF am I talking about? Well, just take a lookat the standard library and see for yourself.
+- Introducing modular working session: identify what you need to do and then do it, don't keep dragging the session out based on things like time and stamina or you'll end up hurting yourself.
+- There is a lot of time to spare, so don't try to work too hard or you'll burn and it'll be not fun
+
+Thought 31
+
+- Consensus term: sure it's can eliminate glitches incombinational circuit, but the feedback input adds some moresalt
+- Nope! Still glitches! Well actually, that "glitch" can just bea normal delay, not a frantic phase change
+- Remember: F(t) <> F(t + d) does not mean that the circuithas a glitch. The glitch occurs only when F(0) <> F(t)<> F(t + d)
+- Conclusion: the error I had with my DFF is the glitch whichcauses the system to go through 3 states simultaneously, THE MIDDLESTATE IS THE CULPRIT!
+- Mixing colors on paint are taking average rgb value (forexample red (#FF0000) + blue(#0000FF) = magenta (#800080).Saturation is increasing rgb value (for example the previousmagenta is not as vibrant as the real magenta (#FF00FF) because...you can't produce that with rgb scheme
+- There are different forms of mixing colors, as well. the thingthey call "subtractive color mixing" is actually like adding thetwo values together and not splitting it in half, this is how lightbehaves. The "substractive" has a physical meaning when yellowsubstance absorbs everything except yellow
+- The address space limit of a process is directly implemented inprocessor register and cannot be bypassed
+- Likewise, the translation between virtual memory and real RAMis done by hardware
+- The future does NOT lie in solely in systematic work. Onlylistening to Eli talking makes me want to confront the "hard"problem, not reading books
+- View <Equivalent States in DFA>
+- Giving names to objects is incredibly important for real lifetasks
+- Injective means no cramping, surjective means noredundancy
+- The act of counting is just mapping objects to fingers
+- You must always specify the domain of a map, the untyped lambdacalculus doesn't work! A map that has a object domain can't accepta map and likewise
+- IPv6 compression causes the field number to be ambiguous,that's why you can only use it once because the remaining fieldscan help deduce the missing part
+- View <Binary counter power consumption>
+- What does Cyclic Redundancy Checkhave to do with LinearFeedback Shift Register?
+- x_axis = my_number & 0x00FF; Ã‚Â Ã‚Â /* Extract theleast-significant byte. */
+- y_axis = (my_number & 0xFF00) >> 8; Ã‚Â Ã‚Â /*Extract the most-significant byte. */
+- I'm just stealing ideas from Maxfield for now, fortunately thatended though... phew!
+- To control the shift registers properly as storage we canprovide our own manual clock signal, which will be immediately fireright after we request something
+- View <EQcfg>
+- View <The countability of the set of all Turingmachines>, it's in the making
+- We can assign a unique number to every pair of countable setsusing this scheme: assign odd-ordered prime numbers to the elementsof the first set (e.g. 3, 7, 13, 19...); then assign even-orderedprime numbers to the elements of the second set (e.g. 2, 5, 11,17...). Every pair is assigned the product of the two prime numbersof its elements. For example, given the pair 35, you can deducethat it includes the second element of the first set and the secondelement of the second set. Isn't that pretty cool? Btw, I'mout!
+- Use command 'sagemath' instead of 'sage' for the command lineplotting
+- Result of randomness check: view <C random function>
+- View <matrix sketch>
+- if we invert every single bit of a binary counting dequence; wewill end up counting dow
+- What will Ben do next: He will control the circuit using theclock for the timing and instruction from the instruction set, forexample if we want to get the data whose address is stored inregister A and store it to register B we will translate as follow:register A OUT -> RAM OUT -> Register B IN (those steps aresequentially done as instructed by the program counter and theclock?)
+- These are what I came up with after eating too much and almost vomited half of what I had eaten:
+    - Ensembles: look at their type (Type -> Prop). They embodies the common property of their elements. That's why when we say (In <Ensemble> <Element>), we only need to apply <Ensemble> to <Element>. Something can only be in an ensemble if and only if the property embodied in that ensemble holds for that thing
+    - Machine learning: because finding out the activation property of the output layer is just like multiplying the activation matrix to the input layer's activation vector; which is exactly like applying a linear transformation to the input vector to get the output vector
+    - How can one Turing machine X simulate infinitely many other Turing machines M even though its grammar is finite? First of all, M must go through some encoding to be read by x; second of all, the input of M must also go through the encoding to be read by x. If we set up some common Unicode encoding and proper delimiting we can recognize everything (note that one symbol CAN stretch out over many tape slots)
+- Lesson learned: you CAN think even in severe pain
+
+Thought 32
+
+- There is hardly any functions which can be broken down to nonrecursive functions
+- The number of functions from A to B is equal to the totalnumber pairs (A, B), why? Turned out there is no isomorphism in theway that is interesting. The number of functions from A to B isjust formed by making A choices to connect an A element to B(A*A*B) and then divide by A since we're grouping A connections toone functions (A*B). The number of pairs from A to B is calculatedby making A choices and then B choices (A*B). You could say thereis an isomorphism but it's not interesting
+- Simplify logic using binary tree: you can't really do thatoptically because there are terms that can be grouped but are noton adjacent (note that it can be explained that a tree arrange isjust 1D, and a Karnaugh map is 2D)
+- The predicate of the set that create Russell's paradox (x in x)cannot be created in Type theory. There is a distinction between aset (set of things) and a class (set of sets). We can never saythat a set includes itself. For example, if a set x of type (nat-> prop) includes itself; then its type will then be (nat ->prop -> prop)
+- Only when trying to create the Russell paradox can IlearnÂ how people resolve it!
+- Note that a set CAN contain another set, it's just that a setcan NEVER contain itself
+- Unicode provide a code space which then includes code pointswith a one to one relationship to every symbols people can fuckingthink of. Those code points can then be encoded by a lower layer to1s and 0s. UTF-8 is the most popular with ASCII compatibility. Torefer to a Unicode point, say U+<hex value>. Thanks is kindalike 0b or 0x. Why am I interested in this stuff anyway?
+- The program is generally put at the beginning of the addressspace, actually. The data and the stack each have their ownseparate logical space. That's how the program counter incrementsthe steps
+- How to beat the "blue eyes lvl 74" in SAO Memory Degrag: sinceits movement is so hard to predict and its range is too wide, theonly way to move is to stay above or below it. Be careful not tostand too near or your escape path will be blocked. Do not everstop moving if you're near the boss, you must have enough initialacceleration to hope to escape its attack! Use sword for normalfight and switch out with Sinon when have a chance to counterattack. When to counter? When the boss suddenly jumps back and thenrun towards you, remember: Jump back AND run towards
+    - For Sword user: basically stay above or below it and attack itright after its move set. Then just keep running up and down. Ifyou think you're in the Purple zone and that you're fucked, don'tpanic and block the attack, that's better than trying desperatelyto counter
+    - For Sinon: stay FAR outside of its range, you are at a hugedisadvantage since you have to be vertically aligned with the bossto hit it, so hit and run won't work. You have to choose a placewhere you are super far away and shoot from there
+- That SAO game was so great, it challenged me mentally. Strategyand mechanism is the key to victory. I take back what I said aboutgames completely
+- view <https://www.youtube.com/watch?v=6u8gAV7om_g>,a moth flies into a candle because it doesn't know that the candleis not at optical infinity
+- even in games it is the same: you play before you read themanual
+- What is system call really: so basically for every instructionscycle we have to check for any events (interrupt). If there aresome, we run the code responsible for that event -> it'll sortthings out based on the I/O waiting list. If there is none, wecontinue normally with our fetch. Windows had its own system callAPI that apps can call and say shit like... "Hey! Tell me when thehappens" to the OS's event handler or say "I want this file, butplease don't block me while I'm waiting!"
+- How does the parties of a stream cipher get the common randomstring to XOR? They use a key to generate strings and change thekey each time using COUNTING (which is why if you reset thecounting you're as good as gone). They key might be secure but themessage is not, lol
+- How to name a signal that does not mean (enabled/disabled)?Just use "X/NOT(Y)": meaning "X when the signal is high" and"NOT(Y) when the signal is high (or Y when the signal is low)"
+- Is there really a way to minimizing logic function with onlyminterm number
+
+The XOR function obscures information and restore it like so(x is the message, k is the key):
+
+- x y x XOR k x XOR k XOR k
+- 0 0 0         0
+- 0 1 1         0
+- 1 0 1         1
+- 1 1 0         1
+
+The cooler thing is: every 2 columns could be the inputs andthe other one could be the output. every 2 columns could be theinputs and the other one could be the output. But wait! There'smore: you can invert any two columns and the result will still besame
+
+Where as the AND and the OR function destroy the messagecompletely. And do even expose the bits when the AND is 1 and theOR is 0
+
+- Before the server goes down, it even cares to broadcast a"shutdown" signal to its client, what a good guy!
+- One of the things that happened today was fucking amazing: oneof the basic circuit does not work, and I had to troubleshoot:everything was connected correctly. So what else could be wrong?Fucking amplitude value of the "clock" signal. That's what happenswhen you work on virtual circuit too much and neglects reality. Weassume too much about reality that we don't even remember that weare assuming
+- x XOR y = NOT(x) XOR NOT(y)
+- view <Digital Electronics lab full of passion>
+- I don't know if I've said it: XOR provides inverter withcondition
+- Switch terminology: Terminal ~ Throw, Armature ~ Pole (becareful, those are not the same thing). For example, a Single PoleDouble Throw has 1 Armature and 2 Terminals. Also there are twokinds of terminals: normally open (which are normally notconnected) and normally closed (which defaults to connected). Nowthe mental image should be clear. A switch which you normally thinkof is actually a single pole, and that pole is made of 1/2terminals and 1 armature). The number of Pole should be equal tothe number of Armature and the number of Terminal should be equalto the number of Throw. Note that there is nothing such as input oroutput in the context of switches, they're just here to connect thecircuit and you can use them however you want
+
+
+Though 33
+
+Author: lackhoa
+
+- Devise an algorithm for sub-2n counter: take the largestdifferent bit for example: 200 (1100 1000) and 230 (1110 0110)differs at the third most significant bit. That means we need a 5bit counter to do the job. set '11' as the default first two bits.Then count the last five. This method of choosing an offset ispretty handy when you must count through large numbers but everyset of numbers have fixed small sizes (for example programcounters)
+- Johnson counter = Twisted ring counter
+- The Johnson counter does not toggle a lot because it uses afuck ton of flip-flops
+- New typing technique: if you hit 'h' and 'y' at the same time,you will get and always will get 'hy' on this keyboard. Use thejoint in your finger to type immediately the key below the keyyou're typing or trying to type next
+- Why Telnet's packet spoofing displays the each commandcharacter twice? Because the terminal emulator must get thecharacters back to the loopback interface to display on theclient's own window and send it to the server at the same time(Just my speculation)
+- Johnson counter = Möbius counter since the end is inverted(twisted, I should say)
+- Ring counter can be used in a selector to choose input
+- BenCom: each step is called a micro-instruction
+- How did Ben build the step selector for his computer: He didn'tneed a selector, he only needed a fancy display to indicate thesteps! Btw, the "selector" I was talking about is called a"decoder/demultiplexer", it's named like that because the turn 3lines into 8 lines
+- Want to check where you were at a specific time so that youknow how much time elapsed? Use Google Time line
+- Digital Logic does NOT run on voltage, it runs on current. Low,High and No-Voltage corresponds to current going Left, Right andNo-Current. And LED can tell in which direction the current isgoing
+- Here is someething incredible that I did not notice until now:one day I came across a webpage that teaches me how to drag withthe touchpad: "Double tap, hold and then drag". I thought: "Wow,that is incredible, now I know a better alternative to drag usingthe pad". Surprising, only after I tried really hard to redo thesteps did I realized I had already known how to do it. Isn't itinsane how you do things without even knowing what the exact stepsare. Which brings me to the next thought: we do know that we haveto breathe, but we don't know HOW to breathe. I assume that thebrain is modular: our unconscious's behavior does not interferewith our consciousness
+- the fourth dimension can still be represented using a changinggraph of 3D and time
+- Oh yeah, I forgot to say that Ring counter can be used to runtext around the edge of the screen (like pacman)
+- Difficult! programming is!
+- Types are just Sets containing constructor expressions.
+- Look at this code here:
+    - Inductive prod (X Y: Type) : Type :=
+    - | pair: X -> Y -> prod X Y
+- What does this mean? It means that prod is a function of twotypes which returns another type (the Cartesian product of thosetypes). What is pair? It is one of the elements of the set prod,which is also a constructor of the type prod.
+- A polymorphic type such as (list X) is called a dependent type.Since a type corresponds to a proposition, we can view dependenttypes as predicates (propositions with forall and exists). Thereseems to be nothing more to the word polymorphism aside its use incomputer science
+- the logical connective implication (->) has twocorresponding inference rule: introduction (how to derive theconnective: if we have A then we have B, then we conclude that A-> B) and elimination (how to USE it: if we have A -> B andwe have A, we can conclude that we have B)
+- Beware that there is a distinction between what we prove(proposition) and the statement that a proposition holds/does nothold (assertion/denial). In Coq, we can see that a proposition isjust a type, and a provable proposition is an object with thattype
+- Do not concern yourself too much with petty terminology, it's the knowledge that matters most
+- it is almost shocking to see someone posting code tutorials on Youtube with such a bad structural understanding of data. Apparently to represent a block of board game you need an array of things ("dead/alive", the rectangle with points in it, "die"(?) and neighbors). Wtf is that? How is the geometrical representation of the cell necessarily bundled with the its status? I hope I don't have to work with that guy in real life, cuz that would suck, big time
+- At the end of the day, it does not matter whether you are in a situation you like to be in or not, or whether or not you are around people you want to be around, or even if you are doing the thing you like to be doing. It is about learning and getting stronger every day you live, to me that's the most important
+- A proof is the evidence of a judgement ('the' or 'a'?)
+- What has been done can be done again
+- Observe the variable 'C' in the elimination rule of the disjunction connective and existential quantifier (Gentzen's Natural Deduction), why aren't they in the conjunction connective and universial quantifier's elimination rule? What does it mean 'to use disjunction and existential'? Observe that the use of disjunction and existential, in a sense, stems from conjunction and universial quantifier. If something is true as long as A or B is true, then it is true when A \/ is true; likewise, if C is true when A(x) is true for all x, then as long as there is an a for which A(a) is true, C is true
+- Truth is, I invented the twisted ring counter myself without even realizing it (in my attempt to make an up/down Gray code counter)
+- The thing about the ring counter is that it decodes itself (turning a binry code into a unary code). However, flip-flops are still a lot more expensive so...
+- This is a rant about phase
+
+0     0     0
+1     0     0
+1     1     0
+1     1     1
+0     1     1
+0     0     1
+
+- Observe that this is a Johnson sequence, each flip-flop generates a square wave that is 1/2n * 360 out of phase with the one right next to it (n being the number of flip-flops). You know why that is? All three flip-flops constitutes a 3-phase square wave, if the phase of the first one is zero degree, the phase of the second one is 1/2n * 360 degree, the phase of the second one should be 2/2n * 360 degree. According to this analogy, all three of them will make up 360 degree (fuck me I don't know what the terminology is)
+- remember, inverting a counter will slow it down (speed it up?) by 180 degree
+- So finalizing my thoughts on ring: ring counter can be used to build clocks, and mobius counter can be used as a 3 phase power supply (that is mechanical thing, though)
+- True Dedication: it's a combination of passion and responsibility
+- Trivial math: (a^n)^m = a^(n*m). That's it for the day! No regret!
+- You can actually finish a huge amount of work in a surprising short amount of time if you don't fucking delay shit all the time
+- By the way, philosophy is not a joke, as long as you define the correct terminology
+- why is Heathcliff op? No he is not, I just found that it took an eternity to bring him to yellow health and then some. He has no guaranteed parriable movement pattern (except for the response to your full set combo from behind, but even then he sometimes pauses or Smite your face like an asshole). And don't get me started on the "fast thrust
+" he does that you can't even see coming. Even the final skeleton scarab you fight has a parry pattern to it when it approaches you head-on
+
+Thought 34
+
+Author: lackhoa
+
+- How to calculate the bit length of a transmission link: The bit length is the amount of information present on a link when it is full. First, imagine some a Transmitter transmitting at bit rate (R bps). How much time does it take until the first bit gets to the other side? We can calculate that using (t = d/V) (d being distance and V being the propagation time). Now that the link is full and during that time Transmitter also transmitted R * t bits onto the medium, thus we know the bit length b = R *(d/V)
+- Sliding-window is just normal TCP flow control, nothing special here. The main idea is that you want to cut the transmission to smaller frames, but you don't want to limit acknowledgement to just one frame at a time. You also don't want to suffocate the receiver hence you need "window". The integration of sending data and acknowledgement is called "piggybacking"
+- Remember, interrupt requests can come from either software or hardware
+- Socket is not a thing in mind of networking architects, it is a layer of abstraction based on UNIX's Berkeley Sockets Interface to help programmers
+- Busy Beaver: S(n) is the maximum shifts of the set of all n-card stoppers. If we can compute that function, then we automatically know when a machine that is supposed to end should have ended. But since that function is larger the busy beaver function for the same n, which then out-grows every computable function, it is non-computable.
+- Notice the term out-grow (notation: >-). Which means that a function will eventually be larger than another one when the paramaters are large enough
+- In a graph, if there's an alternative route from one point to another, then there's a closed loop. Tree is a sub-category of graph: they have no closed loop
+- In modulo 2 arithmetic there is no distinction between addition and subtraction, hence the other of numbers can only be determined by the number of bits. Also subtraction and division are commutative
+- A polynomial M(x) = x^5 + x^2 + 1 can be expressed by a dummy variable x and a bit pattern M = 100101 representing the coefficients
+- Linear feedback shift registers versus modulo 2 division: the shifting part is analogous to shifting along the dividend when we do divisions, when the most significant bit is 1, we flip the next read according to a pattern is analogous to saying "hey this part here we should put a "1" in the quotient, subtracting the dividend by the divisor (which is XORing like I said) but we don't do the quotient part and proceed to subtract right at the start.
+- Cyclic Redundancy Check: Now let us formalize the division process (to be clear, the remainder finding process): the remainder will be eventually stored in the feedback register, which can be imagined as a "window" sliding over the dividend as we goes on with the process. The remainder has n bits. Using the "Internal input lowercase -> Internal output uppercase" notation: the content of the flip-flops are as follow: C_k = c_k-1 XOR (P_k-1 AND C_n-1) (except C_0 = input) (P is the divisor that we agreed on initially). Forgot to mention, the length of the resulting remainder does not contain the most significant bit. The question can be: For how many steps should we repeat? The answer: How the fuck should I know?
+- No matter what you do, you MUST spend some time thinking at the end of the day before you go to sleep, you will destroy the next day
+-   Nice Notion: How do we denote that "X is the smallest number such that f(X) = 0":
+    - X = (μx) [f(x) = 0]
+- Busy Beaver: If we knew how many entries there are for a category, then by scanning the number of maximum shifts it take, we can deduce the largest number of shifts it takes for machines that will halt to halt. Here is the detailed procedure
+    - We have a pool of machines: M
+    - We need to figure out S, the maximum number of shifts it will take for a machine that will halt to halt, usually it's impossible to calculate, but...
+    - We have the number of valid entries (of machines that will halt) for some reason: N
+    - Action! Initialize a list "good". For i = 0 to infinity do:
+        - for k = 0 to D(M) - len(good) do:
+            - if M_k halts after under or equal to i moves, add it to the "good" list
+        - If the "good" list has length < N, continue with the loop. Else, return i as S
+    - note that the length of "good" list can't exceed N since... it'll be paradoxical if there are machines that halt but aren't listed as valid entries
+- So how does constructive mathematics help us out of this Beaver BS? Well, the objective of the problem itself is to find the largest element of a finite set, which we assume to exist. However, we do not assume so... wait a minute, there's a part 2 to this
+- Good! I'm getting better at controlling my urge to resist the "frog dilemma".
+- Love this moment when you know nothing, let it motivate you instead of striking you down
+- It is truly the nature of human to exhaust every last bit of free beer they can get
+- I can somewhat understand why the schematics of SN74LS138 demultiplexer doesn't include any IEEE symbols, they confuse the hell out of people
+- Muscular complementary system: do you realize that when you contract your fingers, the top part doesn't do anything while the bottom part contracts, and when you open your hands, the top part contracts and the bottom part relaxes?
+- Muscles generate excessive heat, which is then propagated through your entire body by blood
+- I guess Heathcliff is kind of beatable when you get Kirito to lvl 40. You need to develop a really fast understanding of the pattern of his movement and circle around him quickly when he's trying to approach you. When he approaches you and you still can't guess what he is trying to do, just block, you can't risk being smitten by his shield in the face. The reason for the circling is that you CAN dodge his shield attack from far away by getting up or down of the range. When he does the 3-hit-combo thing, block the first two, jump back and then attack him once, then blind-counter because he will thrust you when you get close to him. I guess that is the main way that you can do damage to him: Wait for him to finish his attack, go poke him once to get him to thrust you and then counter attack
+- The exclusion of the Excluded Middle theorem CAN banish the existence of the paradox: "This sentence is false". Since I can say: "If this sentence is true, then it is false". But what then, we can prove falsehood, but only on the assumption that we give the paradoxical sentence a truth value, a truth value is not a necessary construct of the proposition
+- Isn't that weird for propositions to be the only things that can reference themselves?
+- Rule #1 to avoid paradoxes (using the Law of Excluded Middle): a property of an object cannot depend on the that same property of that object, since the dependence can be a conflicting one. For example: "This sentence is false", the truth value of the sentence is dependent on the truth value of the sentence (in fact it is the opposite). Another example: B says: "A is false", A says: "B is true". In this example the truth value of B is negatively dependent on the truth value of A, which is then positively dependent on the truth value of itself, then it is negatively dependent on the truth value of itself. So we have to eliminate self-referencing and circular-referencing. Another example of Russell's paradox: O = {x | ~ (x in x)}. This is also based on this rule because when you think about it, the predicate <P(x) = x in x> is a "guaranteed property" of every object in Frege's universe, because we have [~ (x in x) <-> x in O], x can range over O, that's why we have the paradox. The excluded middle is the root of all weird inconsistencies you can think of, and I don't like it at all!
+- Yes, you heard me right, I love constructive mathematics
+
+Though 35
+
+Author: lackhoa
+
+- We cannot prove that a mathematical system cannot have holes in them, what?
+- I think the tic-tac-toe machine is the thing that led me to fully appreciate the depth of mathematics
+- Busy Beaver's calculation:
+    - C (Classical Mathematician): There is this BB problem I just can't compute
+    - I (Intuitive Mathematician): How so?
+    - C: I have a finite set of natural numbers and I need to find the largest element of it
+    -  I: Oh, you can't do that with any finite set
+    - C: What? You surely can. The set is finite, I MUST be able to get the largest element
+    - I: So tell me how you define the set
+    - C: It's a set of sigma of machines that will halt for a number of cards
+    - I: OK, tell me how you derive that set, note: how do you know which machine will halt?
+    - C: Oh, I can't, but that set exists.
+    - I: Sure it exists, but until you've defined a way to compute systematically create and iterate through that set, your function is non-computable. On my end, I don't even want to call that a function at all!
+    - C: I get it, thank you very much!
+- Okay, that was really... something.
+- You don't really realize that you must use your ear to calibrate the volume of your speech until you try to speak with earphones on
+- How the light pen sensed the position of the screen the pen was pointing at: The screen does not send light signals on all spots all the time, it sends signals one by one sequentially. Now if we can sense when the pen received light combined with the CPU's knowledge, you will know where it is because time is a parameter that can literally determine coordination. There is a problem with this: the light pen won't work with dark area, where the screen literally don't light up
+- The NES duck hunt gun does a kind of similar thing: it blacks out the screen whenever you pull the trigger and then flash a white box on the target, if the gun sees the flash, you've hit the target and that's all the game cares about anyways
+- Spend the first four days getting closer to reality, spend the next three getting closer to your dream
+- The "floor" and "celing" function could be the base idea of the "jadged function" I described a while ago when calculating Starcraft II money
+- A proof of the decidability of le (the one pre-made in Coq is just unreadable)
+
+Theorem le_decidable : forall (n m: nat),
+  (n <= m) \/ (~ n <= m).
+Proof. induction n; intros.
+- left. induction m; auto.
+- destruct m.
+  + right. intro. inversion H.
+  + destruct (IHn m).
+  * left. apply le_n_S. auto.
+  * right. intro. unfold not in H.
+  apply H. apply le_S_n. auto.
+Qed.
+
+- The formal way to test a system (correctness and completeness): supposed we have a behavior that we believe in, called A; then we proceed and implement a new behavior that we want to test, called B. We have two concept called correctness (A implies B) and completeness (B implies A). As we can see correctness is easier to test than completeness since we can control A but we can't control B. Sometimes we want only correctness but not completeness (when we want to test out a new drug to see if it is safe on human, with A being the safety of the test subject and B being the symptoms). Sometimes we want completeness but not correctness (when?). And of course, in mathematics you need both
+- My own intuitive reflection implementation
+
+Inductive reflect (P: Prop) (b: bool) : Prop :=
+  | ReflectT: (P /\ (b = true)) -> reflect P b
+  | ReflectF: (~P /\ (b = false)) -> reflect P b.
+
+Theorem reflect_iff: forall P b,
+  reflect P b <-> (P <-> b = true).
+Proof. split.
+- intros. inversion H; destruct H0.
+  + split; auto.
+  + split; auto. intro. rewrite H1 in H2. inversion H2.
+- intros. inversion H. destruct b.
+  + apply ReflectT. split; auto.
+  + apply ReflectF. split; auto. intro. apply H0 in H2.
+  inversion H2.
+Qed.
+
+- Compared with coq's more compact style:
+
+Inductive reflect : Prop -> bool -> Prop :=
+| ReflectT : forall (P:Prop), P -> reflect P true
+| ReflectF : forall (P:Prop), ~ P -> reflect P false.
+
+- That took really long to come up with! The major insight of my rewriting is that reflect is a proposition to be asserted with a proposition and a boolean (which isn't shown directly in Coq's implementation). There are two lines that we can derive (reflect P b), the first being P does not hold and b is false, the second being P holds and b is true. If we do not have b or P beforehand, we can split b into two lines and then provide away to prove P or not P in each respective line; since reflect holds demand that P holds whenever b is true and vice versa. Either way, we only use reflect when we already have it: if we have reflect, there are only two possibilities: the first line or the second line
+- This one is even simpler: it is just a plain old non-recursive property, no need for stupid jargon (there's no need to be afraid of this shit anymore)
+
+Definition simple_reflect (P: Prop) (b: bool) : Prop :=
+  (P /\ b = true) \/ (~P /\ b = false).
+
+Theorem simple_reflect_iff: forall P b,
+  simple_reflect P b <-> (P <-> b = true).
+Proof. intros. split; intros.
+- inversion H; destruct H0; auto.
+  + split; auto. + split; auto. intro. rewrite H1 in H2; inversion H2.
+- destruct H. unfold simple_reflect. destruct b.
+  + left; auto. + right; auto. split; auto.
+  intro. apply H in H1; inversion H1. Qed.
+
+Theorem simple_beq_natP : forall n m,
+  simple_reflect (n = m) (n =? m).
+Proof. intros. apply simple_reflect_iff.
+symmetry. apply Nat.eqb_eq. Qed.
+
+- The microwave bread event that almost got me in prison: everything was supposed to be perfect, but it somehow isn't
+- Yeah, anything can happen; you can't really take into account everything
+- Keyboard Time Matrix: What does we do when we have less input pins than we need (you know, on a calculator when you don't want to make a super big chip serving a cheap electronics). You use a matrix with different lines, each line will... hold that thought I'll be coming back to it
+- First a flood, now a fire, are you happy with yourself yet?
+- No, you even saw that happen, but you're too stupid to stop. In both accidents you were the on to blame
