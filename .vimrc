@@ -94,3 +94,11 @@ autocmd FileType python set makeprg=sage\ -b\ &&\ sage\ -t\ %
 
 " Ctrl + a for select all:
 :map <C-a> GVgg
+
+"Change j and k behavior
+nnoremap j gj
+nnoremap k gk
+
+nnoremap gj j
+nnoremap gk k
+

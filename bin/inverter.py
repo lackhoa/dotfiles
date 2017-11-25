@@ -2,6 +2,8 @@ from subprocess import *
 from string import *
 from time import *
 
+NORM_THRESHOLD = 128 #The lightness indicating when to switch back from inverted to normal
+INV_THRESHOLD = 135 #The lightness indicating when to invert
 INVERT_COMMAND = "xcalib -i -a"
 INVERTED = False # Gotta add a state since we can't get the screen color after being inverted
 STABLE_MAIN_COMMAND = "import -thumbnail 2x1 -window root - | convert - -scale 1x1\! -format \'%[fx:int(255*r+.5)] %[fx:int(255*g+.5)] %[fx:int(255*b+.5)]\' info:-"
@@ -27,14 +29,17 @@ while True:
     #begin=time()
 
     lightness = get_lightness()
-    print "This is lightness: " + str(lightness)
-    if lightness > 128:
-        if not INVERTED:
+    #print "This is lightness: " + str(lightness)
+    
+    #The main evaluation process uses hysteresis (to prevent rapid changes)
+    if INVERTED:
+        if lightness < NORM_THRESHOLD:
+            call(split(INVERT_COMMAND))
+            INVERTED = False
+    else:
+        if lightness > INV_THRESHOLD:
             call(split(INVERT_COMMAND))
             INVERTED = True
-    elif INVERTED:
-        call(split(INVERT_COMMAND))
-        INVERTED = False
 
     #end=time()
     #print "Time: " + str(end-begin)
