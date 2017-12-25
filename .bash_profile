@@ -21,6 +21,7 @@ alias cp='cp -vi'
 alias mv='mv -vi'
 alias cdw='cdl ~/Work'
 alias cdd='cdl ~/Downloads'
+alias cdc='cdl ~/Coq'
 
 # clean up stuff that were created less than 1 minute ago
 alias clean='find . -type f -cmin -1 -delete'

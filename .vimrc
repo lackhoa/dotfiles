@@ -6,7 +6,7 @@ autocmd Filetype tex map <F2> :!pdflatex (cat proj_name).tex <CR>
 autocmd Filetype tex map <F4> :!biber (cat proj_name) <CR>
 
 "This will read the pdf file:
-autocmd Filetype tex map <F3> :!xreader (cat proj_name).pdf <CR>
+autocmd Filetype tex map <F3> :!xreader (cat proj_name).pdf & <CR>
 
 "Spell check
 map <F6> :setlocal spell! spelllang=en_us<CR>

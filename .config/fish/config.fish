@@ -2,12 +2,14 @@
 abbr cls 'clear'
 abbr desktop 'cdl ~/Desktop'
 abbr subl '/usr/bin/subl'
-abbr add-abbr 'vim ~/.profile'
-abbr update-abbr 'source ~/.profile'
+abbr add-abbr 'vim ~/.config/fish/config.fish'
+abbr update-abbr 'source ~/.config/fish/config.fish'
 abbr cp 'cp -vi'
 abbr mv 'mv -vi'
 abbr cdw 'cdl ~/Work'
 abbr cdd 'cdl ~/Downloads'
+abbr cdc 'cdl ~/Coq'
+abbr x 'xset dpms force off'
 
 # clean up stuff that were created less than 1 minute ago
 abbr clean 'find . -type f -cmin -1 -delete'
