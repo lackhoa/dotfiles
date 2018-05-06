@@ -8,7 +8,7 @@ INVERT_COMMAND = "xcalib -i -a"
 INVERTED = False # Gotta add a state since we can't get the screen color after being inverted
 STABLE_MAIN_COMMAND = "import -thumbnail 2x1 -window root - | convert - -scale 1x1\! -format \'%[fx:int(255*r+.5)] %[fx:int(255*g+.5)] %[fx:int(255*b+.5)]\' info:-"
 TEST_MAIN_COMMAND = "import -thumbnail 1x1 -window root -format \'%[fx:int(255*r+.5)] %[fx:int(255*g+.5)] %[fx:int(255*b+.5)]\' info:-"
-PERIOD = 0.1 # Update time
+PERIOD = 0.5 # Update time
 
 def get_lightness():
     # What do we do here? Take a screen shot then get its average color
