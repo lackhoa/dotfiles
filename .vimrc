@@ -132,7 +132,9 @@ au BufNewFile,BufRead *.py
     \ set autoindent |
     \ set fileformat=unix
 
-" No more "copy" when deleting: contents deleted using 'dd' goes to the black
+" No more "copy" when deleting: contents deleted using 'dd' and 'x' (in normal
+" mode) goes to the black
 " hole register
 nnoremap d "_d
 vnoremap d "_d
+nnoremap x "_x
