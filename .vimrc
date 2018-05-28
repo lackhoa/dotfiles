@@ -13,8 +13,10 @@ Plugin 'gmarik/Vundle.vim'
 
 " add all your plugins here (note older versions of Vundle
 " used Bundle instead of Plugin)
-
-" ...
+Plugin 'vim-surround'	" Plugin to change surrounding quotes, parens...
+Plugin 'vim-commentary'	" Plugin to comment
+" Set comment character for file types below:
+autocmd FileType python setlocal commentstring=#\ %s
 
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
