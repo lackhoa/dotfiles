@@ -61,20 +61,23 @@ window-size=(1366, 600)
 
 [calculator]
 target-currency=''
-show-zeroes=false
+show-zeroes=true
 source-currency=''
-show-thousands=false
-button-mode='basic'
+show-thousands=true
+button-mode='advanced'
 target-units='radian'
 word-size=64
-number-format='automatic'
+number-format='engineering'
 angle-units='degrees'
 base=10
 source-units='degree'
 accuracy=9
 
 [charmap/window-state]
-size=(768, 407)
+size=(768, 408)
+
+[charmap]
+last-char=uint32 617
 
 [gedit/preferences/ui]
 show-tabs-mode='auto'
@@ -99,11 +102,16 @@ geometry='890x550+65+24'
 maximized=false
 
 [file-roller/listing]
-sort-method='name'
+sort-method='time'
 name-column-width=250
 sort-type='descending'
 list-mode='as-folder'
 show-path=false
+
+[file-roller/dialogs/new]
+default-extension='.zip'
+volume-size=104857
+encrypt-header=false
 
 [file-roller/dialogs/extract]
 skip-newer=false
@@ -145,7 +153,7 @@ x-centered=false
 [gnome-panel/layout/toplevels/bottom-panel]
 x=0
 animation-speed='fast'
-y=744
+y=737
 orientation='bottom'
 unhide-delay=100
 y-centered=false
@@ -191,6 +199,9 @@ object-iid='WnckletFactory::WindowListApplet'
 [gnome-panel/layout]
 object-id-list=['menu-bar', 'indicators', 'show-destkop', 'window-list', 'workspace-switcher']
 toplevel-id-list=['top-panel', 'bottom-panel']
+
+[simple-scan]
+document-type='photo'
 
 [desktop/a11y/applications]
 screen-keyboard-enabled=false
@@ -240,7 +251,7 @@ last-save-directory='file:///home/khoa/Desktop'
 
 [libgnomekbd/keyboard]
 layouts=['us', 'fi']
-options=['grp\tgrp:alts_toggle', 'caps\tcaps:swapescape']
+options=['grp\tgrp:alts_toggle', 'caps\tcaps:swapescape', 'currencysign\teurosign:4']
 
 [libgnomekbd/desktop]
 default-group=0
@@ -254,21 +265,22 @@ info-page-number=3
 
 [terminal/legacy]
 mnemonics-enabled=true
+menu-accelerator-enabled=false
 schema-version=uint32 3
 default-show-menubar=true
 shortcuts-enabled=true
 
 [terminal/legacy/keybindings]
-new-tab='disabled'
-switch-to-tab-1='disabled'
-switch-to-tab-2='disabled'
-switch-to-tab-3='disabled'
+new-tab='<Primary><Shift>n'
+switch-to-tab-1='<Primary>1'
+switch-to-tab-2='<Primary>2'
+switch-to-tab-3='<Primary>3'
 copy='<Primary><Shift>c'
 switch-to-tab-5='disabled'
-switch-to-tab-4='disabled'
-prev-tab='disabled'
+switch-to-tab-4='<Primary>4'
+prev-tab='<Primary>Left'
 new-window='disabled'
-close-tab='disabled'
+close-tab='<Primary><Shift>w'
 close-window='disabled'
 move-tab-left='disabled'
 switch-to-tab-7='disabled'
@@ -280,13 +292,13 @@ switch-to-tab-8='disabled'
 zoom-out='<Primary>minus'
 zoom-normal='<Primary>0'
 paste='<Primary><Shift>v'
-next-tab='disabled'
+next-tab='<Primary>Right'
 zoom-in='<Primary>equal'
 
 [terminal/legacy/profiles:/:9d69388d-3484-4748-8f0f-73cbb8acbaca]
 foreground-color='rgb(170,170,170)'
 rewrap-on-resize=true
-scrollbar-policy='never'
+scrollbar-policy='always'
 login-shell=true
 palette=['rgb(0,0,0)', 'rgb(205,0,0)', 'rgb(0,205,0)', 'rgb(205,205,0)', 'rgb(0,0,205)', 'rgb(205,0,205)', 'rgb(0,205,205)', 'rgb(250,235,215)', 'rgb(64,64,64)', 'rgb(255,0,0)', 'rgb(0,255,0)', 'rgb(255,255,0)', 'rgb(0,0,255)', 'rgb(255,0,255)', 'rgb(0,255,255)', 'rgb(255,255,255)']
 visible-name='Khoa'
@@ -294,16 +306,17 @@ custom-command='tmux'
 default-size-columns=70
 default-size-rows=20
 cursor-shape='ibeam'
-scroll-on-output=false
-use-custom-command=true
+scroll-on-output=true
+use-custom-command=false
 use-system-font=false
-exit-action='hold'
+exit-action='restart'
 use-theme-colors=false
-font='Courier 21'
+font='Noto Sans Mono CJK JP 17'
 use-theme-transparency=false
-scroll-on-keystroke=false
-background-color='rgb(0,0,0)'
-background-transparency-percent=7
+scrollback-unlimited=false
+scroll-on-keystroke=true
+background-color='rgb(65,1,64)'
+background-transparency-percent=0
 audible-bell=true
 
 [terminal/legacy/profiles:]
@@ -313,6 +326,18 @@ default='9d69388d-3484-4748-8f0f-73cbb8acbaca'
 [nm-applet]
 disable-disconnected-notifications=true
 disable-connected-notifications=true
+
+[nm-applet/eap/11d7d086-19d8-4f2b-9f4a-3208e7c9e57c]
+ignore-phase2-ca-cert=false
+ignore-ca-cert=false
+
+[nm-applet/eap/39a978e4-f69e-47fe-b74d-cbb605f93888]
+ignore-phase2-ca-cert=false
+ignore-ca-cert=false
+
+[nm-applet/eap/fe300bc6-7166-4e19-a278-43d366eb17f9]
+ignore-phase2-ca-cert=false
+ignore-ca-cert=false
 
 [nm-applet/eap/9b3142bd-00df-41e6-b212-3fa115a34027]
 ignore-phase2-ca-cert=false
@@ -326,11 +351,23 @@ ignore-ca-cert=false
 ignore-phase2-ca-cert=false
 ignore-ca-cert=false
 
-[nm-applet/eap/0a561c21-9bde-4420-aabd-56460dde9900]
+[nm-applet/eap/64f22216-8edb-4a6b-9af7-a534f3468e84]
+ignore-phase2-ca-cert=false
+ignore-ca-cert=false
+
+[nm-applet/eap/dd368145-a3fe-450f-b1ad-9a2dd0944a9c]
 ignore-phase2-ca-cert=false
 ignore-ca-cert=false
 
 [nm-applet/eap/86cd2479-a04c-447b-932b-24381cb534b4]
+ignore-phase2-ca-cert=false
+ignore-ca-cert=false
+
+[nm-applet/eap/0a561c21-9bde-4420-aabd-56460dde9900]
+ignore-phase2-ca-cert=false
+ignore-ca-cert=false
+
+[nm-applet/eap/302f3f03-341b-4328-a70a-9946e0bac7cf]
 ignore-phase2-ca-cert=false
 ignore-ca-cert=false
 
@@ -346,7 +383,15 @@ ignore-ca-cert=false
 ignore-phase2-ca-cert=false
 ignore-ca-cert=false
 
+[nm-applet/eap/f6444f74-6e75-4d51-ba38-60c005066492]
+ignore-phase2-ca-cert=false
+ignore-ca-cert=false
+
 [nm-applet/eap/95254c66-3368-4020-9eed-5f45686d3e2b]
+ignore-phase2-ca-cert=false
+ignore-ca-cert=false
+
+[nm-applet/eap/c7705cba-ad9f-4487-9b00-7a9567517342]
 ignore-phase2-ca-cert=false
 ignore-ca-cert=false
 
@@ -354,7 +399,19 @@ ignore-ca-cert=false
 ignore-phase2-ca-cert=false
 ignore-ca-cert=false
 
+[nm-applet/eap/c35fa770-c7e6-4135-b771-57b8c2e80fb6]
+ignore-phase2-ca-cert=false
+ignore-ca-cert=false
+
 [nm-applet/eap/e516fbfc-4181-481f-aee5-91c243494e07]
+ignore-phase2-ca-cert=false
+ignore-ca-cert=false
+
+[nm-applet/eap/5fa0313f-ad56-4544-9b11-ec86740d5a88]
+ignore-phase2-ca-cert=false
+ignore-ca-cert=false
+
+[nm-applet/eap/87116a8f-6958-4efb-8603-5c4992c9497e]
 ignore-phase2-ca-cert=false
 ignore-ca-cert=false
 

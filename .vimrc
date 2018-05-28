@@ -73,8 +73,8 @@ endif
 "=====[ Highlight matches when jumping to next ]=============
 
 " This rewires n and N to do the highlighing...
-nnoremap <silent> n   n:call HLNext(0.4)<cr>
-nnoremap <silent> N   N:call HLNext(0.4)<cr>
+nnoremap <silent> n   n:call HLNext(0.2)<cr>
+nnoremap <silent> N   N:call HLNext(0.2)<cr>
 
 " EITHER blink the line containing the match...
 function! HLNext (blinktime)
@@ -138,3 +138,6 @@ au BufNewFile,BufRead *.py
 nnoremap d "_d
 vnoremap d "_d
 nnoremap x "_x
+
+" Fold python code
+set foldmethod=indent

@@ -1,14 +1,15 @@
 [/]
 desktop-effects-unmaximize-transition='easeOutBounce'
 desktop-effects-maximize-transition='easeInBack'
-desktop-effects-map-effect='scale'
-command-history=['khoa-update', 'sudo khoa-update', 'touch dick', 'subl', 'gnome-terminal -x sleep 10h', 'bash', 'shell', 'sudo apt-get install --reinstall gnome-terminal', 'sudo apt-get install xterm', 'sudo apt-get instsall gnome-terminal', 'terminal-emulator', 'terminal', 'wireless', 'conky-config', 'conky-conf', 'coqtop', 'coqide', 'sudo wireshark-gtk', 'sudo', 'gksu', 'gksudo', 'pt', 'conky', 'gnome-terminal', 'redshift', 'packettracer', 'python3 ~/pywal-master/khoa_wal.py', 'python3 /home/khoa/pywal-master/khoa_wal.py', 'i3', 'keynav']
-hotcorner-layout=['expo:false:0', 'scale:false:0', 'scale:false:0', 'desktop:false:0']
-desktop-effects-close-effect='blend'
-desktop-effects-style='blend'
+workspace-osd-visible=true
+desktop-effects-map-effect='flyUp'
+command-history=['khoa-update', 'sudo khoa-update', 'touch dick', 'gnome-terminal -x sleep 10h', 'bash', 'shell', 'sudo apt-get install --reinstall gnome-terminal', 'sudo apt-get install xterm', 'sudo apt-get instsall gnome-terminal', 'terminal-emulator', 'wireless', 'conky-config', 'conky-conf', 'coqtop', 'sudo', 'gksu', 'gksudo', 'pt', 'conky', 'gnome-terminal', 'python3 ~/pywal-master/khoa_wal.py', 'python3 /home/khoa/pywal-master/khoa_wal.py', 'i3', 'keynav', 'vim something', 'gvim something', 'bash bin/khoa_motd.sh', 'gvim', 'bash ~/bin/khoa_motd.sh', 'bash khoa_motd.sh', 'khoa_motd', 'khoa_motd.sh', '~/bin/khoa_motd.sh', 'wireshark gtk', 'wireshark-gtk', 'nemo', 'redshift', '~/bin/inverter.py', 'python /home/khoa/bin/inverter.py', 'uninv', 'coqie', 'subl', 'coq', 'terminal', 'term', 'x', 'noinv', 'inv', 'droicam', 'droidcam', 'python3 ~/bin/inverter.py', 'python ~/bin/inverter.py', 'coqide', 'sudo wireshark-gtk %f', 'sudo wireshark-gtk', 'python bin/inverter.py', 'packettracer']
+hotcorner-layout=['expo:false:0', 'scale:false:0', 'scale:false:0', 'desktop:true:0']
+desktop-effects-close-effect='flyDown'
+desktop-effects-style='flyUp'
 desktop-effects-unmaximize-time=100
 enabled-desklets=@as []
-desktop-effects-map-time=250
+desktop-effects-map-time=100
 panels-scale-text-icons=['1:true', '2:true']
 desktop-effects-minimize-effect='flyDown'
 alttab-switcher-style='coverflow'
@@ -16,9 +17,9 @@ workspace-osd-duration=400
 prevent-focus-stealing=true
 panels-height=['1:42', '2:25']
 enable-vfade=true
-next-applet-id=58
+next-applet-id=59
 panel-launchers=['DEPRECATED']
-desktop-effects-map-transition='easeOutQuart'
+desktop-effects-map-transition='easeOutSine'
 desktop-effects-unmaximize-effect='scale'
 panels-enabled=['1:0:bottom']
 desktop-effects-maximize-time=100
@@ -27,22 +28,23 @@ desktop-effects-tile-transition='easeInBack'
 desktop-effects-maximize-effect='scale'
 desktop-effects-on-menus=true
 panels-resizable=['1:true', '2:false']
-enabled-applets=['panel1:left:2:window-list@cinnamon.org:50', 'panel1:center:0:menu@cinnamon.org:51', 'panel1:right:0:notifications@cinnamon.org:4', 'panel1:right:1:separator@cinnamon.org:55', 'panel1:right:3:removable-drives@cinnamon.org:6', 'panel1:right:5:systray@cinnamon.org:12', 'panel1:right:6:keyboard@cinnamon.org:7', 'panel1:right:7:network@cinnamon.org:9', 'panel1:right:8:separator@cinnamon.org:41', 'panel1:right:9:calendar@cinnamon.org:13', 'panel1:right:10:windows-quick-list@cinnamon.org:53']
-desktop-effects-minimize-time=250
+enabled-applets=['panel1:left:2:window-list@cinnamon.org:50', 'panel1:center:0:menu@cinnamon.org:51', 'panel1:right:0:notifications@cinnamon.org:4', 'panel1:right:2:separator@cinnamon.org:55', 'panel1:right:3:removable-drives@cinnamon.org:6', 'panel1:right:4:systray@cinnamon.org:12', 'panel1:right:6:keyboard@cinnamon.org:7', 'panel1:right:7:network@cinnamon.org:9', 'panel1:right:8:separator@cinnamon.org:41', 'panel1:right:9:calendar@cinnamon.org:13']
+desktop-effects-minimize-time=100
 alttab-switcher-delay=100
 desktop-effects-tile-effect='scale'
-desktop-effects-close-transition='easeInQuart'
-desktop-effects-minimize-transition='easeInQuart'
+desktop-effects-close-transition='easeInBack'
+desktop-effects-minimize-transition='easeInSine'
 panel-edit-mode=false
 panels-show-delay=['1:0', '2:0']
 panels-hide-delay=['1:0', '2:0']
-desktop-effects-close-time=250
+desktop-effects-close-time=100
 no-adjacent-panel-barriers=true
 workspace-osd-y=50
 favorite-apps=['gnome-terminal.desktop', 'nemo.desktop', 'xviewer.desktop']
 workspace-osd-x=50
 desktop-effects-tile-time=100
 panels-autohide=['1:false', '2:false']
+workspace-expo-view-as-grid=false
 
 [settings-daemon/plugins/power]
 lid-close-suspend-with-external-monitor=false
@@ -60,6 +62,7 @@ buttons-have-icons=true
 hinting='full'
 
 [settings-daemon/peripherals/touchpad]
+tap-to-click=true
 horizontal-edge-scrolling=true
 motion-acceleration=10.0
 custom-acceleration=true
@@ -71,7 +74,7 @@ motion-threshold=1
 touchpad-enabled=true
 
 [settings-daemon/peripherals/touchscreen]
-orientation-lock=true
+orientation-lock=false
 
 [settings-daemon/peripherals/keyboard]
 repeat-interval=uint32 19
@@ -83,16 +86,17 @@ repeat=true
 locate-pointer=true
 left-handed=false
 drag-threshold=10
-motion-acceleration=10.0
+motion-acceleration=5.8835758835758831
 custom-acceleration=true
 custom-threshold=true
 double-click=400
-motion-threshold=1
+motion-threshold=5
 
 [muffin]
 button-layout=':minimize,maximize,close'
 resize-threshold=24
 tile-hud-threshold=25
+workspace-cycle=false
 edge-tiling=false
 
 [sounds]
@@ -104,15 +108,15 @@ minimize-enabled=true
 
 [desktop/interface]
 text-scaling-factor=1.0
-cursor-size=35
+cursor-size=33
 clock-use-24h=true
 font-name='Norasi 12'
-cursor-theme='oxy-blue'
+cursor-theme='Adwaita'
 toolkit-accessibility=false
 clock-show-seconds=false
 cursor-blink-time=1200
-icon-theme='Numix'
-gtk-theme='Chrome OS'
+icon-theme='Vivacious-Colors'
+gtk-theme='Paper'
 clock-show-date=true
 
 [desktop/keybindings/media-keys]
@@ -129,7 +133,7 @@ unmaximize=@as []
 switch-to-workspace-left=['<Primary><Super>Left', '<Primary><Alt>Left']
 switch-to-workspace-down=['<Super>Tab']
 switch-to-workspace-right=['<Primary><Super>Right', '<Primary><Alt>Right']
-toggle-fullscreen=['<Shift>F11']
+toggle-fullscreen=@as []
 push-snap-right=@as []
 switch-to-workspace-up=['<Alt>F1']
 minimize=@as []
@@ -156,15 +160,15 @@ recent-files-max-age=30
 remember-recent-files=false
 
 [desktop/wm/preferences]
-theme='Esco'
-num-workspaces=4
+theme='Paper'
+num-workspaces=3
 action-scroll-titlebar='opacity'
 auto-raise=true
 visual-bell=false
 min-window-opacity=30
-workspace-names=['Entertainment & Note', 'Main work', 'References', 'Others']
+workspace-names=['Entertainment & Note', 'Main work', 'References']
 audible-bell=false
-titlebar-font='Linux Biolinum Keyboard O Bold Italic 14'
+titlebar-font='Linux Biolinum O Bold 12'
 
 [desktop/a11y/magnifier]
 mouse-tracking='proportional'
@@ -190,12 +194,12 @@ stickykeys-enable=false
 feature-state-change-beep=false
 slowkeys-beep-accept=true
 bouncekeys-delay=300
-mousekeys-max-speed=500
+mousekeys-max-speed=750
 mousekeys-enable=false
 timeout-enable=false
 slowkeys-delay=300
 stickykeys-modifier-beep=true
-stickykeys-two-key-off=false
+stickykeys-two-key-off=true
 mousekeys-init-delay=160
 slowkeys-enable=false
 
@@ -210,7 +214,7 @@ dwell-click-enabled=false
 event-sounds=false
 
 [desktop/background]
-picture-uri='file:///home/khoa/Pictures/thumb-1920-202536.jpg'
+picture-uri='file:///home/khoa/Pictures/maxresdefault%20(5).jpg'
 picture-options='zoom'
 
 [desktop/background/slideshow]
@@ -220,7 +224,7 @@ delay=10
 slideshow-enabled=true
 
 [theme]
-name='Glass-Fedora-Classic'
+name='Vivaldi-ZorinOS'
 
 [cinnamon-session]
 quit-time-delay=60
