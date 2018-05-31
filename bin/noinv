@@ -1,3 +1,2 @@
 #! /usr/bin/fish
-
-kill -STOP (pidof python)
+kill -STOP (ps -C 'python /home/khoa/bin/inverter.py' -o pid=)
