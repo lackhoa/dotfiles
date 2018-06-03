@@ -140,3 +140,10 @@ nnoremap x "_x
 
 " Fold python code
 set foldmethod=indent
+
+" Show matching parenthesis:
+:set showmatch
+:set matchtime=2
+" Highlight text in between matching parentheses:
+noremap % v%
+
