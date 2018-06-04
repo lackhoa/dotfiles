@@ -147,3 +147,7 @@ set foldmethod=indent
 " Highlight text in between matching parentheses:
 " noremap % v%
 
+" Ctrl+j to add line below and Ctrl+k to add line above
+nnoremap <silent><C-j> :set paste<CR>m`o<Esc>``:set nopaste<CR>
+nnoremap <silent><C-k> :set paste<CR>m`O<Esc>``:set nopaste<CR>
+
