@@ -40,8 +40,8 @@ map <F6> :setlocal spell! spelllang=en_us<CR>
 "imap ( ()<Esc>i
 "imap [ []<Esc>i
 
-"No more matching parentheses
-let loaded_matchparen = 1
+"Disable matching parentheses
+" let loaded_matchparen = 1
 
 "No more pretending to be vi
 :set nocp
@@ -142,8 +142,8 @@ nnoremap x "_x
 set foldmethod=indent
 
 " Show matching parenthesis:
-:set showmatch
-:set matchtime=2
+" :set showmatch
+" :set matchtime=2
 " Highlight text in between matching parentheses:
-noremap % v%
+" noremap % v%
 
