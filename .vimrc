@@ -155,4 +155,4 @@ nnoremap <silent><C-k> :set paste<CR>m`O<Esc>``:set nopaste<CR>
 :set textwidth=80
 
 " Turn off highlighting using Esc
-map <esc> :noh<cr>
+map <esc><esc> :noh<cr>
