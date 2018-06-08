@@ -181,4 +181,5 @@ nnoremap <leader>w gt
 nnoremap <leader>W gT
 " }}
 
-
+" Change parentheses highlighting style
+hi MatchParen cterm=underline ctermbg=None ctermfg=cyan
