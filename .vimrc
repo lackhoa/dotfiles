@@ -158,14 +158,7 @@ nnoremap <silent><C-k> :set paste<CR>m`O<Esc>``:set nopaste<CR>
 map <esc><esc> :noh<cr>
 
 let mapleader = " "
- 
-" }}}
- 
-" create new tabs  {{
 nnoremap <leader>t :tabnew<Enter>
-" Close all except current tab
-nnoremap <leader>\ :tabonly<Enter>
-nnoremap <F1> :buffers<CR>:buffer<Space>
 " Navigating tabs
 nnoremap <leader>1 1gt
 nnoremap <leader>2 2gt
@@ -179,7 +172,6 @@ nnoremap <leader>9 9gt
 "Previous and next window
 nnoremap <leader>w gt
 nnoremap <leader>W gT
-" }}
 
 " Change parentheses highlighting style
 hi MatchParen cterm=underline ctermbg=None ctermfg=cyan
