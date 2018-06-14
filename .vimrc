@@ -138,21 +138,9 @@ au BufNewFile,BufRead *.py
 " goes to the black hole register
 nnoremap x "_x
 
-" Fold python code
-set foldmethod=indent
-
-" Show matching parenthesis:
-" :set showmatch
-" :set matchtime=2
-" Highlight text in between matching parentheses:
-" noremap % v%
-
 " Ctrl+j to add line below and Ctrl+k to add line above
 nnoremap <silent><C-j> :set paste<CR>m`o<Esc>``:set nopaste<CR>
 nnoremap <silent><C-k> :set paste<CR>m`O<Esc>``:set nopaste<CR>
-
-" textwidth constraint
-:set textwidth=80
 
 " Turn off highlighting using Esc
 map <esc><esc> :noh<cr>
