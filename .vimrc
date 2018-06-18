@@ -125,7 +125,7 @@ autocmd Filetype python set tabstop=4|set shiftwidth=4|set expandtab
 highlight BadWhitespace ctermbg=red guibg=darkred
 au BufRead,BufNewFile *.py,*.pyw,*.c,*.h match BadWhitespace /\s\+$/
 " Highlight indentation parity:
-highlight EightWhitespace ctermbg=grey
+highlight EightWhitespace ctermbg=darkgrey
 au BufRead,BufNewFile *.py,*.pyw match EightWhitespace "\s\{8}"
 " YCM: auto-complete goes away when you're done
 let g:ycm_autoclose_preview_window_after_completion = 1
