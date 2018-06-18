@@ -15,6 +15,9 @@ Plugin 'gmarik/Vundle.vim'
 " used Bundle instead of Plugin)
 Plugin 'vim-surround'	" Plugin to change surrounding quotes, parens...
 Plugin 'vim-commentary'	" Plugin to comment
+Plugin 'vim-scripts/indentpython.vim'   " Plugin to indent python code
+Plugin 'YouCompleteMe'	" code completion
+
 " Set comment character for file types below:
 autocmd FileType python setlocal commentstring=#\ %s
 
@@ -23,7 +26,8 @@ call vundle#end()            " required
 filetype plugin indent on    " required
 
 "Key maps for .tex files
-"For these to work, you must put the name of the project (i.e. the name of the latex file without the '.tex' extension
+"For these to work, you must put the name of the project
+"(i.e. the name of the latex file without the '.tex' extension
 " So what does this do? It saves the current vim file, compiles latex file
 autocmd Filetype tex map <F2> :!pdflatex (cat proj_name).tex <CR>
 
@@ -35,21 +39,13 @@ autocmd Filetype tex map <F3> :!xreader (cat proj_name).pdf & <CR>
 "Spell check
 map <F6> :setlocal spell! spelllang=en_us<CR>
 
-"Autocomplete brackets
-"imap { {}<Esc>i
-"imap ( ()<Esc>i
-"imap [ []<Esc>i
-
-"Disable matching parentheses
-" let loaded_matchparen = 1
-
 "No more pretending to be vi
 :set nocp
 
 "Highlight matching
 :set hlsearch
 
-"weird numbering
+"relative numbering
 :set number relativenumber
 
 :augroup numbertoggle
@@ -67,7 +63,7 @@ set laststatus=2
 
 " now set it up to change the status line based on mode
 if version >= 700
-  au InsertEnter * hi StatusLine term=reverse ctermbg=5 gui=undercurl guisp=Magenta
+  au InsertEnter * hi StatusLine term=reverse ctermbg=5 gui=undercurl guisp=Red
   au InsertLeave * hi StatusLine term=reverse ctermfg=0 ctermbg=2 gui=bold,reverse
 endif
 
@@ -78,7 +74,7 @@ endif
 nnoremap <silent> n   n:call HLNext(0.2)<cr>
 nnoremap <silent> N   N:call HLNext(0.2)<cr>
 
-" EITHER blink the line containing the match...
+" Blink the line containing the match...
 function! HLNext (blinktime)
     set invcursorline
     redraw
@@ -91,16 +87,6 @@ endfunction
 
 nnoremap  ;  :
 
-"====[ Make tabs, trailing whitespace, and non-breaking spaces visible ]======
-" For some reason the line below doesn't work
-" exec "set listchars=tab:>_,eol:\⏎,trail:\uB7,nbsp:~"
-
-" So this is the fix: Tab identified by a bar and trailing spaces identified by middle dot
-:set lcs=trail:·,space:·,nbsp:~,tab:\|\ 
-
-" If you can handle it, set it on default
-set list
-
 "Fix pasting behavior (p -> P):
 nnoremap p P
 
@@ -110,11 +96,7 @@ nnoremap a A
 "replace all occurences on one line by default (still needs to specify range for the entire file)
 set gdefault
 
-""""""
-" Sage settings (from Franco Saliola)
-autocmd BufRead,BufNewFile *.sage,*.pyx,*.spyx set filetype=python
-autocmd Filetype python set tabstop=4|set shiftwidth=4|set expandtab
-autocmd FileType python set makeprg=sage\ -b\ &&\ sage\ -t\ %
+
 
 " Ctrl + a for select all:
 :map <C-a> GVgg
@@ -126,6 +108,7 @@ nnoremap k gk
 nnoremap gj j
 nnoremap gk k
 
+"=====================Python stuff=====================
 au BufNewFile,BufRead *.py
     \ set tabstop=4 |
     \ set softtabstop=4 |
@@ -133,6 +116,21 @@ au BufNewFile,BufRead *.py
     \ set expandtab |
     \ set autoindent |
     \ set fileformat=unix
+
+" Sage settings (from Franco Saliola)
+autocmd BufRead,BufNewFile *.sage,*.pyx,*.spyx set filetype=python
+autocmd FileType python set makeprg=sage\ -b\ &&\ sage\ -t\ %
+autocmd Filetype python set tabstop=4|set shiftwidth=4|set expandtab
+" Highlight bad whitespace
+highlight BadWhitespace ctermbg=red guibg=darkred
+au BufRead,BufNewFile *.py,*.pyw,*.c,*.h match BadWhitespace /\s\+$/
+" Highlight indentation parity:
+highlight EightWhitespace ctermbg=grey
+au BufRead,BufNewFile *.py,*.pyw match EightWhitespace "\s\{8}"
+" YCM: auto-complete goes away when you're done
+let g:ycm_autoclose_preview_window_after_completion = 1
+" map <leader>g  :YcmCompleter GoToDefinitionElseDeclaration<CR>
+
 
 " No more "copy" when deleting: contents deleted using 'x'
 " goes to the black hole register
@@ -163,3 +161,6 @@ nnoremap <leader>W gT
 
 " Change parentheses highlighting style
 hi MatchParen cterm=underline ctermbg=None ctermfg=cyan
+
+" Show partial command
+set showcmd
