@@ -96,15 +96,9 @@ nnoremap a A
 "replace all occurences on one line by default (still needs to specify range for the entire file)
 set gdefault
 
-
-
-" Ctrl + a for select all:
-:map <C-a> GVgg
-
 "Change j and k behavior
 nnoremap j gj
 nnoremap k gk
-
 nnoremap gj j
 nnoremap gk k
 
