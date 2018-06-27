@@ -166,3 +166,8 @@ nnoremap <CR> :wa<CR>
 
 " S-k to join with line above
 nnoremap <S-k> k<S-j>
+
+nnoremap <Right> gt
+nnoremap <Left> gT
+nnoremap <Up> <C-y>
+nnoremap <Down> <C-e>
