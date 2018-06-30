@@ -132,6 +132,7 @@ nnoremap x "_x
 
 " Ctrl+j to add line below
 nnoremap <silent><C-j> :set paste<CR>m`o<Esc>``:set nopaste<CR>
+nnoremap <silent><C-k> :set paste<CR>m`O<Esc>``:set nopaste<CR>
 
 " Turn off highlighting using Esc
 map <esc><esc> :noh<cr>
@@ -157,9 +158,6 @@ hi MatchParen cterm=underline ctermbg=None ctermfg=cyan
 
 " Show partial command
 set showcmd
-
-" Insert line break with C-k
-nnoremap <C-k> i<CR><esc>k$
 
 " Save all files with enter in Normal mode
 nnoremap <CR> :wa<CR>
