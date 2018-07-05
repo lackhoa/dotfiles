@@ -126,6 +126,11 @@ au BufRead,BufNewFile *.py,*.pyw match EightWhitespace "\s\{8}"
 let g:ycm_autoclose_preview_window_after_completion = 1
 " map <leader>g  :YcmCompleter GoToDefinitionElseDeclaration<CR>
 
+" Scheme settings
+autocmd BufRead,BufNewFile *.scm,*.rkt set filetype=scheme
+autocmd Filetype scheme set tabstop=2|set shiftwidth=2|set expandtab
+highlight FourWhitespace ctermbg=darkgrey
+autocmd Filetype scheme match FourWhitespace "\s\{4}"
 
 " No more "copy" when deleting: contents deleted using 'x'
 " goes to the black hole register
