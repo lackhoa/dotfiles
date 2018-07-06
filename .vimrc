@@ -18,6 +18,7 @@ Plugin 'vim-commentary'	" Plugin to comment
 Plugin 'vim-scripts/indentpython.vim'   " Plugin to indent python code
 Plugin 'YouCompleteMe'	" code completion
 Plugin 'Raimondi/delimitMate'	" auto-complete brackets
+Plugin 'amdt/vim-niji'
 
 " Set comment character for file types below:
 autocmd FileType python setlocal commentstring=#\ %s
