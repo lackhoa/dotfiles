@@ -119,7 +119,7 @@ autocmd FileType python set makeprg=sage\ -b\ &&\ sage\ -t\ %
 autocmd Filetype python set tabstop=4|set shiftwidth=4|set expandtab
 " Highlight bad whitespace
 highlight BadWhitespace ctermbg=red guibg=darkred
-au BufRead,BufNewFile *.py,*.pyw,*.c,*.h match BadWhitespace /\s\+$/
+au BufRead,BufNewFile *.py,*.pyw,*.c,*.h match BadWhitespace /\s\$/
 " Highlight indentation parity:
 highlight EightWhitespace ctermbg=darkgrey
 au BufRead,BufNewFile *.py,*.pyw match EightWhitespace "\s\{8}"
