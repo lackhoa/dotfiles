@@ -125,13 +125,11 @@ highlight EightWhitespace ctermbg=darkgrey
 au BufRead,BufNewFile *.py,*.pyw match EightWhitespace "\s\{8}"
 " YCM: auto-complete goes away when you're done
 let g:ycm_autoclose_preview_window_after_completion = 1
-" map <leader>g  :YcmCompleter GoToDefinitionElseDeclaration<CR>
 
-" Scheme settings
-autocmd BufRead,BufNewFile *.scm,*.rkt set filetype=scheme
-autocmd Filetype scheme set tabstop=2|set shiftwidth=2|set expandtab
-highlight FourWhitespace ctermbg=darkgrey
-autocmd Filetype scheme match FourWhitespace "\s\{4}"
+" Lisp settings
+autocmd BufRead,BufNewFile *.scm,*.rkt,*.kar set filetype=lisp
+autocmd Filetype lisp set tabstop=4|set shiftwidth=4|set expandtab
+autocmd Filetype lisp match EightWhitespace "\s\{8}"
 
 " No more "copy" when deleting: contents deleted using 'x'
 " goes to the black hole register
@@ -176,3 +174,10 @@ nnoremap <Right> gt
 nnoremap <Left> gT
 nnoremap <Up> <C-y>
 nnoremap <Down> <C-e>
+
+" Turn indent off
+filetype indent off
+
+" Turn keyword highlighting off but keep niji color
+syntax off
+let g:niji_matching_filetypes = ['lisp', '', 'python']
