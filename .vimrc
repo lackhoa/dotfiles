@@ -184,3 +184,5 @@ let g:niji_matching_filetypes = ['lisp', '', 'python']
 
 " Line up with the line above
 nnoremap <C-l> 0d^ky^jP
+
+au Filetype lisp let b:delimitMate_quotes = "\""
