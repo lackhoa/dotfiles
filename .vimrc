@@ -196,3 +196,5 @@ let g:niji_matching_filetypes = ['lisp', '', 'python']
 
 " Line up with the line above
 nnoremap <C-l> 0d^ky^jPl
+inoremap <C-l> <Esc>0d^ky^jPli
+
