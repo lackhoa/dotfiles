@@ -117,19 +117,31 @@ au BufNewFile,BufRead *.py
 autocmd BufRead,BufNewFile *.sage,*.pyx,*.spyx set filetype=python
 autocmd FileType python set makeprg=sage\ -b\ &&\ sage\ -t\ %
 autocmd Filetype python set tabstop=4|set shiftwidth=4|set expandtab
+
 " Highlight bad whitespace
 highlight BadWhitespace ctermbg=red guibg=darkred
-au BufRead,BufNewFile *.py,*.pyw,*.c,*.h match BadWhitespace /\s\$/
+match BadWhitespace "\s$"
+
 " Highlight indentation parity:
 highlight EightWhitespace ctermbg=darkgrey
-au BufRead,BufNewFile *.py,*.pyw match EightWhitespace "\s\{8}"
+autocmd Filetype python match EightWhitespace "\s\{8}"
+
 " YCM: auto-complete goes away when you're done
 let g:ycm_autoclose_preview_window_after_completion = 1
 
+" ------------------------------------------
 " Lisp settings
+" ------------------------------------------
 autocmd BufRead,BufNewFile *.scm,*.rkt,*.kar set filetype=lisp
 autocmd Filetype lisp set tabstop=4|set shiftwidth=4|set expandtab
 autocmd Filetype lisp match EightWhitespace "\s\{8}"
+
+au Filetype lisp let b:delimitMate_quotes = "\""
+
+highlight Quasiquote ctermfg=Green
+autocmd Filetype lisp call matchadd('Quasiquote', "`")
+highlight Quote ctermfg=Red
+autocmd Filetype lisp call matchadd('Quote',"'")
 
 " No more "copy" when deleting: contents deleted using 'x'
 " goes to the black hole register
@@ -184,5 +196,3 @@ let g:niji_matching_filetypes = ['lisp', '', 'python']
 
 " Line up with the line above
 nnoremap <C-l> 0d^ky^jPl
-
-au Filetype lisp let b:delimitMate_quotes = "\""
