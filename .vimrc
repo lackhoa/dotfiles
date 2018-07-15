@@ -120,7 +120,7 @@ autocmd Filetype python set tabstop=4|set shiftwidth=4|set expandtab
 
 " Highlight bad whitespace
 highlight BadWhitespace ctermbg=red guibg=darkred
-match BadWhitespace "\s$"
+" match BadWhitespace "\s$"
 
 " Highlight indentation parity:
 highlight EightWhitespace ctermbg=darkgrey
@@ -196,5 +196,4 @@ let g:niji_matching_filetypes = ['lisp', '', 'python']
 
 " Line up with the line above
 nnoremap <C-l> 0d^ky^jPl
-inoremap <C-l> <Esc>0d^ky^jPli
-
+inoremap <C-l> <Esc>0d^ky^jPla
