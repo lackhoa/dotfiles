@@ -1,24 +1,37 @@
-set nocompatible              " required
+set shell=/bin/bash
+
+set nocompatible              " be iMproved, required
 filetype off                  " required
 
 " set the runtime path to include Vundle and initialize
 set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#begin()
 
-" alternatively, pass a path where Vundle should install plugins
-"call vundle#begin('~/some/path/here')
-
 " let Vundle manage Vundle, required
 Plugin 'gmarik/Vundle.vim'
 
-" add all your plugins here (note older versions of Vundle
-" used Bundle instead of Plugin)
-Plugin 'vim-surround'	" Plugin to change surrounding quotes, parens...
-Plugin 'vim-commentary'	" Plugin to comment
-Plugin 'vim-scripts/indentpython.vim'   " Plugin to indent python code
-Plugin 'YouCompleteMe'	" code completion
-Plugin 'Raimondi/delimitMate'	" auto-complete brackets
-Plugin 'amdt/vim-niji'
+Plugin 'vim-surround'                 " Plugin to change surrounding quotes, parens...
+Plugin 'vim-commentary'               " Plugin to comment
+Plugin 'vim-scripts/indentpython.vim' " Plugin to indent python code
+Plugin 'YouCompleteMe'                " code completion
+Plugin 'Raimondi/delimitMate'         " auto-complete brackets
+Plugin 'amdt/vim-niji'                " Rainbow
+Plugin 'junegunn/vim-easy-align'      " Alignment
+
+" All of your Plugins must be added before the following line
+call vundle#end()            " required
+filetype plugin indent on    " required
+" To ignore plugin indent changes, instead use:
+"filetype plugin on
+"
+" Brief help
+" :PluginList       - lists configured plugins
+" :PluginInstall    - installs plugins; append `!` to update or just :PluginUpdate
+" :PluginSearch foo - searches for foo; append `!` to refresh local cache
+" :PluginClean      - confirms removal of unused plugins; append `!` to auto-approve removal
+"
+" see :h vundle for more details or wiki for FAQ
+" Put your non-Plugin stuff after this line
 
 " Set comment character for file types below:
 autocmd FileType python setlocal commentstring=#\ %s
@@ -197,3 +210,9 @@ let g:niji_matching_filetypes = ['lisp', '', 'python']
 " Line up with the line above
 nnoremap <C-l> 0d^ky^jPl
 inoremap <C-l> <Esc>0d^ky^jPli
+
+" Start interactive EasyAlign in visual mode (e.g. vipga)
+xmap ga <Plug>(EasyAlign)
+
+" Start interactive EasyAlign for a motion/text object (e.g. gaip)
+nmap ga <Plug>(EasyAlign)
