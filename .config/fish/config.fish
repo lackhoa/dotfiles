@@ -10,6 +10,7 @@ abbr cdw 'cdl ~/Work'
 abbr cdd 'cdl ~/Downloads'
 abbr cdc 'cdl ~/Coq'
 abbr x 'xset dpms force off'
+abbr emacs 'emacs -nw'
 
 # clean up stuff that were created less than 1 minute ago
 abbr clean 'find . -type f -cmin -1 -delete'
