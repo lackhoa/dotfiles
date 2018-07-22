@@ -64,11 +64,13 @@
   :config
   (evil-snipe-mode 1))
 
+; Alignment
 (use-package evil-lion
   :ensure t
   :config
   (evil-lion-mode))
 
+; Tabs
 (use-package evil-tabs
   :ensure t
   :config
@@ -95,6 +97,8 @@
 (define-key evil-motion-state-map [down] 'evil-scroll-line-down)
 (define-key evil-motion-state-map [up] 'evil-scroll-line-up)
 (define-key evil-motion-state-map (kbd "RET") 'evil-write-all)
+(evil-define-key 'normal 'global [right] 'elscreen-next)
+(evil-define-key 'normal 'global [left] 'elscreen-previous)
 (evil-define-key 'normal 'global (kbd "C-j") #'add-line-below)
 (defun add-line-below ()
   (interactive) (evil-open-below 0)
