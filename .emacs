@@ -45,6 +45,9 @@
 
 ; Highlight matching brackets
 (show-paren-mode)
+(set-face-background 'show-paren-match (face-background 'default))
+(set-face-foreground 'show-paren-match "#def")
+(set-face-attribute 'show-paren-match nil :weight 'extra-bold)
 
 ; Custome theme or whatever
 (add-to-list 'custom-theme-load-path "~/.emacs.d/themes/")
@@ -93,6 +96,16 @@
   tab-width 4
   tab-stop-list (quote (4 8)))
 
+; Get rid of the menu bar
+(menu-bar-mode -1)
+
+; Vim Numbering
+(use-package evil-numbers
+  :ensure t
+  :config
+  (global-set-key (kbd "C-a") 'evil-numbers/inc-at-pt)
+  (global-set-key (kbd "C-c -") 'evil-numbers/dec-at-pt))
+
 
 ; Key binding
 (define-key evil-motion-state-map ";" 'evil-ex)
@@ -135,6 +148,7 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(match ((t (:background "RoyalBlue3" :underline nil))))
  '(rainbow-delimiters-depth-1-face ((t (:inherit rainbow-delimiters-base-face :foreground "red"))))
  '(rainbow-delimiters-depth-2-face ((t (:inherit rainbow-delimiters-base-face :foreground "green"))))
  '(rainbow-delimiters-depth-3-face ((t (:inherit rainbow-delimiters-base-face :foreground "yellow"))))
@@ -143,4 +157,5 @@
  '(rainbow-delimiters-depth-6-face ((t (:inherit rainbow-delimiters-base-face :foreground "cyan"))))
  '(rainbow-delimiters-depth-7-face ((t (:inherit rainbow-delimiters-base-face :foreground "white"))))
  '(rainbow-delimiters-depth-8-face ((t (:inherit rainbow-delimiters-base-face :foreground "brightgreen"))))
- '(rainbow-delimiters-depth-9-face ((t (:inherit rainbow-delimiters-base-face :foreground "color-63")))))
+ '(rainbow-delimiters-depth-9-face ((t (:inherit rainbow-delimiters-base-face :foreground "color-63"))))
+ '(show-paren-match ((t (:underline "cyan" :weight extra-bold)))))
