@@ -106,6 +106,14 @@
   (global-set-key (kbd "C-a") 'evil-numbers/inc-at-pt)
   (global-set-key (kbd "C-c -") 'evil-numbers/dec-at-pt))
 
+;; Remove completion buffer when done
+(add-hook 'minibuffer-exit-hook 
+      '(lambda ()
+         (let ((buffer "*Completions*"))
+           (and (get-buffer buffer)
+            (kill-buffer buffer)))))
+
+
 
 ; Key binding
 (define-key evil-motion-state-map ";" 'evil-ex)
