@@ -1,7 +1,9 @@
 (require 'package)
-(setq package-archives '(("gnu" . "https://elpa.gnu.org/packages/")
-                         ("marmalade" . "https://marmalade-repo.org/packages/")
-                         ("melpa" . "https://melpa.org/packages/")))
+(setq package-archives
+      '(("elpy" . "http://jorgenschaefer.github.io/packages/")
+        ("melpa" . "https://melpa.org/packages/")
+        ("gnu" . "http://elpa.gnu.org/packages/")
+        ("melpa-stable" . "https://stable.melpa.org/packages/")))
 (package-initialize)
 (require 'use-package)
 
