@@ -155,7 +155,20 @@
   (interactive) (evil-open-above 0)
   (evil-normal-state) (evil-next-line) (evil-first-non-blank))
 
+; stop creating backup~ files
+(setq make-backup-files nil)
+; stop creating #autosave# files
+(setq auto-save-default nil)
 
+;; Removes *messages* from the buffer.
+(setq-default message-log-max nil)
+(kill-buffer "*Messages*")
+
+;; Don't show *Buffer list* when opening multiple files at the same time.
+(setq inhibit-startup-buffer-menu t)
+
+;; No more typing the whole yes or no. Just y or n will do.
+(fset 'yes-or-no-p 'y-or-n-p)
 
 
 
