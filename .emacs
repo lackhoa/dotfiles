@@ -133,6 +133,9 @@
 (with-eval-after-load 'helm
     (define-key helm-map (kbd "C-w") 'evil-delete-backward-word))
 
+; Kill the buffer with ':x'
+(evil-ex-define-cmd "x" 'kill-this-buffer)
+
 
 ; Key binding
 (define-key evil-motion-state-map ";" 'evil-ex)
