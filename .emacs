@@ -100,8 +100,9 @@
   tab-width 4
   tab-stop-list (quote (4 8)))
 
-; Get rid of the menu bar
-(menu-bar-mode -1)
+; Get rid of the menu bar for terminal
+(unless (display-graphic-p)
+   (menu-bar-mode -1))
 
 ; Vim Numbering
 (use-package evil-numbers
@@ -175,7 +176,9 @@
 ;; No more typing the whole yes or no. Just y or n will do.
 (fset 'yes-or-no-p 'y-or-n-p)
 
-
+(if (display-graphic-p) 
+    nil
+  (enable-theme 'wheatgrass))
 
 
 
@@ -186,15 +189,17 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(custom-enabled-themes (quote (wheatgrass)))
+ '(custom-enabled-themes nil)
  '(custom-safe-themes
    (quote
-    ("29c71db1bc8738c0270e2751babc5cd39d82e496e912c8afc04d59a12429e3bb" default))))
+    ("29c71db1bc8738c0270e2751babc5cd39d82e496e912c8afc04d59a12429e3bb" default)))
+ '(show-paren-mode t))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(default ((t (:family "Courier New" :foundry "outline" :slant normal :weight normal :height 203 :width normal))))
  '(match ((t (:background "RoyalBlue3" :underline nil))))
  '(rainbow-delimiters-depth-1-face ((t (:inherit rainbow-delimiters-base-face :foreground "red"))))
  '(rainbow-delimiters-depth-2-face ((t (:inherit rainbow-delimiters-base-face :foreground "green"))))
