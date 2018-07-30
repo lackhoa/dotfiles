@@ -173,6 +173,9 @@
 ;; Don't show *Buffer list* when opening multiple files at the same time.
 (setq inhibit-startup-buffer-menu t)
 
+;; Don't show Welcome Screen when opening up
+(setq inhibit-startup-screen t)
+
 ;; No more typing the whole yes or no. Just y or n will do.
 (fset 'yes-or-no-p 'y-or-n-p)
 
