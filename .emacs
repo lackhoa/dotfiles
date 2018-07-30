@@ -142,6 +142,7 @@
 (define-key evil-motion-state-map ";" 'evil-ex)
 (define-key evil-normal-state-map "a" 'evil-append-line)
 (define-key evil-normal-state-map "p" 'evil-paste-before)
+(define-key evil-normal-state-map "P" 'evil-paste-after)
 (define-key evil-motion-state-map (kbd "RET") 'evil-write-all)
 (evil-define-key 'normal 'global [down] 'evil-scroll-line-down)
 (evil-define-key 'insert 'global [down] 'evil-scroll-line-down)
