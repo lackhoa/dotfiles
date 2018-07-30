@@ -181,7 +181,7 @@
 
 (if (display-graphic-p) 
     nil
-  (enable-theme 'wheatgrass))
+  (load-theme 'wheatgrass))
 
 
 
