@@ -137,6 +137,38 @@
 ; Kill the buffer with ':x'
 (evil-ex-define-cmd "x" 'kill-this-buffer)
 
+; stop creating backup~ files
+(setq make-backup-files nil)
+; stop creating #autosave# files
+(setq auto-save-default nil)
+
+;; Removes *messages* from the buffer.
+(setq-default message-log-max nil)
+(kill-buffer "*Messages*")
+
+;; Don't show *Buffer list* when opening multiple files at the same time.
+(setq inhibit-startup-buffer-menu t)
+
+;; Don't show Welcome Screen when opening up
+(setq inhibit-startup-screen t)
+
+;; No more typing the whole yes or no. Just y or n will do.
+(fset 'yes-or-no-p 'y-or-n-p)
+
+(if (display-graphic-p) 
+    nil
+  (load-theme 'wheatgrass))
+
+; Highlight indentation
+(use-package highlight-indent-guides
+  :ensure t
+  :config
+  (setq highlight-indent-guides-auto-enabled nil)
+  (set-face-background 'highlight-indent-guides-odd-face "darkgray")
+  (set-face-background 'highlight-indent-guides-even-face "dimgray")
+  (set-face-foreground 'highlight-indent-guides-character-face "dimgray")
+  (setq highlight-indent-guides-method 'column)
+  (add-hook 'prog-mode-hook 'highlight-indent-guides-mode))
 
 ; Key binding
 (define-key evil-motion-state-map ";" 'evil-ex)
@@ -162,27 +194,6 @@
   (interactive) (evil-open-above 0)
   (evil-normal-state) (evil-next-line) (evil-first-non-blank))
 
-; stop creating backup~ files
-(setq make-backup-files nil)
-; stop creating #autosave# files
-(setq auto-save-default nil)
-
-;; Removes *messages* from the buffer.
-(setq-default message-log-max nil)
-(kill-buffer "*Messages*")
-
-;; Don't show *Buffer list* when opening multiple files at the same time.
-(setq inhibit-startup-buffer-menu t)
-
-;; Don't show Welcome Screen when opening up
-(setq inhibit-startup-screen t)
-
-;; No more typing the whole yes or no. Just y or n will do.
-(fset 'yes-or-no-p 'y-or-n-p)
-
-(if (display-graphic-p) 
-    nil
-  (load-theme 'wheatgrass))
 
 
 
