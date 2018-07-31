@@ -11,6 +11,7 @@ abbr cdc 'cdl ~/Coq'
 abbr x 'xset dpms force off'
 abbr emacs 'emacs -nw'
 abbr gs 'git status'
+abbr grep 'grep -C 10'
 
 # clean up stuff that were created less than 1 minute ago
 abbr clean 'find . -type f -cmin -1 -delete'
