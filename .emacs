@@ -77,13 +77,6 @@
   :config
   (evil-lion-mode))
 
-; Tabs
-(use-package evil-tabs
-  :ensure t
-  :config
-  (global-evil-tabs-mode t))
-
-
 ; Adding new file extension to programming mode
 (add-to-list 'auto-mode-alist '("\\.kar\\'" . prog-mode))
 (add-to-list 'auto-mode-alist '("\\.rkt\\'" . prog-mode))
@@ -100,9 +93,10 @@
   tab-width 4
   tab-stop-list (quote (4 8)))
 
-; Get rid of the menu bar for terminal
-(unless (display-graphic-p)
-   (menu-bar-mode -1))
+; Get rid of the UI elements
+(menu-bar-mode -1)
+(toggle-scroll-bar -1) 
+(tool-bar-mode -1) 
 
 ; Vim Numbering
 (use-package evil-numbers
@@ -155,9 +149,7 @@
 ;; No more typing the whole yes or no. Just y or n will do.
 (fset 'yes-or-no-p 'y-or-n-p)
 
-(if (display-graphic-p) 
-    nil
-  (load-theme 'wheatgrass))
+(load-theme 'wheatgrass)
 
 ; Highlight indentation
 (use-package highlight-indent-guides
@@ -169,6 +161,12 @@
   (set-face-foreground 'highlight-indent-guides-character-face "dimgray")
   (setq highlight-indent-guides-method 'column)
   (add-hook 'prog-mode-hook 'highlight-indent-guides-mode))
+
+; Ignore case in minibuffer's tab completion
+(setq completion-ignore-case t)
+(setq read-file-name-completion-ignore-case t)
+(setq read-buffer-completion-ignore-case t)
+
 
 ; Key binding
 (define-key evil-motion-state-map ";" 'evil-ex)
