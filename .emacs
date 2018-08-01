@@ -42,6 +42,8 @@
   :config
   (add-hook 'prog-mode-hook #'rainbow-delimiters-mode))
 
+; No tabs!
+(setq-default indent-tabs-mode nil)
 
 ; Show line number
 (global-linum-mode t)
