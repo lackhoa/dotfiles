@@ -167,6 +167,8 @@
 (setq read-file-name-completion-ignore-case t)
 (setq read-buffer-completion-ignore-case t)
 
+; Maximize on start-up
+(add-to-list 'default-frame-alist '(fullscreen . maximized))
 
 ; Key binding
 (define-key evil-motion-state-map ";" 'evil-ex)
@@ -202,17 +204,14 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(custom-enabled-themes nil)
- '(custom-safe-themes
-   (quote
-    ("29c71db1bc8738c0270e2751babc5cd39d82e496e912c8afc04d59a12429e3bb" default)))
- '(show-paren-mode t))
+ '(show-paren-mode t)
+ '(tool-bar-mode nil))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(default ((t (:family "Courier New" :foundry "outline" :slant normal :weight normal :height 203 :width normal))))
+ '(default ((t (:family "Noto Sans UI" :foundry "GOOG" :slant normal :weight normal :height 200 :width normal))))
  '(match ((t (:background "RoyalBlue3" :underline nil))))
  '(rainbow-delimiters-depth-1-face ((t (:inherit rainbow-delimiters-base-face :foreground "red"))))
  '(rainbow-delimiters-depth-2-face ((t (:inherit rainbow-delimiters-base-face :foreground "green"))))
