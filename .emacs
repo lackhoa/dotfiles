@@ -88,11 +88,6 @@
 (define-key evil-motion-state-map (kbd "<remap> <evil-next-line>") 'evil-next-visual-line)
 (define-key evil-motion-state-map (kbd "<remap> <evil-previous-line>") 'evil-previous-visual-line)
 
-(setq-default
-  indent-tabs-mode nil
-  tab-width 4
-  tab-stop-list (quote (4 8)))
-
 ; Get rid of the UI elements
 (menu-bar-mode -1)
 (toggle-scroll-bar -1) 
@@ -151,7 +146,7 @@
 
 (load-theme 'wheatgrass)
 
-; Highlight indentation
+;; Highlight indentation
 (use-package highlight-indent-guides
   :ensure t
   :config
@@ -211,7 +206,7 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(default ((t (:family "Noto Sans UI" :foundry "GOOG" :slant normal :weight normal :height 200 :width normal))))
+ '(default ((t (:family "DejaVu Sans Mono" :foundry "PfEd" :slant normal :weight normal :height 203 :width normal))))
  '(match ((t (:background "RoyalBlue3" :underline nil))))
  '(rainbow-delimiters-depth-1-face ((t (:inherit rainbow-delimiters-base-face :foreground "red"))))
  '(rainbow-delimiters-depth-2-face ((t (:inherit rainbow-delimiters-base-face :foreground "green"))))
