@@ -79,9 +79,9 @@
   :config
   (evil-lion-mode))
 
-; Adding new file extension to programming mode
-(add-to-list 'auto-mode-alist '("\\.kar\\'" . prog-mode))
-(add-to-list 'auto-mode-alist '("\\.rkt\\'" . prog-mode))
+; Adding new file extension to modes
+(add-to-list 'auto-mode-alist '("\\.kar\\'" . scheme-mode))
+(add-to-list 'auto-mode-alist '("\\.rkt\\'" . scheme-mode))
 
 
 ; Make movement keys work respect visual lines
