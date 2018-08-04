@@ -85,10 +85,10 @@
 
 
 ; Make movement keys work respect visual lines
-(define-key evil-normal-state-map (kbd "<remap> <evil-next-line>") 'evil-next-visual-line)
-(define-key evil-normal-state-map (kbd "<remap> <evil-previous-line>") 'evil-previous-visual-line)
-(define-key evil-motion-state-map (kbd "<remap> <evil-next-line>") 'evil-next-visual-line)
-(define-key evil-motion-state-map (kbd "<remap> <evil-previous-line>") 'evil-previous-visual-line)
+;; (define-key evil-normal-state-map (kbd "<remap> <evil-next-line>") 'evil-next-visual-line)
+;; (define-key evil-normal-state-map (kbd "<remap> <evil-previous-line>") 'evil-previous-visual-line)
+;; (define-key evil-motion-state-map (kbd "<remap> <evil-next-line>") 'evil-next-visual-line)
+;; (define-key evil-motion-state-map (kbd "<remap> <evil-previous-line>") 'evil-previous-visual-line)
 
 ; Get rid of the UI elements
 (menu-bar-mode -1)
@@ -127,6 +127,7 @@
 
 ; Kill the buffer with ':x'
 (evil-ex-define-cmd "x" 'kill-this-buffer)
+(evil-ex-define-cmd "f" 'find-file)
 
 ; stop creating backup~ files
 (setq make-backup-files nil)
