@@ -168,6 +168,9 @@
 ; Maximize on start-up
 (add-to-list 'default-frame-alist '(fullscreen . maximized))
 
+; Turn off the annoying reindenting
+(electric-indent-mode -1)
+
 ; Key binding
 (define-key evil-motion-state-map ";" 'evil-ex)
 (define-key evil-normal-state-map "a" 'evil-append-line)
