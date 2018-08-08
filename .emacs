@@ -166,10 +166,20 @@
 ; Turn off the annoying reindenting
 (electric-indent-mode -1)
 
-;; display “lambda” as “λ”
+; Prettify symbols
+(add-hook 'prog-mode-hook
+  (lambda ()
+    (setq prettify-symbols-alist
+          '(("lambda" . ?λ)
+            ("lam"    . ?λ)
+            ("<="     . ?≤)
+            (">="     . ?≥)
+            ("->"     . ?→)
+            ("=>"     . ?➾)))))
 (global-prettify-symbols-mode 1)
-(setq prettify-symbols-alist '(("lambda" . 955)))
-(setq prettify-symbols-alist '(("lam" . 955)))
+
+
+
 
 
 
@@ -179,6 +189,7 @@
 (define-key evil-motion-state-map ";" 'evil-ex)
 (define-key evil-normal-state-map "a" 'evil-append-line)
 (define-key evil-normal-state-map "p" 'evil-paste-before)
+(evil-define-key 'insert 'global (kbd "C-v") 'evil-paste-before)
 (define-key evil-normal-state-map "P" 'evil-paste-after)
 (define-key evil-motion-state-map (kbd "RET") 'evil-write-all)
 (evil-define-key 'normal 'global [down] 'evil-scroll-line-down)
@@ -198,6 +209,7 @@
 (defun add-line-above ()
   (interactive) (evil-open-above 0)
   (evil-normal-state) (evil-next-line) (evil-first-non-blank))
+
 
 
 
