@@ -169,6 +169,7 @@
 ;; display “lambda” as “λ”
 (global-prettify-symbols-mode 1)
 (setq prettify-symbols-alist '(("lambda" . 955)))
+(setq prettify-symbols-alist '(("lam" . 955)))
 
 
 
