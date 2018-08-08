@@ -166,6 +166,14 @@
 ; Turn off the annoying reindenting
 (electric-indent-mode -1)
 
+;; display “lambda” as “λ”
+(global-prettify-symbols-mode 1)
+(setq prettify-symbols-alist '(("lambda" . 955)))
+
+
+
+
+
 ; Key binding
 (define-key evil-motion-state-map ";" 'evil-ex)
 (define-key evil-normal-state-map "a" 'evil-append-line)
