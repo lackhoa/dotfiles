@@ -4,7 +4,9 @@
         ("melpa" . "https://melpa.org/packages/")
         ("gnu" . "http://elpa.gnu.org/packages/")
         ("melpa-stable" . "https://stable.melpa.org/packages/")))
-(package-refresh-contents)
+
+;; Evaluate this when you can't install use-package
+;; (package-refresh-contents)
 (package-initialize)
 (require 'use-package)
 
