@@ -22,6 +22,12 @@
   (use-package evil-indent-textobject
     :ensure t))
 
+; Surround
+(use-package evil-surround
+  :ensure t
+  :config
+  (global-evil-surround-mode))
+
 ; Relative line number
 (use-package linum-relative
   :ensure t
@@ -81,12 +87,6 @@
 (add-to-list 'auto-mode-alist '("\\.kar\\'" . scheme-mode))
 (add-to-list 'auto-mode-alist '("\\.rkt\\'" . scheme-mode))
 
-
-; Make movement keys work respect visual lines
-;; (define-key evil-normal-state-map (kbd "<remap> <evil-next-line>") 'evil-next-visual-line)
-;; (define-key evil-normal-state-map (kbd "<remap> <evil-previous-line>") 'evil-previous-visual-line)
-;; (define-key evil-motion-state-map (kbd "<remap> <evil-next-line>") 'evil-next-visual-line)
-;; (define-key evil-motion-state-map (kbd "<remap> <evil-previous-line>") 'evil-previous-visual-line)
 
 ; Get rid of the UI elements
 (menu-bar-mode -1)
@@ -206,17 +206,14 @@
 (evil-define-key 'normal 'global (kbd "C-j") #'add-line-below)
 (defun add-line-below ()
   (interactive) (evil-open-below 0)
-  (evil-normal-state) (evil-previous-line) (evil-first-non-blank))
+  (evil-previous-line) (evil-first-non-blank)
+  (evil-normal-state))
 
 (evil-define-key 'normal 'global (kbd "C-k") #'add-line-above)
 (defun add-line-above ()
   (interactive) (evil-open-above 0)
-  (evil-normal-state) (evil-next-line) (evil-first-non-blank))
-
-
-
-
-
+  (evil-next-line) (evil-first-non-blank)
+  (evil-normal-state))
 
 
 (custom-set-variables
