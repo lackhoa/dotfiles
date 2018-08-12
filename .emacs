@@ -34,11 +34,8 @@
   :config
   (linum-relative-on))
 
-; Powerline
-(use-package powerline
-  :ensure t
-  :config
-  (powerline-center-evil-theme))
+; Show column
+(column-number-mode 1)
 
 ; Rainbow
 (use-package rainbow-delimiters
@@ -91,7 +88,7 @@
 ; Get rid of the UI elements
 (menu-bar-mode -1)
 (toggle-scroll-bar -1) 
-(tool-bar-mode -1) 
+(tool-bar-mode -1)
 
 ; Vim Numbering
 (use-package evil-numbers
