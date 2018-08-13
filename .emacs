@@ -81,8 +81,8 @@
   (evil-lion-mode))
 
 ; Adding new file extension to modes
-(add-to-list 'auto-mode-alist '("\\.kar\\'" . scheme-mode))
 (add-to-list 'auto-mode-alist '("\\.rkt\\'" . scheme-mode))
+(add-to-list 'auto-mode-alist '("\\.md\\'" . prog-mode))
 
 
 ; Get rid of the UI elements
@@ -175,7 +175,11 @@
             ("<="     . ?≤)
             (">="     . ?≥)
             ("->"     . ?→)
-            ("=>"     . ?➾)))))
+            ("<-"     . ?←)
+            ("<->"    . ?↔)
+            ("=>"     . ?➾)
+            ("=="     . ?≡)
+            ("=/="    . ?≠)))))
 (global-prettify-symbols-mode 1)
 
 
