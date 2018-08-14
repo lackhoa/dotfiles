@@ -182,6 +182,8 @@
             ("=/="    . ?≠)))))
 (global-prettify-symbols-mode 1)
 
+; Delete trailing whitespaces
+(add-hook 'before-save-hook 'delete-trailing-whitespace)
 
 
 
