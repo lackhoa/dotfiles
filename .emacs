@@ -87,7 +87,7 @@
 
 ; Get rid of the UI elements
 (menu-bar-mode -1)
-(toggle-scroll-bar -1) 
+(toggle-scroll-bar -1)
 (tool-bar-mode -1)
 
 ; Vim Numbering
@@ -98,7 +98,7 @@
   (global-set-key (kbd "C-c -") 'evil-numbers/dec-at-pt))
 
 ;; Remove completion buffer when done
-(add-hook 'minibuffer-exit-hook 
+(add-hook 'minibuffer-exit-hook
       '(lambda ()
          (let ((buffer "*Completions*"))
            (and (get-buffer buffer)
@@ -182,10 +182,21 @@
             ("=/="    . ?≠)))))
 (global-prettify-symbols-mode 1)
 
-; Delete trailing whitespaces
+; Delete trailing whitespaces on save.
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
 
-
+; Line number fix when zooming
+(require 'linum)
+(defun linum-update-window-scale-fix (win)
+  "fix linum for scaled text"
+  (set-window-margins win
+          (ceiling (* (if (boundp 'text-scale-mode-step)
+                  (expt text-scale-mode-step
+                    text-scale-mode-amount) 1)
+              (if (car (window-margins))
+                  (car (window-margins)) 1)
+              ))))
+(advice-add #'linum-update-window :after #'linum-update-window-scale-fix)
 
 
 
