@@ -217,18 +217,22 @@
 (evil-define-key 'insert 'global [right] 'next-buffer)
 (evil-define-key 'normal 'global [left] 'previous-buffer)
 (evil-define-key 'insert 'global [left] 'previous-buffer)
+
 (evil-define-key 'normal 'global (kbd "C-j") #'add-line-below)
 (defun add-line-below ()
-  (interactive) (evil-open-below 0)
-  (evil-previous-line) (evil-first-non-blank)
-  (evil-normal-state))
+  (interactive)
+  (save-excursion
+      (end-of-line)
+      (open-line 1)))
 
 (evil-define-key 'normal 'global (kbd "C-k") #'add-line-above)
 (defun add-line-above ()
-  (interactive) (evil-open-above 0)
-  (evil-next-line) (evil-first-non-blank)
-  (evil-normal-state))
+  (interactive)
+  (save-excursion
+    (end-of-line 0)
+    (open-line 1)))
 
+(evil-define-key 'visual 'global (kbd "TAB") #'indent-rigidly)
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
