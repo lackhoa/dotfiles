@@ -5,8 +5,10 @@
         ("gnu" . "http://elpa.gnu.org/packages/")
         ("melpa-stable" . "https://stable.melpa.org/packages/")))
 
-;; Evaluate this when you can't install use-package
+;; Evaluate these when you haven't got install use-package
 ;; (package-refresh-contents)
+;; (package-install 'use-package)
+
 (package-initialize)
 (require 'use-package)
 
@@ -239,6 +241,8 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(package-selected-packages
+   '("use-package" highlight-indent-guides company evil-numbers evil-lion evil-snipe evil-commentary rainbow-delimiters linum-relative evil-surround evil-indent-textobject evil-leader evil use-package))
  '(show-paren-mode t)
  '(tool-bar-mode nil))
 (custom-set-faces
