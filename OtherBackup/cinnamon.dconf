@@ -214,14 +214,14 @@ dwell-click-enabled=false
 event-sounds=false
 
 [desktop/background]
-picture-uri='file:///home/khoa/Pictures/maxresdefault%20(5).jpg'
+picture-uri='file:///usr/share/backgrounds/linuxmint-sarah/linuxmint_ireland.jpg'
 picture-options='zoom'
 
 [desktop/background/slideshow]
 image-source='directory:///home/khoa/Pictures'
 random-order=true
 delay=10
-slideshow-enabled=true
+slideshow-enabled=false
 
 [theme]
 name='Vivaldi-ZorinOS'

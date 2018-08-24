@@ -323,6 +323,14 @@ audible-bell=true
 list=['9d69388d-3484-4748-8f0f-73cbb8acbaca', '70e5f7a9-1ee9-40be-bdbd-73208eb3deb5']
 default='9d69388d-3484-4748-8f0f-73cbb8acbaca'
 
+[terminal/legacy/profiles:/:b1dcc9dd-5262-4d8d-a863-c897e6d979b9]
+background-color='rgb(0,43,54)'
+use-theme-colors=false
+use-theme-transparency=false
+foreground-color='rgb(131,148,150)'
+use-system-font=false
+font='Monospace 16'
+
 [nm-applet]
 disable-disconnected-notifications=true
 disable-connected-notifications=true
