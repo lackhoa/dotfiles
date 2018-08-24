@@ -296,7 +296,7 @@ next-tab='<Primary>Right'
 zoom-in='<Primary>equal'
 
 [terminal/legacy/profiles:/:9d69388d-3484-4748-8f0f-73cbb8acbaca]
-foreground-color='rgb(170,170,170)'
+foreground-color='rgb(131,148,150)'
 rewrap-on-resize=true
 scrollbar-policy='always'
 login-shell=true
@@ -315,7 +315,7 @@ font='Noto Sans Mono CJK JP 17'
 use-theme-transparency=false
 scrollback-unlimited=false
 scroll-on-keystroke=true
-background-color='rgb(65,1,64)'
+background-color='rgb(0,43,54)'
 background-transparency-percent=0
 audible-bell=true
 
