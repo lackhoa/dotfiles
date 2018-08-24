@@ -79,7 +79,7 @@ orientation-lock=false
 [settings-daemon/peripherals/keyboard]
 repeat-interval=uint32 19
 delay=uint32 405
-numlock-state='off'
+numlock-state='on'
 repeat=true
 
 [settings-daemon/peripherals/mouse]
