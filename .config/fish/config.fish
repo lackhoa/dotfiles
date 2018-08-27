@@ -1,15 +1,16 @@
-abbr cls 'clear'
-abbr edit-abbr 'emacs ~/.config/fish/config.fish'
+abbr cls         'clear'
+abbr edit-abbr   'emacs  ~/.config/fish/config.fish'
 abbr update-abbr 'source ~/.config/fish/config.fish'
-abbr cp 'cp -vi'
-abbr mv 'mv -vi'
-abbr gs 'git status'
-abbr gps 'git push'
-abbr gpl 'git pull'
-abbr gc 'git commit -m'
-abbr gca 'git commit -a -m'
-abbr ga 'git add'
-abbr grep 'grep -C 10'
+abbr cp          'cp     -vi'
+abbr mv          'mv     -vi'
+abbr gs          'git    status'
+abbr gps         'git    push'
+abbr gpl         'git    pull'
+abbr gc          'git    commit -m'
+abbr gca         'git    commit -a -m'
+abbr ga          'git    add'
+abbr gd          'git    diff'
+abbr grep        'grep   -C     10'
 
 # clean up stuff that were created less than 1 minute ago
 abbr clean 'find . -type f -cmin -1 -delete'
@@ -26,4 +27,3 @@ abbr texhash 'texhash & texhash ~/texmf'
 function cdl
     builtin cd $argv; and ls -F
 end
-
