@@ -1,37 +1,39 @@
 [/]
 desktop-effects-unmaximize-transition='easeOutBounce'
+desktop-effects-on-dialogs=false
 desktop-effects-maximize-transition='easeInBack'
 workspace-osd-visible=true
-desktop-effects-map-effect='flyUp'
+desktop-effects-map-effect='none'
 command-history=['khoa-update', 'sudo khoa-update', 'touch dick', 'gnome-terminal -x sleep 10h', 'bash', 'shell', 'sudo apt-get install --reinstall gnome-terminal', 'sudo apt-get install xterm', 'sudo apt-get instsall gnome-terminal', 'terminal-emulator', 'wireless', 'conky-config', 'conky-conf', 'coqtop', 'sudo', 'gksu', 'gksudo', 'pt', 'gnome-terminal', 'python3 ~/pywal-master/khoa_wal.py', 'python3 /home/khoa/pywal-master/khoa_wal.py', 'i3', 'keynav', 'vim something', 'gvim something', 'bash bin/khoa_motd.sh', 'gvim', 'bash ~/bin/khoa_motd.sh', 'bash khoa_motd.sh', 'khoa_motd', 'khoa_motd.sh', '~/bin/khoa_motd.sh', 'wireshark gtk', 'wireshark-gtk', 'nemo', 'redshift', '~/bin/inverter.py', 'uninv', 'coqie', 'subl', 'coq', 'terminal', 'term', 'x', 'noinv', 'inv', 'droicam', 'droidcam', 'python3 ~/bin/inverter.py', 'coqide', 'sudo wireshark-gtk %f', 'sudo wireshark-gtk', 'python bin/inverter.py', 'packettracer', 'python ~/bin/inverter.py', 'python /home/khoa/bin/inverter.py', 'python /home/lac/inverter.py', 'conky']
 hotcorner-layout=['expo:false:0', 'scale:false:0', 'scale:false:0', 'desktop:false:0']
-desktop-effects-close-effect='flyDown'
+desktop-effects-close-effect='none'
 desktop-effects-style='flyUp'
 desktop-effects-unmaximize-time=100
 enabled-desklets=@as []
 desktop-effects-map-time=100
 panels-scale-text-icons=['1:true', '2:true']
-desktop-effects-minimize-effect='flyDown'
-alttab-switcher-style='coverflow'
+desktop-effects-minimize-effect='none'
+alttab-switcher-style='icons+preview'
 workspace-osd-duration=400
+desktop-effects=false
 prevent-focus-stealing=true
 panels-height=['1:42', '2:25']
-enable-vfade=true
+enable-vfade=false
 next-applet-id=59
 panel-launchers=['DEPRECATED']
 desktop-effects-map-transition='easeOutSine'
-desktop-effects-unmaximize-effect='scale'
-panels-enabled=['1:0:bottom']
 desktop-effects-maximize-time=100
-overview-corner=['expo:false:false:0', 'scale:false:false:0', 'scale:false:false:0', 'desktop:false:false:0']
+desktop-effects-unmaximize-effect='none'
+panels-enabled=['1:0:bottom']
 desktop-effects-tile-transition='easeInBack'
-desktop-effects-maximize-effect='scale'
-desktop-effects-on-menus=true
+overview-corner=['expo:false:false:0', 'scale:false:false:0', 'scale:false:false:0', 'desktop:false:false:0']
 panels-resizable=['1:true', '2:false']
+desktop-effects-maximize-effect='none'
+desktop-effects-on-menus=false
 enabled-applets=['panel1:left:2:window-list@cinnamon.org:50', 'panel1:center:0:menu@cinnamon.org:51', 'panel1:right:0:notifications@cinnamon.org:4', 'panel1:right:2:separator@cinnamon.org:55', 'panel1:right:3:removable-drives@cinnamon.org:6', 'panel1:right:4:systray@cinnamon.org:12', 'panel1:right:6:keyboard@cinnamon.org:7', 'panel1:right:7:network@cinnamon.org:9', 'panel1:right:8:separator@cinnamon.org:41', 'panel1:right:9:calendar@cinnamon.org:13']
 desktop-effects-minimize-time=100
 alttab-switcher-delay=100
-desktop-effects-tile-effect='scale'
+desktop-effects-tile-effect='none'
 desktop-effects-close-transition='easeInBack'
 desktop-effects-minimize-transition='easeInSine'
 panel-edit-mode=false
@@ -42,69 +44,17 @@ no-adjacent-panel-barriers=true
 workspace-osd-y=50
 favorite-apps=['gnome-terminal.desktop', 'nemo.desktop', 'xviewer.desktop']
 workspace-osd-x=50
+workspace-expo-view-as-grid=false
 desktop-effects-tile-time=100
 panels-autohide=['1:false', '2:false']
-workspace-expo-view-as-grid=false
-
-[settings-daemon/plugins/power]
-lid-close-suspend-with-external-monitor=false
-sleep-inactive-battery-timeout=0
-lock-on-suspend=false
-lid-close-ac-action='nothing'
-idle-dim-battery=true
-sleep-display-battery=600
-sleep-display-ac=300
-lid-close-battery-action='nothing'
-sleep-inactive-ac-timeout=1800
-
-[settings-daemon/plugins/xsettings]
-buttons-have-icons=true
-hinting='full'
-
-[settings-daemon/peripherals/touchpad]
-tap-to-click=true
-horizontal-edge-scrolling=true
-motion-acceleration=10.0
-custom-acceleration=true
-custom-threshold=true
-two-finger-click=0
-three-finger-click=0
-horizontal-two-finger-scrolling=true
-motion-threshold=1
-touchpad-enabled=true
-
-[settings-daemon/peripherals/touchscreen]
-orientation-lock=false
-
-[settings-daemon/peripherals/keyboard]
-repeat-interval=uint32 19
-delay=uint32 405
-numlock-state='on'
-repeat=true
-
-[settings-daemon/peripherals/mouse]
-locate-pointer=true
-left-handed=false
-drag-threshold=10
-motion-acceleration=5.8835758835758831
-custom-acceleration=true
-custom-threshold=true
-double-click=400
-motion-threshold=5
+startup-animation=false
 
 [muffin]
 button-layout=':minimize,maximize,close'
 resize-threshold=24
 tile-hud-threshold=25
 workspace-cycle=false
-edge-tiling=false
-
-[sounds]
-maximize-enabled=true
-unmaximize-enabled=true
-map-enabled=true
-close-enabled=true
-minimize-enabled=true
+edge-tiling=true
 
 [desktop/interface]
 text-scaling-factor=1.0
@@ -115,8 +65,9 @@ cursor-theme='Adwaita'
 toolkit-accessibility=false
 clock-show-seconds=false
 cursor-blink-time=1200
-icon-theme='Vivacious-Colors'
-gtk-theme='Paper'
+icon-theme='Mint-X-Red'
+gtk-overlay-scrollbars=false
+gtk-theme='Mint-Y-Dark'
 clock-show-date=true
 
 [desktop/keybindings/media-keys]
@@ -160,11 +111,12 @@ recent-files-max-age=30
 remember-recent-files=false
 
 [desktop/wm/preferences]
-theme='Paper'
+theme='Esco'
 num-workspaces=3
 action-scroll-titlebar='opacity'
 auto-raise=true
 visual-bell=false
+action-double-click-titlebar='toggle-maximize'
 min-window-opacity=30
 workspace-names=['Entertainment & Note', 'Main work', 'References']
 audible-bell=false
@@ -218,13 +170,66 @@ picture-uri='file:///usr/share/backgrounds/linuxmint-sarah/linuxmint_ireland.jpg
 picture-options='zoom'
 
 [desktop/background/slideshow]
-image-source='directory:///home/khoa/Pictures'
+image-source='xml:///usr/share/cinnamon-background-properties/linuxmint.xml'
 random-order=true
 delay=10
 slideshow-enabled=false
 
 [theme]
-name='Vivaldi-ZorinOS'
+name='cinnamon'
+
+[settings-daemon/plugins/power]
+lid-close-suspend-with-external-monitor=false
+sleep-inactive-battery-timeout=0
+lock-on-suspend=false
+lid-close-ac-action='nothing'
+idle-dim-battery=true
+sleep-display-battery=600
+sleep-display-ac=300
+lid-close-battery-action='nothing'
+sleep-inactive-ac-timeout=1800
+
+[settings-daemon/plugins/xsettings]
+buttons-have-icons=true
+hinting='full'
+
+[settings-daemon/peripherals/touchpad]
+tap-to-click=true
+horizontal-edge-scrolling=true
+motion-acceleration=10.0
+custom-acceleration=true
+custom-threshold=true
+two-finger-click=0
+three-finger-click=0
+horizontal-two-finger-scrolling=true
+motion-threshold=1
+touchpad-enabled=true
+
+[settings-daemon/peripherals/touchscreen]
+orientation-lock=false
+
+[settings-daemon/peripherals/keyboard]
+repeat-interval=uint32 19
+delay=uint32 405
+numlock-state='on'
+repeat=true
+
+[settings-daemon/peripherals/mouse]
+locate-pointer=true
+left-handed=false
+drag-threshold=10
+motion-acceleration=5.8835758835758831
+custom-acceleration=true
+custom-threshold=true
+double-click=400
+motion-threshold=5
 
 [cinnamon-session]
 quit-time-delay=60
+
+[sounds]
+maximize-enabled=true
+unmaximize-enabled=true
+map-enabled=true
+close-enabled=true
+minimize-enabled=true
