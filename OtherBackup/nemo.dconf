@@ -15,9 +15,10 @@ maximized=true
 start-with-sidebar=true
 
 [desktop]
+network-icon-visible=false
 volumes-visible=true
 home-icon-visible=false
-network-icon-visible=true
+computer-icon-visible=false
 show-orphaned-desktop-icons=false
 font='Norasi 12'
-trash-icon-visible=true
+trash-icon-visible=false
