@@ -8,7 +8,7 @@
 ;; Evaluate these when you haven't got install use-package
 ;; (package-refresh-contents)
 ;; (package-install 'use-package)
-;; (package-initialize)
+(package-initialize)
 
 (require 'use-package)
 
