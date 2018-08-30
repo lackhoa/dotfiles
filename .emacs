@@ -187,23 +187,6 @@
 ; Delete trailing whitespaces on save.
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
 
-; Line number fix when zooming
-(require 'linum)
-(defun linum-update-window-scale-fix (win)
-  "fix linum for scaled text"
-  (set-window-margins win
-          (ceiling (* (if (boundp 'text-scale-mode-step)
-                  (expt text-scale-mode-step
-                    text-scale-mode-amount) 1)
-              (if (car (window-margins))
-                  (car (window-margins)) 1)
-              ))))
-(advice-add #'linum-update-window :after #'linum-update-window-scale-fix)
-
-
-
-
-
 ; Key binding
 (define-key evil-motion-state-map ";" 'evil-ex)
 (define-key evil-normal-state-map "a" 'evil-append-line)
@@ -251,6 +234,7 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(default ((t (:family "DejaVu Sans Mono" :foundry "PfEd" :slant normal :weight normal :height 203 :width normal))))
+ '(linum ((t (:inherit (shadow default) :height 100))))
  '(match ((t (:background "RoyalBlue3" :underline nil))))
  '(rainbow-delimiters-depth-1-face ((t (:inherit rainbow-delimiters-base-face :foreground "red"))))
  '(rainbow-delimiters-depth-2-face ((t (:inherit rainbow-delimiters-base-face :foreground "green"))))
