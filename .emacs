@@ -8,7 +8,10 @@
 ;; Evaluate these when you haven't got install use-package
 ;; (package-refresh-contents)
 ;; (package-install 'use-package)
-(package-initialize)
+
+; Version 27.0 automatically initializes packages for you
+(when (version< emacs-version "27.0")
+  (package-initialize))
 
 (require 'use-package)
 
