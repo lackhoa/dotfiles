@@ -1,0 +1,13 @@
+[user]
+	email = vodangkhoa873@gmail.com
+	ner = lackhoa
+	name = lackhoa
+[core]
+	editor = vim
+[diff]
+	tool = vimdiff
+        diff = diff-so-fancy | less --tabs=1,5 -RFX
+        show = diff-so-fancy | less --tabs=1,5 -RFX
+[push]
+	default = simple
+	followTags = true
