@@ -171,7 +171,7 @@ dwell-click-enabled=false
 event-sounds=false
 
 [desktop/background]
-picture-uri='file:///usr/share/backgrounds/linuxmint-sarah/linuxmint_ireland.jpg'
+picture-uri='file:///usr/share/backgrounds/linuxmint/edesigner_linuxmint.png'
 picture-options='zoom'
 
 [desktop/background/slideshow]
