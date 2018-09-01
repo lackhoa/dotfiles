@@ -11,6 +11,7 @@ abbr gca         'git commit -a -m'
 abbr ga          'git add'
 abbr gd          'git diff'
 abbr grep        'grep -C 10'
+abbr rm          'rm -rf'
 
 # clean up stuff that were created less than 1 minute ago
 abbr clean 'find . -type f -cmin -1 -delete'
