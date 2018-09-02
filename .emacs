@@ -193,6 +193,7 @@
 ; Key binding
 (define-key evil-motion-state-map ";" 'evil-ex)
 (define-key evil-normal-state-map "a" 'evil-append-line)
+(define-key evil-normal-state-map "A" 'evil-append)
 (define-key evil-normal-state-map "p" 'evil-paste-before)
 (evil-define-key 'insert 'global (kbd "C-v") 'evil-paste-before)
 (define-key evil-normal-state-map "P" 'evil-paste-after)
