@@ -15,6 +15,11 @@
 
 (require 'use-package)
 
+(use-package which-key
+  :ensure t
+  :init
+  (which-key-mode))
+
 (use-package aggressive-indent
   :ensure t
   :config
@@ -136,6 +141,17 @@
 ;; Kill the buffer with ':x'
 (evil-ex-define-cmd "x" 'kill-this-buffer)
 (evil-ex-define-cmd "f" 'find-file)
+(evil-ex-define-cmd "s" #'replace-regexp-entire-buffer)
+(defun replace-regexp-entire-buffer (pattern replacement)
+  "Perform regular-expression replacement throughout buffer."
+  (interactive
+   (let ((args (query-replace-read-args "Replace" t)))
+     (setcdr (cdr args) nil)    ; remove third value returned from query---args
+     args))
+  (save-excursion
+    (goto-char (point-min))
+    (while (re-search-forward pattern nil t)
+      (replace-match replacement))))
 
 ;; stop creating backup~ files
 (setq make-backup-files nil)
@@ -241,6 +257,7 @@
     (open-line 1)))
 
 (evil-define-key 'visual 'global (kbd "TAB") #'indent-rigidly)
+
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
