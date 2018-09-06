@@ -206,6 +206,8 @@
 (put 'send   'scheme-indent-function 2)
 (put 'for    'scheme-indent-function 1)
 (put 'let/cc 'scheme-indent-function 1)
+(put 'let/ec 'scheme-indent-function 1)
+(put 'trace-let 'scheme-indent-function 2)
 
 ;; Key binding
 (define-key evil-motion-state-map ";" 'evil-ex)
