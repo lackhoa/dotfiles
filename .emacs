@@ -9,11 +9,19 @@
 ;; (package-refresh-contents)
 ;; (package-install 'use-package)
 
-; Version 27.0 automatically initializes packages for you
+;; Version 27.0 automatically initializes packages for you
 (when (version< emacs-version "27.0")
   (package-initialize))
 
 (require 'use-package)
+
+(use-package aggressive-indent
+  :ensure t
+  :config
+  (add-hook 'emacs-lisp-mode-hook
+            #'aggressive-indent-mode)
+  (add-hook 'scheme-mode-hook
+            #'aggressive-indent-mode))
 
 (use-package evil
   :ensure t
@@ -27,75 +35,75 @@
   (use-package evil-indent-textobject
     :ensure t))
 
-; Surround
+;; Surround
 (use-package evil-surround
   :ensure t
   :config
   (global-evil-surround-mode))
 
-; Relative line number
+;; Relative line number
 (use-package linum-relative
   :ensure t
   :config
   (linum-relative-on))
 
-; Show column
+;; Show column
 (column-number-mode 1)
 
-; Rainbow
+;; Rainbow
 (use-package rainbow-delimiters
   :ensure t
   :config
   (add-hook 'prog-mode-hook #'rainbow-delimiters-mode))
 
-; No tabs!
+;; No tabs!
 (setq-default indent-tabs-mode nil)
 
-; Show line number
+;; Show line number
 (global-linum-mode t)
 (setq linum-relative-current-symbol "")
 
-; Highlight matching brackets
+;; Highlight matching brackets
 (show-paren-mode)
 (set-face-background 'show-paren-match (face-background 'default))
 (set-face-foreground 'show-paren-match "#def")
 (set-face-attribute 'show-paren-match nil :weight 'extra-bold)
 
-; Custome theme or whatever
+;; Custome theme or whatever
 (add-to-list 'custom-theme-load-path "~/.emacs.d/themes/")
 
-; Auto-pair
+;; Auto-pair
 (electric-pair-mode)
 
-; Commentary
+;; Commentary
 (use-package evil-commentary
   :ensure t
   :config
   (evil-commentary-mode))
 
-; The (legendary) sniping ability
+;; The (legendary) sniping ability
 (use-package evil-snipe
   :ensure t
   :config
   (evil-snipe-mode 1))
 
-; Alignment
+;; Alignment
 (use-package evil-lion
   :ensure t
   :config
   (evil-lion-mode))
 
-; Adding new file extension to modes
+;; Adding new file extension to modes
 (add-to-list 'auto-mode-alist '("\\.rkt\\'" . scheme-mode))
 (add-to-list 'auto-mode-alist '("\\.md\\'" . prog-mode))
 
 
-; Get rid of the UI elements
+;; Get rid of the UI elements
 (menu-bar-mode -1)
 (toggle-scroll-bar -1)
 (tool-bar-mode -1)
 
-; Vim Numbering
+;; Vim Numbering
 (use-package evil-numbers
   :ensure t
   :config
@@ -104,12 +112,12 @@
 
 ;; Remove completion buffer when done
 (add-hook 'minibuffer-exit-hook
-      '(lambda ()
-         (let ((buffer "*Completions*"))
-           (and (get-buffer buffer)
-            (kill-buffer buffer)))))
+          '(lambda ()
+             (let ((buffer "*Completions*"))
+               (and (get-buffer buffer)
+                    (kill-buffer buffer)))))
 
-; Auto completion
+;; Auto completion
 (use-package company
   :ensure t
   :config
@@ -119,19 +127,19 @@
   (define-key company-active-map [tab] 'company-complete)
   (define-key company-active-map (kbd "C-n") 'company-select-next)
   (define-key company-active-map (kbd "C-p") 'company-select-previous))
-; Delete word when in automcomplete
+;; Delete word when in automcomplete
 (with-eval-after-load 'company
     (define-key company-active-map (kbd "C-w") 'evil-delete-backward-word))
 (with-eval-after-load 'helm
     (define-key helm-map (kbd "C-w") 'evil-delete-backward-word))
 
-; Kill the buffer with ':x'
+;; Kill the buffer with ':x'
 (evil-ex-define-cmd "x" 'kill-this-buffer)
 (evil-ex-define-cmd "f" 'find-file)
 
-; stop creating backup~ files
+;; stop creating backup~ files
 (setq make-backup-files nil)
-; stop creating #autosave# files
+;; stop creating #autosave# files
 (setq auto-save-default nil)
 
 ;; Removes *messages* from the buffer.
@@ -160,37 +168,46 @@
   (setq highlight-indent-guides-method 'column)
   (add-hook 'prog-mode-hook 'highlight-indent-guides-mode))
 
-; Ignore case in minibuffer's tab completion
+;; Ignore case in minibuffer's tab completion
 (setq completion-ignore-case t)
 (setq read-file-name-completion-ignore-case t)
 (setq read-buffer-completion-ignore-case t)
 
-; Maximize on start-up
+;; Maximize on start-up
 (add-to-list 'default-frame-alist '(fullscreen . maximized))
 
-; Turn off the annoying reindenting
-(electric-indent-mode -1)
 
-; Prettify symbols
+                                        ;; Prettify symbols
 (add-hook 'prog-mode-hook
-  (lambda ()
-    (setq prettify-symbols-alist
-          '(("lambda" . ?λ)
-            ("lam"    . ?λ)
-            ("<="     . ?≤)
-            (">="     . ?≥)
-            ("->"     . ?→)
-            ("<-"     . ?←)
-            ("<->"    . ?↔)
-            ("=>"     . ?➾)
-            ("=="     . ?≡)
-            ("=/="    . ?≠)))))
+          (lambda ()
+            (setq prettify-symbols-alist
+                  '(("lambda" . ?λ)
+                    ("lam"    . ?λ)
+                    ("<="     . ?≤)
+                    (">="     . ?≥)
+                    ("->"     . ?→)
+                    ("<-"     . ?←)
+                    ("<->"    . ?↔)
+                    ("=>"     . ?➾)
+                    ("=="     . ?≡)
+                    ("=/="    . ?≠)))))
 (global-prettify-symbols-mode 1)
 
-; Delete trailing whitespaces on save.
+;; Delete trailing whitespaces on save.
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
 
-; Key binding
+;; Fix lisp indent
+(put 'lam      'scheme-indent-function 'defun)
+(put 'def    'scheme-indent-function 1)
+(put 'class  'scheme-indent-function 1)
+(put 'class* 'scheme-indent-function 2)
+(put 'match  'scheme-indent-function 1)
+(put 'match* 'scheme-indent-function 1)
+(put 'send   'scheme-indent-function 2)
+(put 'for    'scheme-indent-function 1)
+(put 'let/cc 'scheme-indent-function 1)
+
+;; Key binding
 (define-key evil-motion-state-map ";" 'evil-ex)
 (define-key evil-normal-state-map "a" 'evil-append-line)
 (define-key evil-normal-state-map "A" 'evil-append)
