@@ -24,12 +24,6 @@
 ;; Load THE theme
 (load-theme 'wheatgrass)
 
-;; Terminal
-(defvar my-term-shell "/usr/bin/fish")
-(defadvice ansi-term (before force-bash)
-  (interactive (list my-term-shell)))
-(global-set-key (kbd "<s-return>") 'ansi-term)
-
 ;; Don't skip the screen when scrolling up or down
 (setq scroll-conservatively 100)
 
@@ -68,6 +62,23 @@
 ;;; Packages
 (require 'use-package)
 
+(use-package evil
+  :ensure t
+  :config
+  (evil-mode 1)
+  (use-package evil-leader
+    :ensure t
+    :config
+    (global-evil-leader-mode))
+  (use-package evil-indent-textobject
+    :ensure t))
+
+;; Switch line highlighting off when in insert mode.
+(add-hook 'evil-insert-state-entry-hook
+          '(lambda () (global-hl-line-mode -1)))
+(add-hook 'evil-normal-state-entry-hook
+          '(lambda () (global-hl-line-mode)))
+
 ;; Ido-mode
 (setq ido-enable-flex-matching nil)
 (setq ido-create-new-buffer 'always)
@@ -100,18 +111,6 @@
             #'aggressive-indent-mode)
   (add-hook 'scheme-mode-hook
             #'aggressive-indent-mode))
-
-(use-package evil
-  :ensure t
-  :config
-  (evil-mode 1)
-  (use-package evil-leader
-    :ensure t
-    :config
-    (global-evil-leader-mode))
-
-  (use-package evil-indent-textobject
-    :ensure t))
 
 ;; Surround
 (use-package evil-surround
@@ -250,18 +249,21 @@
 ;; Delete trailing whitespaces on save.
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
 
-;; Fix lisp indent
-(put 'lam      'scheme-indent-function 'defun)
-(put 'def    'scheme-indent-function 1)
-(put 'class  'scheme-indent-function 1)
-(put 'class* 'scheme-indent-function 2)
-(put 'match  'scheme-indent-function 1)
-(put 'match* 'scheme-indent-function 1)
-(put 'send   'scheme-indent-function 2)
-(put 'for    'scheme-indent-function 1)
-(put 'let/cc 'scheme-indent-function 1)
-(put 'let/ec 'scheme-indent-function 1)
-(put 'trace-let 'scheme-indent-function 2)
+;;; Fix lisp indent
+(let ((sif 'scheme-indent-function))
+  (put 'lam         sif 'defun)
+  (put 'def       sif 1)
+  (put 'class     sif 1)
+  (put 'class*    sif 2)
+  (put 'match     sif 1)
+  (put 'match*    sif 1)
+  (put 'send      sif 2)
+  (put 'for       sif 1)
+  (put 'let/cc    sif 1)
+  (put 'let/ec    sif 1)
+  (put 'trace-let sif 2)
+  (put 'apply     sif 1))
+
 
 ;;; Key bindings
 (define-key evil-motion-state-map ";" 'evil-ex)
