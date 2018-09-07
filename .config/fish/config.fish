@@ -30,3 +30,8 @@ abbr texhash 'texhash & texhash ~/texmf'
 function cdl
     builtin cd $argv; and ls -F
 end
+
+# fix emacs term
+if test "$TERM" = "eterm-color"
+  function fish_title; end
+end

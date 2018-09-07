@@ -5,20 +5,93 @@
         ("gnu" . "http://elpa.gnu.org/packages/")
         ("melpa-stable" . "https://stable.melpa.org/packages/")))
 
-;; Evaluate these when you haven't got install use-package
-;; (package-refresh-contents)
-;; (package-install 'use-package)
+(unless (package-installed-p 'use-package)
+  (package-refresh-contents)
+  (package-install 'use-package))
 
 ;; Version 27.0 automatically initializes packages for you
 (when (version< emacs-version "27.0")
   (package-initialize))
 
+;; Ignore case in minibuffer's tab completion
+(setq completion-ignore-case t)
+(setq read-file-name-completion-ignore-case t)
+(setq read-buffer-completion-ignore-case t)
+
+;; Maximize on start-up
+(add-to-list 'default-frame-alist '(fullscreen . maximized))
+
+;; Load THE theme
+(load-theme 'wheatgrass)
+
+;; Terminal
+(defvar my-term-shell "/usr/bin/fish")
+(defadvice ansi-term (before force-bash)
+  (interactive (list my-term-shell)))
+(global-set-key (kbd "<s-return>") 'ansi-term)
+
+;; Don't skip the screen when scrolling up or down
+(setq scroll-conservatively 100)
+
+;; Something really annoying?
+(setq ring-bell-function 'ignore)
+
+;; Show where the cursor is
+(global-hl-line-mode)
+
+;; Removes *messages* from the buffer.
+(setq-default message-log-max nil)
+(kill-buffer "*Messages*")
+
+;; Don't show *Buffer list* when opening multiple files at the same time.
+(setq inhibit-startup-buffer-menu t)
+
+;; Don't show Welcome Screen when opening up
+(setq inhibit-startup-screen t)
+
+;; No more typing the whole yes or no. Just y or n will do.
+(fset 'yes-or-no-p 'y-or-n-p)
+
+;; Adding new file extension to modes
+(add-to-list 'auto-mode-alist '("\\.rkt\\'" . scheme-mode))
+(add-to-list 'auto-mode-alist '("\\.md\\'" . prog-mode))
+
+;; Get rid of the UI elements
+(menu-bar-mode -1)
+(toggle-scroll-bar -1)
+(tool-bar-mode -1)
+
+;; Auto-pair
+(electric-pair-mode)
+
+
+;;; Packages
 (require 'use-package)
 
-(use-package which-key
+;; Ido-mode
+(setq ido-enable-flex-matching nil)
+(setq ido-create-new-buffer 'always)
+(setq ido-everywhere t)
+(ido-mode 1)
+(use-package ido-vertical-mode
   :ensure t
   :init
-  (which-key-mode))
+  (ido-vertical-mode 1))
+(setq ido-vertical-keys 'C-n-and-C-p-only)
+
+(use-package smex
+  :ensure t
+  :init (smex-initialize)
+  :bind ("M-x" . smex))
+
+(use-package avy
+  :ensure t)
+
+;; Highlight the cursor a bit when switching buffer
+(use-package beacon
+  :ensure t
+  :init
+  (beacon-mode 1))
 
 (use-package aggressive-indent
   :ensure t
@@ -74,12 +147,6 @@
 (set-face-foreground 'show-paren-match "#def")
 (set-face-attribute 'show-paren-match nil :weight 'extra-bold)
 
-;; Custome theme or whatever
-(add-to-list 'custom-theme-load-path "~/.emacs.d/themes/")
-
-;; Auto-pair
-(electric-pair-mode)
-
 ;; Commentary
 (use-package evil-commentary
   :ensure t
@@ -97,16 +164,6 @@
   :ensure t
   :config
   (evil-lion-mode))
-
-;; Adding new file extension to modes
-(add-to-list 'auto-mode-alist '("\\.rkt\\'" . scheme-mode))
-(add-to-list 'auto-mode-alist '("\\.md\\'" . prog-mode))
-
-
-;; Get rid of the UI elements
-(menu-bar-mode -1)
-(toggle-scroll-bar -1)
-(tool-bar-mode -1)
 
 ;; Vim Numbering
 (use-package evil-numbers
@@ -136,11 +193,12 @@
 (with-eval-after-load 'company
     (define-key company-active-map (kbd "C-w") 'evil-delete-backward-word))
 (with-eval-after-load 'helm
-    (define-key helm-map (kbd "C-w") 'evil-delete-backward-word))
+  (define-key helm-map (kbd "C-w") 'evil-delete-backward-word))
 
-;; Kill the buffer with ':x'
+;; A bunch of commands
 (evil-ex-define-cmd "x" 'kill-this-buffer)
 (evil-ex-define-cmd "f" 'find-file)
+(evil-ex-define-cmd "b" 'switch-to-buffer)
 (evil-ex-define-cmd "s" #'replace-regexp-entire-buffer)
 (defun replace-regexp-entire-buffer (pattern replacement)
   "Perform regular-expression replacement throughout buffer."
@@ -158,20 +216,7 @@
 ;; stop creating #autosave# files
 (setq auto-save-default nil)
 
-;; Removes *messages* from the buffer.
-(setq-default message-log-max nil)
-(kill-buffer "*Messages*")
 
-;; Don't show *Buffer list* when opening multiple files at the same time.
-(setq inhibit-startup-buffer-menu t)
-
-;; Don't show Welcome Screen when opening up
-(setq inhibit-startup-screen t)
-
-;; No more typing the whole yes or no. Just y or n will do.
-(fset 'yes-or-no-p 'y-or-n-p)
-
-(load-theme 'wheatgrass)
 
 ;; Highlight indentation
 (use-package highlight-indent-guides
@@ -184,16 +229,9 @@
   (setq highlight-indent-guides-method 'column)
   (add-hook 'prog-mode-hook 'highlight-indent-guides-mode))
 
-;; Ignore case in minibuffer's tab completion
-(setq completion-ignore-case t)
-(setq read-file-name-completion-ignore-case t)
-(setq read-buffer-completion-ignore-case t)
-
-;; Maximize on start-up
-(add-to-list 'default-frame-alist '(fullscreen . maximized))
 
 
-                                        ;; Prettify symbols
+;; Prettify symbols
 (add-hook 'prog-mode-hook
           (lambda ()
             (setq prettify-symbols-alist
@@ -225,7 +263,7 @@
 (put 'let/ec 'scheme-indent-function 1)
 (put 'trace-let 'scheme-indent-function 2)
 
-;; Key binding
+;;; Key bindings
 (define-key evil-motion-state-map ";" 'evil-ex)
 (define-key evil-normal-state-map "a" 'evil-append-line)
 (define-key evil-normal-state-map "A" 'evil-append)
@@ -238,9 +276,7 @@
 (evil-define-key 'normal 'global [up] 'evil-scroll-line-up)
 (evil-define-key 'insert 'global [up] 'evil-scroll-line-up)
 (evil-define-key 'normal 'global [right] 'next-buffer)
-(evil-define-key 'insert 'global [right] 'next-buffer)
 (evil-define-key 'normal 'global [left] 'previous-buffer)
-(evil-define-key 'insert 'global [left] 'previous-buffer)
 
 (evil-define-key 'normal 'global (kbd "C-j") #'add-line-below)
 (defun add-line-below ()
@@ -257,15 +293,17 @@
     (open-line 1)))
 
 (evil-define-key 'visual 'global (kbd "TAB") #'indent-rigidly)
+;; Avy for the win!
+(evil-define-key 'normal 'global (kbd "f") #'avy-goto-char)
 
-
+;;; Automatic Settings
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
-   '("use-package" highlight-indent-guides company evil-numbers evil-lion evil-snipe evil-commentary rainbow-delimiters linum-relative evil-surround evil-indent-textobject evil-leader evil use-package))
+   '(avy smex ido-vertical-mode beacon "use-package" highlight-indent-guides company evil-numbers evil-lion evil-snipe evil-commentary rainbow-delimiters linum-relative evil-surround evil-indent-textobject evil-leader evil use-package))
  '(show-paren-mode t)
  '(tool-bar-mode nil))
 (custom-set-faces
