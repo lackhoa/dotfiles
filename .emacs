@@ -9,14 +9,20 @@
   (package-refresh-contents)
   (package-install 'use-package))
 
+;; This is only needed once, near the top of the file
+(eval-when-compile
+  ;; Following line is not needed if use-package.el is in ~/.emacs.d
+  (add-to-list 'load-path "<path where use-package is installed>")
+  (require 'use-package))
+
 ;; Version 27.0 automatically initializes packages for you
 (when (version< emacs-version "27.0")
   (package-initialize))
 
 ;; Ignore case in minibuffer's tab completion
-(setq completion-ignore-case t)
-(setq read-file-name-completion-ignore-case t)
-(setq read-buffer-completion-ignore-case t)
+(setq completion-ignore-case t
+      read-file-name-completion-ignore-case t
+      read-buffer-completion-ignore-case t)
 
 ;; Maximize on start-up
 (add-to-list 'default-frame-alist '(fullscreen . maximized))
@@ -33,13 +39,12 @@
 ;; Show where the cursor is
 (global-hl-line-mode)
 
+;;; Getting rid of really annoying buffers
 ;; Removes *messages* from the buffer.
 (setq-default message-log-max nil)
 (kill-buffer "*Messages*")
-
 ;; Don't show *Buffer list* when opening multiple files at the same time.
 (setq inhibit-startup-buffer-menu t)
-
 ;; Don't show Welcome Screen when opening up
 (setq inhibit-startup-screen t)
 
@@ -51,203 +56,235 @@
 (add-to-list 'auto-mode-alist '("\\.md\\'" . prog-mode))
 
 ;; Get rid of the UI elements
-(menu-bar-mode -1)
+(menu-bar-mode     -1)
 (toggle-scroll-bar -1)
-(tool-bar-mode -1)
+(tool-bar-mode     -1)
 
 ;; Auto-pair
 (electric-pair-mode)
 
-
 ;;; Packages
-(require 'use-package)
-
+;; This is why I'm here
 (use-package evil
   :ensure t
-  :config
+  :init
   (evil-mode 1)
-  (use-package evil-leader
+  :config
+  ;; Switch line highlighting off when in insert mode.
+  (add-hook 'evil-insert-state-entry-hook
+            '(lambda () (global-hl-line-mode -1)))
+  (add-hook 'evil-normal-state-entry-hook
+            '(lambda () (global-hl-line-mode)))
+
+  ;; Surround
+  (use-package evil-surround
     :ensure t
     :config
-    (global-evil-leader-mode))
-  (use-package evil-indent-textobject
-    :ensure t))
+    (global-evil-surround-mode))
 
-;; Switch line highlighting off when in insert mode.
-(add-hook 'evil-insert-state-entry-hook
-          '(lambda () (global-hl-line-mode -1)))
-(add-hook 'evil-normal-state-entry-hook
-          '(lambda () (global-hl-line-mode)))
+  ;; Auto-completion
+  (use-package company
+    :ensure t
+    :config
+    (global-company-mode)
+    (setq company-idle-delay 0.2
+          company-selection-wrap-around t)
+    (define-key company-active-map [tab] 'company-complete)
+    (define-key company-active-map (kbd "C-n") 'company-select-next)
+    (define-key company-active-map (kbd "C-p") 'company-select-previous)
+    ;; Delete word when in automcomplete
+    (define-key company-active-map (kbd "C-w") 'evil-delete-backward-word))
 
-;; Ido-mode
-(setq ido-enable-flex-matching nil)
-(setq ido-create-new-buffer 'always)
-(setq ido-everywhere t)
-(ido-mode 1)
+  ;; Auto-center search result
+  (defadvice evil-search-next
+      (after advice-for-evil-search-next activate)
+    (evil-scroll-line-to-center (line-number-at-pos)))
+  (defadvice evil-search-previous
+      (after advice-for-evil-search-previous activate)
+    (evil-scroll-line-to-center (line-number-at-pos)))
+
+  ;; Commentary
+  (use-package evil-commentary
+    :ensure t
+    :config
+    (evil-commentary-mode))
+
+  ;; The dopest snipe package ever
+  (use-package avy
+    :ensure t
+    :config
+    (evil-define-key 'normal 'global (kbd "f") #'avy-goto-char-2))
+
+;;; Key bindings
+  (define-key evil-motion-state-map ";" 'evil-ex)
+  (define-key evil-normal-state-map "a" 'evil-append-line)
+  (define-key evil-normal-state-map "A" 'evil-append)
+  (define-key evil-normal-state-map "p" 'evil-paste-before)
+  (evil-define-key 'insert 'global (kbd "C-v") 'evil-paste-before)
+  (define-key evil-normal-state-map "P" 'evil-paste-after)
+  (define-key evil-motion-state-map (kbd "RET") 'evil-write-all)
+  (evil-define-key 'normal 'global [down] 'evil-scroll-line-down)
+  (evil-define-key 'insert 'global [down] 'evil-scroll-line-down)
+  (evil-define-key 'normal 'global [up] 'evil-scroll-line-up)
+  (evil-define-key 'insert 'global [up] 'evil-scroll-line-up)
+  (evil-define-key 'normal 'global [right] 'next-buffer)
+  (evil-define-key 'normal 'global [left] 'previous-buffer)
+
+  (evil-define-key 'normal 'global (kbd "C-j") #'add-line-below)
+  (defun add-line-below ()
+    (interactive)
+    (save-excursion
+      (end-of-line)
+      (open-line 1)))
+
+  (evil-define-key 'normal 'global (kbd "C-k") #'add-line-above)
+  (defun add-line-above ()
+    (interactive)
+    (save-excursion
+      (end-of-line 0)
+      (open-line 1)))
+
+  (evil-define-key 'visual 'global (kbd "TAB") #'indent-rigidly)
+
+;;; A bunch of commands
+  (evil-ex-define-cmd "x" 'kill-this-buffer)
+  (evil-ex-define-cmd "f" 'find-file)
+  (evil-ex-define-cmd "b" 'switch-to-buffer)
+  (evil-ex-define-cmd "s" #'replace-regexp-entire-buffer)
+  (defun replace-regexp-entire-buffer (pattern replacement)
+    "Perform regular-expression replacement throughout buffer."
+    (interactive
+     (let ((args (query-replace-read-args "Replace" t)))
+       (setcdr (cdr args) nil)    ; remove third value returned from query---args
+       args))
+    (save-excursion
+      (goto-char (point-min))
+      (while (re-search-forward pattern nil t)
+        (replace-match replacement)))))
+
+;; Why even bother with the default status bar?
+(use-package spaceline
+  :ensure t
+  :init (setq powerline-default-separator 'arrow)
+  :config
+  (require 'spaceline-config)
+  (spaceline-spacemacs-theme))
+
 (use-package ido-vertical-mode
+  ;; Ido-mode
   :ensure t
   :init
-  (ido-vertical-mode 1))
-(setq ido-vertical-keys 'C-n-and-C-p-only)
+  (ido-mode 1)
+  (setq ido-enable-flex-matching nil
+        ido-create-new-buffer 'always
+        ido-everywhere t)
+  :config (ido-vertical-mode 1))
 
 (use-package smex
+  ;; Same but for buffer
   :ensure t
   :init (smex-initialize)
   :bind ("M-x" . smex))
 
-(use-package avy
-  :ensure t)
-
-;; Highlight the cursor a bit when switching buffer
 (use-package beacon
+  ;; Highlight the cursor a bit when switching buffer
   :ensure t
-  :init
-  (beacon-mode 1))
+  :init (beacon-mode 1))
 
 (use-package aggressive-indent
+  ;; No more worries about lisp indentation
   :ensure t
-  :config
-  (add-hook 'emacs-lisp-mode-hook
-            #'aggressive-indent-mode)
-  (add-hook 'scheme-mode-hook
-            #'aggressive-indent-mode))
+  :hook ((emacs-lisp-mode scheme-mode) . aggressive-indent-mode))
 
-;; Surround
-(use-package evil-surround
-  :ensure t
-  :config
-  (global-evil-surround-mode))
-
-;; Relative line number
 (use-package linum-relative
+  ;; Relative line number
   :ensure t
-  :config
-  (linum-relative-on))
+  :init
+  (linum-relative-global-mode))
 
-;; Show column
-(column-number-mode 1)
+(column-number-mode 1)  ; Show columns
 
-;; Rainbow
 (use-package rainbow-delimiters
   :ensure t
   :config
-  (add-hook 'prog-mode-hook #'rainbow-delimiters-mode))
+  (add-hook 'prog-mode-hook 'rainbow-delimiters-mode))
 
-;; No tabs!
-(setq-default indent-tabs-mode nil)
+(setq-default indent-tabs-mode nil)  ;; No tabs!
 
-;; Show line number
-(global-linum-mode t)
-(setq linum-relative-current-symbol "")
-
-;; Highlight matching brackets
-(show-paren-mode)
-(set-face-background 'show-paren-match (face-background 'default))
-(set-face-foreground 'show-paren-match "#def")
-(set-face-attribute 'show-paren-match nil :weight 'extra-bold)
-
-;; Commentary
-(use-package evil-commentary
+(use-package sudo-edit
   :ensure t
-  :config
-  (evil-commentary-mode))
+  :bind
+  ("s-e" . sudo-edit))
 
-;; The (legendary) sniping ability
-(use-package evil-snipe
+(global-auto-revert-mode 1)  ; Automatically update changed buffer
+
+(progn
+  ;; Highlight matching brackets
+  (show-paren-mode)
+  (set-face-background 'show-paren-match (face-background 'default))
+  (set-face-foreground 'show-paren-match "#def")
+  (set-face-attribute 'show-paren-match nil :weight 'extra-bold))
+
+(use-package expand-region
+  ;; Magic that I saw once.
   :ensure t
-  :config
-  (evil-snipe-mode 1))
+  :bind ("C-q" . er/expand-region))
 
-;; Alignment
+(use-package popup-kill-ring
+  ;; Use this to yank multiple things.
+  :ensure t
+  :bind ("M-y" . popup-kill-ring))
+
 (use-package evil-lion
+  ;; Alignment
   :ensure t
   :config
   (evil-lion-mode))
 
-;; Vim Numbering
 (use-package evil-numbers
+  ;; Vim Numbering
   :ensure t
   :config
   (global-set-key (kbd "C-a") 'evil-numbers/inc-at-pt)
   (global-set-key (kbd "C-c -") 'evil-numbers/dec-at-pt))
 
-;; Remove completion buffer when done
-(add-hook 'minibuffer-exit-hook
-          '(lambda ()
-             (let ((buffer "*Completions*"))
-               (and (get-buffer buffer)
-                    (kill-buffer buffer)))))
+(add-hook
+ ;; Remove completion buffer when done
+ 'minibuffer-exit-hook
+ '(lambda ()
+    (let ((buffer "*Completions*"))
+      (and (get-buffer buffer)
+         (kill-buffer buffer)))))
 
-;; Auto completion
-(use-package company
-  :ensure t
-  :config
-  (global-company-mode)
-  (setq company-idle-delay 0.2)
-  (setq company-selection-wrap-around t)
-  (define-key company-active-map [tab] 'company-complete)
-  (define-key company-active-map (kbd "C-n") 'company-select-next)
-  (define-key company-active-map (kbd "C-p") 'company-select-previous))
-;; Delete word when in automcomplete
-(with-eval-after-load 'company
-    (define-key company-active-map (kbd "C-w") 'evil-delete-backward-word))
-(with-eval-after-load 'helm
-  (define-key helm-map (kbd "C-w") 'evil-delete-backward-word))
+(desktop-save-mode 1)  ; Save all the buffers to re-open them later.
 
-;; A bunch of commands
-(evil-ex-define-cmd "x" 'kill-this-buffer)
-(evil-ex-define-cmd "f" 'find-file)
-(evil-ex-define-cmd "b" 'switch-to-buffer)
-(evil-ex-define-cmd "s" #'replace-regexp-entire-buffer)
-(defun replace-regexp-entire-buffer (pattern replacement)
-  "Perform regular-expression replacement throughout buffer."
-  (interactive
-   (let ((args (query-replace-read-args "Replace" t)))
-     (setcdr (cdr args) nil)    ; remove third value returned from query---args
-     args))
-  (save-excursion
-    (goto-char (point-min))
-    (while (re-search-forward pattern nil t)
-      (replace-match replacement))))
+(setq
+ ;; stop creating backup files
+ make-backup-files nil
+ auto-save-default nil)
 
-;; stop creating backup~ files
-(setq make-backup-files nil)
-;; stop creating #autosave# files
-(setq auto-save-default nil)
-
-
-
-;; Highlight indentation
-(use-package highlight-indent-guides
-  :ensure t
-  :config
-  (setq highlight-indent-guides-auto-enabled nil)
-  (set-face-background 'highlight-indent-guides-odd-face "darkgray")
-  (set-face-background 'highlight-indent-guides-even-face "dimgray")
-  (set-face-foreground 'highlight-indent-guides-character-face "dimgray")
-  (setq highlight-indent-guides-method 'column)
-  (add-hook 'prog-mode-hook 'highlight-indent-guides-mode))
-
-
-
-;; Prettify symbols
-(add-hook 'prog-mode-hook
-          (lambda ()
-            (setq prettify-symbols-alist
-                  '(("lambda" . ?λ)
-                    ("lam"    . ?λ)
-                    ("<="     . ?≤)
-                    (">="     . ?≥)
-                    ("->"     . ?→)
-                    ("<-"     . ?←)
-                    ("<->"    . ?↔)
-                    ("=>"     . ?➾)
-                    ("=="     . ?≡)
-                    ("=/="    . ?≠)))))
+(add-hook
+ ;; Prettify symbols
+ 'prog-mode-hook
+ (lambda ()
+   (setq prettify-symbols-alist
+         '(("lambda" . ?λ)
+           ("lam"    . ?λ)
+           ("<="     . ?≤)
+           (">="     . ?≥)
+           ("->"     . ?→)
+           ("<-"     . ?←)
+           ("<->"    . ?↔)
+           ("=>"     . ?➾)
+           ("=="     . ?≡)
+           ("=/="    . ?≠)
+           ("and"    . ?∧)
+           ("or"     . ?∨)))))
 (global-prettify-symbols-mode 1)
 
-;; Delete trailing whitespaces on save.
-(add-hook 'before-save-hook 'delete-trailing-whitespace)
+(add-hook
+ ;; Delete trailing whitespaces on save.
+ 'before-save-hook 'delete-trailing-whitespace)
 
 ;;; Fix lisp indent
 (let ((sif 'scheme-indent-function))
@@ -264,48 +301,20 @@
   (put 'trace-let sif 2)
   (put 'apply     sif 1))
 
+(global-set-key
+ ;; Always kill current buffer
+ (kbd "C-x k") 'kill-current-buffer)
 
-;;; Key bindings
-(define-key evil-motion-state-map ";" 'evil-ex)
-(define-key evil-normal-state-map "a" 'evil-append-line)
-(define-key evil-normal-state-map "A" 'evil-append)
-(define-key evil-normal-state-map "p" 'evil-paste-before)
-(evil-define-key 'insert 'global (kbd "C-v") 'evil-paste-before)
-(define-key evil-normal-state-map "P" 'evil-paste-after)
-(define-key evil-motion-state-map (kbd "RET") 'evil-write-all)
-(evil-define-key 'normal 'global [down] 'evil-scroll-line-down)
-(evil-define-key 'insert 'global [down] 'evil-scroll-line-down)
-(evil-define-key 'normal 'global [up] 'evil-scroll-line-up)
-(evil-define-key 'insert 'global [up] 'evil-scroll-line-up)
-(evil-define-key 'normal 'global [right] 'next-buffer)
-(evil-define-key 'normal 'global [left] 'previous-buffer)
 
-(evil-define-key 'normal 'global (kbd "C-j") #'add-line-below)
-(defun add-line-below ()
-  (interactive)
-  (save-excursion
-      (end-of-line)
-      (open-line 1)))
 
-(evil-define-key 'normal 'global (kbd "C-k") #'add-line-above)
-(defun add-line-above ()
-  (interactive)
-  (save-excursion
-    (end-of-line 0)
-    (open-line 1)))
-
-(evil-define-key 'visual 'global (kbd "TAB") #'indent-rigidly)
-;; Avy for the win!
-(evil-define-key 'normal 'global (kbd "f") #'avy-goto-char)
-
-;;; Automatic Settings
+;;; Automatic Settings (DON'T TOUCH BEYOND THIS POINT)
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
-   '(avy smex ido-vertical-mode beacon "use-package" highlight-indent-guides company evil-numbers evil-lion evil-snipe evil-commentary rainbow-delimiters linum-relative evil-surround evil-indent-textobject evil-leader evil use-package))
+   '(magit sudo-edit spaceline avy smex ido-vertical-mode beacon "use-package" highlight-indent-guides company evil-numbers evil-lion evil-snipe evil-commentary rainbow-delimiters linum-relative evil-surround evil-indent-textobject evil-leader evil use-package))
  '(show-paren-mode t)
  '(tool-bar-mode nil))
 (custom-set-faces
@@ -314,6 +323,7 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(default ((t (:family "DejaVu Sans Mono" :foundry "PfEd" :slant normal :weight normal :height 203 :width normal))))
+ '(hl-line ((t (:box (:line-width 2 :color "yellow green" :style released-button)))))
  '(linum ((t (:inherit (shadow default) :height 100))))
  '(match ((t (:background "RoyalBlue3" :underline nil))))
  '(rainbow-delimiters-depth-1-face ((t (:inherit rainbow-delimiters-base-face :foreground "red"))))
