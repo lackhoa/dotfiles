@@ -200,6 +200,7 @@
   ;; Relative line number
   :ensure t
   :init
+  (setq linum-relative-current-symbol "")
   (linum-relative-global-mode))
 
 (column-number-mode 1)  ; Show columns
@@ -296,6 +297,7 @@
   (put 'match*    sif 1)
   (put 'send      sif 2)
   (put 'for       sif 1)
+  (put 'for/list  sif 1)
   (put 'let/cc    sif 1)
   (put 'let/ec    sif 1)
   (put 'trace-let sif 2)
