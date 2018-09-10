@@ -300,7 +300,8 @@
   (put 'let/ec    sif 1)
   (put 'trace-let sif 2)
   (put 'struct    sif 2)
-  (put 'apply     sif 1))
+  (put 'apply     sif 1)
+  (put 'generator sif 1))
 
 (global-set-key
  ;; Always kill current buffer
