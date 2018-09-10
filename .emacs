@@ -11,8 +11,6 @@
 
 ;; This is only needed once, near the top of the file
 (eval-when-compile
-  ;; Following line is not needed if use-package.el is in ~/.emacs.d
-  (add-to-list 'load-path "<path where use-package is installed>")
   (require 'use-package))
 
 ;; Version 27.0 automatically initializes packages for you
@@ -113,7 +111,7 @@
   (use-package avy
     :ensure t
     :config
-    (evil-define-key 'normal 'global (kbd "f") #'avy-goto-char-2))
+    (evil-define-key 'normal 'global (kbd "f") #'avy-goto-char))
 
 ;;; Key bindings
   (define-key evil-motion-state-map ";" 'evil-ex)
@@ -301,6 +299,7 @@
   (put 'let/cc    sif 1)
   (put 'let/ec    sif 1)
   (put 'trace-let sif 2)
+  (put 'struct    sif 2)
   (put 'apply     sif 1))
 
 (global-set-key
@@ -316,7 +315,7 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
-   '(magit sudo-edit spaceline avy smex ido-vertical-mode beacon "use-package" highlight-indent-guides company evil-numbers evil-lion evil-snipe evil-commentary rainbow-delimiters linum-relative evil-surround evil-indent-textobject evil-leader evil use-package))
+   '(sudo-edit spaceline avy smex ido-vertical-mode beacon company evil-numbers evil-lion evil-commentary rainbow-delimiters linum-relative evil-surround evil use-package))
  '(show-paren-mode t)
  '(tool-bar-mode nil))
 (custom-set-faces
