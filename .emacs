@@ -111,7 +111,8 @@
   (use-package avy
     :ensure t
     :config
-    (evil-define-key 'normal 'global (kbd "f") #'avy-goto-char))
+    (evil-define-key 'normal 'global (kbd "f") #'avy-goto-char)
+    (evil-define-key 'normal 'global (kbd "s") #'avy-goto-char-2))
 
 ;;; Key bindings
   (define-key evil-motion-state-map ";" 'evil-ex)
