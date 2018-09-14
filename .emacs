@@ -297,6 +297,8 @@
   (put 'send      sif 2)
   (put 'for       sif 1)
   (put 'for/list  sif 1)
+  (put 'for/seteq sif 1)
+  (put 'for/set   sif 1)
   (put 'let/cc    sif 1)
   (put 'let/ec    sif 1)
   (put 'trace-let sif 2)
