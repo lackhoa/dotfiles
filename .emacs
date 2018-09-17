@@ -290,6 +290,7 @@
 (let ((sif 'scheme-indent-function))
   (put 'lam         sif 'defun)
   (put 'def       sif 1)
+  (put 'set!      sif 1)
   (put 'class     sif 1)
   (put 'class*    sif 2)
   (put 'match     sif 1)
