@@ -307,6 +307,7 @@
   (put 'for*/list  sif 1)
   (put 'for/seteq  sif 1)
   (put 'for/set    sif 1)
+  (put 'for/or     sif 1)
   (put 'let/cc     sif 1)
   (put 'let/ec     sif 1)
   (put 'trace-let  sif 2)
