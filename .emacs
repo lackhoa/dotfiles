@@ -314,6 +314,7 @@
   (put 'for/and    sif 1)
   (put 'struct     sif 2)
   (put 'apply      sif 1)
+  (put 'for*/and   sif 1)
   (put 'generator  sif 1))
 
 (global-set-key
