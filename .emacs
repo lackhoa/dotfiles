@@ -22,9 +22,6 @@
       read-file-name-completion-ignore-case t
       read-buffer-completion-ignore-case t)
 
-;; Maximize on start-up
-(add-to-list 'default-frame-alist '(fullscreen . maximized))
-
 ;; Load THE theme
 (load-theme 'wheatgrass)
 
