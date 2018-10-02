@@ -75,6 +75,14 @@ gtk-overlay-scrollbars=false
 gtk-theme='Vivaldi-ZorinOS'
 clock-show-date=true
 
+[desktop/keybindings/custom-keybindings/custom0]
+binding=['<Alt>i']
+command='xcalib -i -a'
+name='Invert Color'
+
+[desktop/keybindings]
+custom-list=['custom0']
+
 [desktop/keybindings/media-keys]
 restart-cinnamon=@as []
 touchpad-toggle=['<Primary>Escape']
@@ -173,7 +181,7 @@ dwell-click-enabled=false
 event-sounds=false
 
 [desktop/background]
-picture-uri='file:///usr/share/backgrounds/linuxmint-sarah/linuxmint_exotic.jpg'
+picture-uri='file:///usr/share/backgrounds/linuxmint-sarah/linuxmint_wood.jpg'
 picture-options='zoom'
 
 [desktop/background/slideshow]
