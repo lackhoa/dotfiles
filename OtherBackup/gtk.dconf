@@ -1,7 +1,7 @@
 [settings/file-chooser]
 sort-column='name'
 sidebar-width=148
-window-position=(580, 162)
+window-position=(584, 135)
 show-size-column=true
 show-hidden=true
 window-size=(750, 704)

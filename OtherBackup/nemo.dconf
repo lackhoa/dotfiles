@@ -8,10 +8,10 @@ side-pane-view='places'
 devices-expanded=true
 sidebar-width=197
 my-computer-expanded=true
-geometry='681x693+333+1'
+geometry='958x1005+50+0'
 network-expanded=false
 sidebar-bookmark-breakpoint=8
-maximized=true
+maximized=false
 start-with-sidebar=true
 
 [desktop]
@@ -21,4 +21,4 @@ home-icon-visible=false
 computer-icon-visible=false
 show-orphaned-desktop-icons=false
 font='Norasi 12'
-trash-icon-visible=false
+trash-icon-visible=true

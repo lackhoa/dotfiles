@@ -430,13 +430,13 @@ ignore-ca-cert=false
 [gnome-system-monitor]
 current-tab='processes'
 show-whose-processes='user'
-window-state=(1366, 701, 0, 0)
-maximized=true
+window-state=(958, 1005, 960, 0)
+maximized=false
 show-dependencies=false
 
 [gnome-system-monitor/proctree]
 columns-order=[0, 1, 2, 3, 4, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22]
-sort-order=0
+sort-order=1
 sort-col=15
 
 [gnome-system-monitor/openfilestree]

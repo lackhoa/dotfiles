@@ -5,14 +5,14 @@ desktop-effects-maximize-transition='easeInBack'
 workspace-osd-visible=true
 desktop-effects-map-effect='none'
 workspace-osd-y=50
-command-history=['khoa-update', 'sudo khoa-update', 'touch dick', 'gnome-terminal -x sleep 10h', 'bash', 'shell', 'sudo apt-get install --reinstall gnome-terminal', 'sudo apt-get install xterm', 'sudo apt-get instsall gnome-terminal', 'terminal-emulator', 'wireless', 'conky-config', 'conky-conf', 'coqtop', 'sudo', 'gksu', 'gksudo', 'pt', 'gnome-terminal', 'python3 ~/pywal-master/khoa_wal.py', 'python3 /home/khoa/pywal-master/khoa_wal.py', 'i3', 'keynav', 'vim something', 'gvim something', 'bash bin/khoa_motd.sh', 'gvim', 'bash ~/bin/khoa_motd.sh', 'bash khoa_motd.sh', 'khoa_motd', 'khoa_motd.sh', '~/bin/khoa_motd.sh', 'wireshark gtk', 'wireshark-gtk', 'nemo', 'redshift', '~/bin/inverter.py', 'uninv', 'coqie', 'subl', 'coq', 'terminal', 'term', 'x', 'noinv', 'inv', 'droicam', 'droidcam', 'python3 ~/bin/inverter.py', 'coqide', 'sudo wireshark-gtk %f', 'sudo wireshark-gtk', 'python bin/inverter.py', 'packettracer', 'python ~/bin/inverter.py', 'python /home/khoa/bin/inverter.py', 'python /home/lac/inverter.py', 'conky']
+command-history=['khoa-update', 'sudo khoa-update', 'touch dick', 'gnome-terminal -x sleep 10h', 'bash', 'shell', 'sudo apt-get install --reinstall gnome-terminal', 'sudo apt-get install xterm', 'sudo apt-get instsall gnome-terminal', 'terminal-emulator', 'wireless', 'conky-config', 'conky-conf', 'coqtop', 'sudo', 'gksu', 'gksudo', 'pt', 'gnome-terminal', 'python3 ~/pywal-master/khoa_wal.py', 'python3 /home/khoa/pywal-master/khoa_wal.py', 'i3', 'keynav', 'vim something', 'gvim something', 'bash bin/khoa_motd.sh', 'gvim', 'bash ~/bin/khoa_motd.sh', 'bash khoa_motd.sh', 'khoa_motd', 'khoa_motd.sh', '~/bin/khoa_motd.sh', 'wireshark gtk', 'wireshark-gtk', 'nemo', 'redshift', '~/bin/inverter.py', 'uninv', 'coqie', 'subl', 'coq', 'terminal', 'term', 'x', 'noinv', 'droicam', 'droidcam', 'python3 ~/bin/inverter.py', 'coqide', 'sudo wireshark-gtk %f', 'sudo wireshark-gtk', 'python bin/inverter.py', 'packettracer', 'python ~/bin/inverter.py', 'python /home/khoa/bin/inverter.py', 'python /home/lac/inverter.py', 'conky', 'inv', 'u', 'i']
 alttab-switcher-show-all-workspaces=false
 desktop-effects-close-effect='none'
 desktop-effects-style='flyUp'
 desktop-effects-unmaximize-time=100
-enabled-desklets=@as []
+desklet-snap-interval=25
 desktop-effects-map-time=100
-panels-scale-text-icons=['1:true', '2:true']
+enabled-desklets=@as []
 desktop-effects-minimize-effect='none'
 alttab-switcher-style='icons+preview'
 hotcorner-layout=['expo:false:0', 'scale:false:0', 'scale:false:0', 'desktop:false:0']
@@ -20,18 +20,19 @@ desktop-effects=false
 prevent-focus-stealing=false
 panels-height=['1:42', '2:25']
 enable-vfade=false
-next-applet-id=59
+next-applet-id=60
 panel-launchers=['DEPRECATED']
+desktop-effects-tile-transition='easeInBack'
 desktop-effects-map-transition='easeOutSine'
 desktop-effects-maximize-time=100
 desktop-effects-unmaximize-effect='none'
 panels-enabled=['1:0:bottom']
-desktop-effects-tile-transition='easeInBack'
+panels-scale-text-icons=['1:true', '2:true']
 overview-corner=['expo:false:false:0', 'scale:false:false:0', 'scale:false:false:0', 'desktop:false:false:0']
 panels-resizable=['1:true', '2:false']
 desktop-effects-maximize-effect='none'
 desktop-effects-on-menus=false
-enabled-applets=['panel1:left:2:window-list@cinnamon.org:50', 'panel1:center:0:menu@cinnamon.org:51', 'panel1:right:0:notifications@cinnamon.org:4', 'panel1:right:2:separator@cinnamon.org:55', 'panel1:right:3:removable-drives@cinnamon.org:6', 'panel1:right:4:systray@cinnamon.org:12', 'panel1:right:6:keyboard@cinnamon.org:7', 'panel1:right:7:network@cinnamon.org:9', 'panel1:right:8:separator@cinnamon.org:41', 'panel1:right:9:calendar@cinnamon.org:13']
+enabled-applets=['panel1:left:2:window-list@cinnamon.org:50', 'panel1:center:0:menu@cinnamon.org:51', 'panel1:right:0:notifications@cinnamon.org:4', 'panel1:right:2:separator@cinnamon.org:55', 'panel1:right:3:removable-drives@cinnamon.org:6', 'panel1:right:4:systray@cinnamon.org:12', 'panel1:right:6:keyboard@cinnamon.org:7', 'panel1:right:7:network@cinnamon.org:9', 'panel1:right:8:separator@cinnamon.org:41', 'panel1:right:9:calendar@cinnamon.org:13', 'panel1:right:0:panel-launchers@cinnamon.org:59']
 desktop-effects-minimize-time=100
 alttab-switcher-delay=100
 desktop-effects-tile-effect='none'
@@ -71,7 +72,7 @@ clock-show-seconds=false
 cursor-blink-time=1200
 icon-theme='Mint-X-Red'
 gtk-overlay-scrollbars=false
-gtk-theme='Mint-Y-Dark'
+gtk-theme='Vivaldi-ZorinOS'
 clock-show-date=true
 
 [desktop/keybindings/media-keys]
@@ -86,6 +87,7 @@ push-snap-left=@as []
 toggle-maximized=@as []
 unmaximize=@as []
 switch-to-workspace-left=['<Primary><Super>Left', '<Primary><Alt>Left']
+panel-run-dialog=['<Alt>F2', '<Alt>2']
 switch-to-workspace-down=['<Super>Tab']
 switch-to-workspace-right=['<Primary><Super>Right', '<Primary><Alt>Right']
 toggle-fullscreen=@as []
@@ -115,7 +117,7 @@ recent-files-max-age=30
 remember-recent-files=false
 
 [desktop/wm/preferences]
-theme='Esco'
+theme='Vivaldi-ZorinOS'
 num-workspaces=3
 action-scroll-titlebar='opacity'
 auto-raise=false
@@ -171,17 +173,14 @@ dwell-click-enabled=false
 event-sounds=false
 
 [desktop/background]
-picture-uri='file:///usr/share/backgrounds/linuxmint/edesigner_linuxmint.png'
+picture-uri='file:///usr/share/backgrounds/linuxmint-sarah/linuxmint_exotic.jpg'
 picture-options='zoom'
 
 [desktop/background/slideshow]
-image-source='xml:///usr/share/cinnamon-background-properties/linuxmint.xml'
+image-source='xml:///usr/share/cinnamon-background-properties/linuxmint-sarah.xml'
 random-order=true
 delay=10
-slideshow-enabled=false
-
-[theme]
-name='cinnamon'
+slideshow-enabled=true
 
 [settings-daemon/plugins/power]
 lid-close-suspend-with-external-monitor=false
@@ -231,6 +230,10 @@ motion-threshold=5
 
 [cinnamon-session]
 quit-time-delay=60
+
+[theme]
+theme-cache-updated=1535974423
+name='Numix-Cinnamon-Transparent'
 
 [sounds]
 maximize-enabled=true
