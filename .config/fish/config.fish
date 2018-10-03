@@ -15,7 +15,7 @@ abbr grep        'grep -C 10'
 abbr rm          'rm -rf'
 abbr cat         'bat'
 abbr rmk         'raco make'
-abbr rack        'racket'
+abbr rkt         'racket'
 
 # clean up stuff that were created less than 1 minute ago
 abbr clean 'find . -type f -cmin -1 -delete'
