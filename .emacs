@@ -314,6 +314,7 @@
   (put 'for/orb        sif 1)
   (put 'for>>          sif 2)
   (put 'for/fold       sif 2)
+  (put 'for*/or        sif 1)
   (put 'struct         sif 2)
   (put 'apply          sif 1)
   (put 'for*/and       sif 1)
