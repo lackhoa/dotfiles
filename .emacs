@@ -125,6 +125,7 @@
   (evil-define-key 'insert 'global [up] 'evil-scroll-line-up)
   (evil-define-key 'normal 'global [right] 'next-buffer)
   (evil-define-key 'normal 'global [left] 'previous-buffer)
+  (evil-define-key 'normal 'global (kbd "K") #'open-line)
 
   (evil-define-key 'normal 'global (kbd "C-j") #'add-line-below)
   (defun add-line-below ()
@@ -325,8 +326,6 @@
 (global-set-key
  ;; Always kill current buffer
  (kbd "C-x k") 'kill-current-buffer)
-
-
 
 ;;; Automatic Settings (DON'T TOUCH BEYOND THIS POINT)
 (custom-set-variables
