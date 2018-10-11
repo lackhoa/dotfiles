@@ -202,6 +202,9 @@
 
 (column-number-mode 1)  ; Show columns
 
+;; List of buffers to not open in a new window
+(add-to-list 'same-window-buffer-names "*Buffer List*")
+
 (use-package rainbow-delimiters
   :ensure t
   :config
