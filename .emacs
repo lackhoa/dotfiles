@@ -324,7 +324,8 @@
   (put 'for*/and       sif 1)
   (put 'generator      sif 1)
   (put 'with-handlers  sif 1)
-  (put 'while          sif 1))
+  (put 'while          sif 1)
+  (put 'place          sif 1))
 
 (global-set-key
  ;; Always kill current buffer
