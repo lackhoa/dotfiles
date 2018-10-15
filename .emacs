@@ -126,21 +126,17 @@
   (evil-define-key 'normal 'global [right] 'next-buffer)
   (evil-define-key 'normal 'global [left] 'previous-buffer)
   (evil-define-key 'normal 'global (kbd "K") #'open-line)
+  (evil-define-key 'normal 'global (kbd "SPC") (lambda () (interactive)
+                                                 (insert-char ?\s)))
 
-  (evil-define-key 'normal 'global (kbd "C-j") #'add-line-below)
-  (defun add-line-below ()
-    (interactive)
-    (save-excursion
-      (end-of-line)
-      (open-line 1)))
-
-  (evil-define-key 'normal 'global (kbd "C-k") #'add-line-above)
-  (defun add-line-above ()
-    (interactive)
-    (save-excursion
-      (end-of-line 0)
-      (open-line 1)))
-
+  (evil-define-key 'normal 'global (kbd "C-j") (lambda () (interactive)
+                                                 (save-excursion
+                                                   (end-of-line)
+                                                   (open-line 1))))
+  (evil-define-key 'normal 'global (kbd "C-k") (lambda () (interactive)
+                                                 (save-excursion
+                                                   (end-of-line 0)
+                                                   (open-line 1))))
   (evil-define-key 'visual 'global (kbd "TAB") #'indent-rigidly)
 
 ;;; A bunch of commands
