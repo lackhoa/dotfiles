@@ -128,7 +128,7 @@
   (evil-define-key 'normal 'global (kbd "K") #'open-line)
   (evil-define-key 'normal 'global (kbd "SPC") (lambda () (interactive)
                                                  (insert-char ?\s)))
-
+  (evil-define-key 'normal 'global (kbd "DEL") #'backward-delete-char-untabify)
   (evil-define-key 'normal 'global (kbd "C-j") (lambda () (interactive)
                                                  (save-excursion
                                                    (end-of-line)
@@ -200,6 +200,7 @@
 
 ;; List of buffers to not open in a new window
 (add-to-list 'same-window-buffer-names "*Buffer List*")
+(add-to-list 'same-window-buffer-names "*Help*")
 
 (use-package rainbow-delimiters
   :ensure t
