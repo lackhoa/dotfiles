@@ -267,7 +267,6 @@
  (lambda ()
    (setq prettify-symbols-alist
          '(("lambda"  . ?λ)
-           ("lam"     . ?λ)
            ("<="      . ?≤)
            (">="      . ?≥)
            ("->"      . ?→)
@@ -278,6 +277,7 @@
            ("not"     . ?¬)
            ("=/="     . ?≠)
            ("forall"  . ?∀)
+           ("for-all" . ?∀)
            ("exists"  . ?∃)
            ("compose" . ?∘)
            ("in"      . ?∈)
