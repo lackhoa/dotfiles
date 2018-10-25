@@ -137,6 +137,7 @@
                                                  (save-excursion
                                                    (end-of-line 0)
                                                    (open-line 1))))
+  (evil-define-key 'normal 'global (kbd "C-a") #'mark-whole-buffer)
   (evil-define-key 'visual 'global (kbd "TAB") #'indent-rigidly)
 
 ;;; A bunch of commands
@@ -243,8 +244,8 @@
   ;; Vim Numbering
   :ensure t
   :config
-  (global-set-key (kbd "C-a") 'evil-numbers/inc-at-pt)
-  (global-set-key (kbd "C-c -") 'evil-numbers/dec-at-pt))
+  (global-set-key (kbd "C-=") 'evil-numbers/inc-at-pt)
+  (global-set-key (kbd "C--") 'evil-numbers/dec-at-pt))
 
 (add-hook
  ;; Remove completion buffer when done
