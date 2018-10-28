@@ -293,7 +293,7 @@
 
 ;;; Fix lisp indent
 (let ((sif 'scheme-indent-function))
-  (put 'lam              sif 'defun)
+  (put 'lam            sif 'defun)
   (put 'def            sif 1)
   (put 'set!           sif 1)
   (put 'class          sif 1)
@@ -323,7 +323,9 @@
   (put 'generator      sif 1)
   (put 'with-handlers  sif 1)
   (put 'while          sif 1)
-  (put 'place          sif 1))
+  (put 'place          sif 1)
+  (put 'trace-lambda   sif 'defun)
+  )
 
 (global-set-key
  ;; Always kill current buffer
