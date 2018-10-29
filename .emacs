@@ -139,6 +139,7 @@
                                                    (open-line 1))))
   (evil-define-key 'normal 'global (kbd "C-a") #'mark-whole-buffer)
   (evil-define-key 'visual 'global (kbd "TAB") #'indent-rigidly)
+  (evil-define-key 'normal 'global "q" #'er/expand-region)
 
 ;;; A bunch of commands
   (evil-ex-define-cmd "x" 'kill-this-buffer)
@@ -226,8 +227,7 @@
 
 (use-package expand-region
   ;; Magic that I saw once.
-  :ensure t
-  :bind ("C-q" . er/expand-region))
+  :ensure t)
 
 (use-package popup-kill-ring
   ;; Use this to yank multiple things.
