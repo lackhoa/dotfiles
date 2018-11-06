@@ -145,7 +145,7 @@
   (evil-ex-define-cmd "x" 'kill-this-buffer)
   (evil-ex-define-cmd "f" 'find-file)
   (evil-ex-define-cmd "b" 'switch-to-buffer)
-  (evil-ex-define-cmd "s" #'replace-regexp-entire-buffer)
+  (evil-ex-define-cmd "s" #'replace-string)
   (defun replace-regexp-entire-buffer (pattern replacement)
     "Perform regular-expression replacement throughout buffer."
     (interactive
