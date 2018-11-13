@@ -2,6 +2,7 @@
 desktop-effects-unmaximize-transition='easeOutBounce'
 desktop-effects-on-dialogs=false
 desktop-effects-maximize-transition='easeInBack'
+applet-cache-updated=1528953413
 workspace-osd-visible=true
 desktop-effects-map-effect='none'
 workspace-osd-y=50
@@ -68,10 +69,12 @@ clock-use-24h=true
 font-name='Norasi 12'
 cursor-theme='Adwaita'
 toolkit-accessibility=false
+keyboard-layout-use-upper=true
 clock-show-seconds=false
 cursor-blink-time=1200
 icon-theme='Mint-X-Red'
 gtk-overlay-scrollbars=false
+keyboard-layout-show-flags=false
 gtk-theme='Vivaldi-ZorinOS'
 clock-show-date=true
 
@@ -125,6 +128,7 @@ recent-files-max-age=30
 remember-recent-files=false
 
 [desktop/wm/preferences]
+action-middle-click-titlebar='none'
 theme='Vivaldi-ZorinOS'
 num-workspaces=3
 action-scroll-titlebar='opacity'
@@ -178,10 +182,11 @@ dwell-threshold=10
 dwell-click-enabled=false
 
 [desktop/sound]
+volume-sound-enabled=true
 event-sounds=false
 
 [desktop/background]
-picture-uri='file:///usr/share/backgrounds/linuxmint-sarah/linuxmint_wood.jpg'
+picture-uri='file:///usr/share/backgrounds/linuxmint-sarah/bartosova_aurora.jpg'
 picture-options='zoom'
 
 [desktop/background/slideshow]
@@ -244,8 +249,14 @@ theme-cache-updated=1535974423
 name='Numix-Cinnamon-Transparent'
 
 [sounds]
-maximize-enabled=true
-unmaximize-enabled=true
+logout-enabled=true
 map-enabled=true
-close-enabled=true
+maximize-enabled=true
+login-enabled=true
+switch-enabled=true
+tile-enabled=true
 minimize-enabled=true
+unplug-enabled=true
+close-enabled=true
+plug-enabled=true
+unmaximize-enabled=true

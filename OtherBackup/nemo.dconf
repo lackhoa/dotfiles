@@ -1,5 +1,5 @@
 [preferences]
-show-hidden-files=false
+show-hidden-files=true
 context-menus-show-all-actions=true
 show-location-entry=false
 
