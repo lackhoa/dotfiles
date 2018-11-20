@@ -325,6 +325,7 @@
   (put 'while          sif 1)
   (put 'place          sif 1)
   (put 'trace-lambda   sif 'defun)
+  (put 'bind           sif 1)
   )
 
 (global-set-key
