@@ -42,13 +42,23 @@
 (setq inhibit-startup-buffer-menu t)
 ;; Don't show Welcome Screen when opening up
 (setq inhibit-startup-screen t)
+;; Not compile log buffer
+(add-hook 'emacs-startup-hook
+          (lambda ()
+            (let ((compile-log-buffer (get-buffer "*Compile-Log*")))
+              (when (and compile-log-buffer
+                       (= (buffer-size compile-log-buffer) 0))
+                (kill-buffer compile-log-buffer)))))
+
 
 ;; No more typing the whole yes or no. Just y or n will do.
 (fset 'yes-or-no-p 'y-or-n-p)
 
 ;; Adding new file extension to modes
-(add-to-list 'auto-mode-alist '("\\.rkt\\'" . scheme-mode))
-(add-to-list 'auto-mode-alist '("\\.md\\'" . prog-mode))
+(setq auto-mode-alist (append '(("\\.rkt\\'" . scheme-mode)
+                                ("\\.md\\'" . prog-mode)
+                                ("\\.pl$" . prolog-mode))
+                              auto-mode-alist))
 
 ;; Get rid of the UI elements
 (menu-bar-mode     -1)
@@ -140,6 +150,12 @@
   (evil-define-key 'normal 'global (kbd "C-a") #'mark-whole-buffer)
   (evil-define-key 'visual 'global (kbd "TAB") #'indent-rigidly)
   (evil-define-key 'normal 'global "q" #'er/expand-region)
+  (evil-define-key 'normal 'global "e" #'forward-word)
+  (evil-define-key 'normal 'global "E" (lambda () (interactive)
+                                         (if (looking-at "[[:space:]]")
+                                             (forward-whitespace 2)
+                                           (forward-whitespace 1))
+                                         (left-char)))
 
 ;;; A bunch of commands
   (evil-ex-define-cmd "x" 'kill-this-buffer)
