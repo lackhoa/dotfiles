@@ -48,8 +48,9 @@
 
 (;; Adding new file extension to modes
  setq auto-mode-alist (append '(("\\.rkt\\'" . scheme-mode)
-                                ("\\.md\\'" . prog-mode)
-                                ("\\.pl$" . prolog-mode))
+                                ("\\.md\\'"  . prog-mode)
+                                ("\\.pl$"    . prolog-mode)
+                                ("\\.m$"     . mercury-mode))
                               auto-mode-alist))
 
 ;; Get rid of the UI elements
@@ -197,7 +198,7 @@
 (use-package aggressive-indent
   ;; No more worries about lisp indentation
   :ensure t
-  :hook ((emacs-lisp-mode scheme-mode) . aggressive-indent-mode))
+  :hook ((prog-mode) . aggressive-indent-mode))
 
 (use-package linum-relative
   ;; Relative line number
@@ -339,6 +340,12 @@
 (global-set-key
  ;; Always kill current buffer
  (kbd "C-x k") 'kill-current-buffer)
+
+;;; Prolog stuff
+(autoload 'run-prolog   "prolog" "Start a Prolog sub-process."              t)
+(autoload 'prolog-mode  "prolog" "Major mode for editing Prolog programs."  t)
+(autoload 'mercury-mode "prolog" "Major mode for editing Mercury programs." t)
+(setq prolog-system 'swi)
 
 ;;; Automatic Settings (DON'T TOUCH BEYOND THIS POINT)
 (custom-set-variables
