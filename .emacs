@@ -340,12 +340,33 @@
 (global-set-key
  ;; Always kill current buffer
  (kbd "C-x k") 'kill-current-buffer)
+(global-set-key
+ (kbd "C-x C-k") 'kill-current-buffer)
+(global-set-key
+ (kbd "C-x C-0") 'kill-buffer-and-window)
+
+(add-hook 'comint-exec-hook
+          (lambda () (set-process-query-on-exit-flag
+                 (get-buffer-process (current-buffer)) nil)))
 
 ;;; Prolog stuff
 (autoload 'run-prolog   "prolog" "Start a Prolog sub-process."              t)
 (autoload 'prolog-mode  "prolog" "Major mode for editing Prolog programs."  t)
 (autoload 'mercury-mode "prolog" "Major mode for editing Mercury programs." t)
 (setq prolog-system 'swi)
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 ;;; Automatic Settings (DON'T TOUCH BEYOND THIS POINT)
 (custom-set-variables
