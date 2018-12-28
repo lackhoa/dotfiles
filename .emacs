@@ -25,26 +25,27 @@
 ;; Load THE theme
 (load-theme 'wheatgrass)
 
-;; Don't skip the screen when scrolling up or down
-(setq scroll-conservatively 100)
+(;; Don't skip the screen when scrolling up or down
+ setq scroll-conservatively 100)
 
-;; Something really annoying?
-(setq ring-bell-function 'ignore)
+(;; Something really annoying?
+ setq ring-bell-function 'ignore)
 
-;; Show where the cursor is
-(global-hl-line-mode)
+(;; Show where the cursor is
+ global-hl-line-mode)
 
 ;;; Getting rid of really annoying buffers
-;; Removes *messages* from the buffer.
+;; Removes *messages* buffer.
 (setq-default message-log-max nil)
 (kill-buffer "*Messages*")
-;; Don't show *Buffer list* when opening multiple files at the same time.
-(setq inhibit-startup-buffer-menu t)
-;; Don't show Welcome Screen when opening up
-(setq inhibit-startup-screen t)
 
-;; No more typing the whole yes or no. Just y or n will do.
-(fset 'yes-or-no-p 'y-or-n-p)
+(;; Don't show *Buffer list* when opening multiple files at the same time.
+ setq inhibit-startup-buffer-menu t)
+(;; Don't show Welcome Screen when opening up
+ setq inhibit-startup-screen t)
+
+(;; No more typing the whole yes or no. Just y or n will do.
+ fset 'yes-or-no-p 'y-or-n-p)
 
 (;; Adding new file extension to modes
  setq auto-mode-alist (append '(("\\.rkt\\'" . scheme-mode)
@@ -53,7 +54,7 @@
                                 ("\\.m$"     . mercury-mode))
                               auto-mode-alist))
 
-;; Get rid of the UI elements
+;; Get rid of UI elements
 (menu-bar-mode     -1)
 (toggle-scroll-bar -1)
 (tool-bar-mode     -1)
@@ -119,15 +120,9 @@
   (define-key evil-normal-state-map "a" 'evil-append-line)
   (define-key evil-normal-state-map "A" 'evil-append)
   (define-key evil-normal-state-map "p" 'evil-paste-before)
-  (evil-define-key 'insert 'global (kbd "C-v") 'evil-paste-before)
   (define-key evil-normal-state-map "P" 'evil-paste-after)
+  (evil-define-key 'insert 'global (kbd "C-v") 'evil-paste-before)
   (define-key evil-motion-state-map (kbd "RET") 'evil-write-all)
-  (evil-define-key 'normal 'global [down] 'evil-scroll-line-down)
-  (evil-define-key 'insert 'global [down] 'evil-scroll-line-down)
-  (evil-define-key 'normal 'global [up] 'evil-scroll-line-up)
-  (evil-define-key 'insert 'global [up] 'evil-scroll-line-up)
-  (evil-define-key 'normal 'global [right] 'next-buffer)
-  (evil-define-key 'normal 'global [left] 'previous-buffer)
   (evil-define-key 'normal 'global (kbd "K") #'open-line)
   (evil-define-key 'normal 'global (kbd "SPC") (lambda () (interactive)
                                                  (insert-char ?\s)))
@@ -148,23 +143,7 @@
                                          (evil-forward-char)))
   (evil-define-key 'normal 'global "E" (lambda () (interactive)
                                          (evil-forward-WORD-end)
-                                         (evil-forward-char)))
-
-;;; A bunch of commands
-  (evil-ex-define-cmd "x" 'kill-this-buffer)
-  (evil-ex-define-cmd "f" 'find-file)
-  (evil-ex-define-cmd "b" 'switch-to-buffer)
-  (evil-ex-define-cmd "s" #'replace-string)
-  (defun replace-regexp-entire-buffer (pattern replacement)
-    "Perform regular-expression replacement throughout buffer."
-    (interactive
-     (let ((args (query-replace-read-args "Replace" t)))
-       (setcdr (cdr args) nil)    ; remove third value returned from query---args
-       args))
-    (save-excursion
-      (goto-char (point-min))
-      (while (re-search-forward pattern nil t)
-        (replace-match replacement)))))
+                                         (evil-forward-char))))
 
 ;; Why even bother with the default status bar?
 (use-package spaceline
@@ -264,10 +243,11 @@
       (and (get-buffer buffer)
          (kill-buffer buffer)))))
 
-(desktop-save-mode 1)  ; Save all the buffers to re-open them later.
+(; Save current desktop configs on exit
+ desktop-save-mode 1)
 
 (setq
- ;; stop creating backup files
+ ;; stop making backup files
  make-backup-files nil
  auto-save-default nil)
 
@@ -345,9 +325,10 @@
 (global-set-key
  (kbd "C-x C-0") 'kill-buffer-and-window)
 
-(add-hook 'comint-exec-hook
-          (lambda () (set-process-query-on-exit-flag
-                 (get-buffer-process (current-buffer)) nil)))
+(;; Please don't ask whether to kill running processes
+ add-hook 'comint-exec-hook
+ (lambda () (set-process-query-on-exit-flag
+        (get-buffer-process (current-buffer)) nil)))
 
 ;;; Prolog stuff
 (autoload 'run-prolog   "prolog" "Start a Prolog sub-process."              t)

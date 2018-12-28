@@ -21,7 +21,7 @@ desktop-effects=false
 prevent-focus-stealing=false
 panels-height=['1:42', '2:25']
 enable-vfade=false
-next-applet-id=60
+next-applet-id=64
 panel-launchers=['DEPRECATED']
 desktop-effects-tile-transition='easeInBack'
 desktop-effects-map-transition='easeOutSine'
@@ -33,7 +33,7 @@ overview-corner=['expo:false:false:0', 'scale:false:false:0', 'scale:false:false
 panels-resizable=['1:true', '2:false']
 desktop-effects-maximize-effect='none'
 desktop-effects-on-menus=false
-enabled-applets=['panel1:left:2:window-list@cinnamon.org:50', 'panel1:center:0:menu@cinnamon.org:51', 'panel1:right:0:notifications@cinnamon.org:4', 'panel1:right:2:separator@cinnamon.org:55', 'panel1:right:3:removable-drives@cinnamon.org:6', 'panel1:right:4:systray@cinnamon.org:12', 'panel1:right:6:keyboard@cinnamon.org:7', 'panel1:right:7:network@cinnamon.org:9', 'panel1:right:8:separator@cinnamon.org:41', 'panel1:right:9:calendar@cinnamon.org:13', 'panel1:right:0:panel-launchers@cinnamon.org:59']
+enabled-applets=['panel1:center:0:menu@cinnamon.org:51', 'panel1:right:2:notifications@cinnamon.org:4', 'panel1:right:4:separator@cinnamon.org:55', 'panel1:right:5:removable-drives@cinnamon.org:6', 'panel1:right:6:systray@cinnamon.org:12', 'panel1:right:7:keyboard@cinnamon.org:7', 'panel1:right:8:network@cinnamon.org:9', 'panel1:right:9:separator@cinnamon.org:41', 'panel1:right:10:calendar@cinnamon.org:13', 'panel1:right:3:panel-launchers@cinnamon.org:59', 'panel1:right:11:windows-quick-list@cinnamon.org:61', 'panel1:left:0:window-list@cinnamon.org:63']
 desktop-effects-minimize-time=100
 alttab-switcher-delay=100
 desktop-effects-tile-effect='none'
@@ -186,11 +186,11 @@ volume-sound-enabled=true
 event-sounds=false
 
 [desktop/background]
-picture-uri='file:///usr/share/backgrounds/linuxmint-sarah/bartosova_aurora.jpg'
+picture-uri='file:///home/khoa/Pictures/635231.jpg'
 picture-options='zoom'
 
 [desktop/background/slideshow]
-image-source='xml:///usr/share/cinnamon-background-properties/linuxmint-sarah.xml'
+image-source='directory:///home/khoa/Pictures'
 random-order=true
 delay=10
 slideshow-enabled=true

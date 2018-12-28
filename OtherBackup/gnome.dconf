@@ -119,8 +119,8 @@ recreate-folders=true
 
 [file-roller/ui]
 sidebar-width=200
-window-height=672
-window-width=681
+window-height=726
+window-width=1366
 
 [gnome-system-log]
 width=600
@@ -346,6 +346,10 @@ disable-connected-notifications=true
 ignore-phase2-ca-cert=false
 ignore-ca-cert=false
 
+[nm-applet/eap/ec2d75ef-452a-4a5a-a39f-0f651be37f7a]
+ignore-phase2-ca-cert=false
+ignore-ca-cert=false
+
 [nm-applet/eap/39a978e4-f69e-47fe-b74d-cbb605f93888]
 ignore-phase2-ca-cert=false
 ignore-ca-cert=false
@@ -435,10 +439,10 @@ ignore-phase2-ca-cert=false
 ignore-ca-cert=false
 
 [gnome-system-monitor]
-current-tab='processes'
+current-tab='resources'
 show-whose-processes='user'
-window-state=(958, 1005, 960, 0)
-maximized=false
+window-state=(1366, 726, -1, -32)
+maximized=true
 show-dependencies=false
 
 [gnome-system-monitor/proctree]

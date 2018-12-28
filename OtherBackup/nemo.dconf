@@ -11,7 +11,7 @@ my-computer-expanded=true
 geometry='958x1005+50+0'
 network-expanded=false
 sidebar-bookmark-breakpoint=8
-maximized=false
+maximized=true
 start-with-sidebar=true
 
 [desktop]
