@@ -25,6 +25,9 @@
 ;; Load THE theme
 (load-theme 'wheatgrass)
 
+(;; Windows redoer
+ winner-mode 1)
+
 (;; Don't skip the screen when scrolling up or down
  setq scroll-conservatively 100)
 
@@ -59,8 +62,8 @@
 (toggle-scroll-bar -1)
 (tool-bar-mode     -1)
 
-;; Auto-pair
-(electric-pair-mode)
+(;; Auto-pair
+ electric-pair-mode)
 
 ;;; Packages
 ;; This is why I'm here
@@ -78,21 +81,7 @@
   ;; Surround
   (use-package evil-surround
     :ensure t
-    :config
-    (global-evil-surround-mode))
-
-  ;; Auto-completion
-  (use-package company
-    :ensure t
-    :config
-    (global-company-mode)
-    (setq company-idle-delay 0.2
-          company-selection-wrap-around t)
-    (define-key company-active-map [tab] 'company-complete)
-    (define-key company-active-map (kbd "C-n") 'company-select-next)
-    (define-key company-active-map (kbd "C-p") 'company-select-previous)
-    ;; Delete word when in automcomplete
-    (define-key company-active-map (kbd "C-w") 'evil-delete-backward-word))
+    :config (global-evil-surround-mode))
 
   ;; Auto-center search result
   (defadvice evil-search-next
@@ -102,18 +91,10 @@
       (after advice-for-evil-search-previous activate)
     (evil-scroll-line-to-center (line-number-at-pos)))
 
-  ;; Commentary
   (use-package evil-commentary
+    ;; Commentary
     :ensure t
-    :config
-    (evil-commentary-mode))
-
-  ;; The dopest snipe package ever
-  (use-package avy
-    :ensure t
-    :config
-    (evil-define-key 'normal 'global (kbd "f") #'avy-goto-char)
-    (evil-define-key 'normal 'global (kbd "s") #'avy-goto-char-2))
+    :config (evil-commentary-mode))
 
 ;;; Key bindings
   (define-key evil-motion-state-map ";" 'evil-ex)
@@ -126,7 +107,6 @@
   (evil-define-key 'normal 'global (kbd "K") #'open-line)
   (evil-define-key 'normal 'global (kbd "SPC") (lambda () (interactive)
                                                  (insert-char ?\s)))
-  (evil-define-key 'normal 'global (kbd "DEL") #'backward-delete-char-untabify)
   (evil-define-key 'normal 'global (kbd "C-j") (lambda () (interactive)
                                                  (save-excursion
                                                    (end-of-line)
@@ -137,34 +117,67 @@
                                                    (open-line 1))))
   (evil-define-key 'normal 'global (kbd "C-a") #'mark-whole-buffer)
   (evil-define-key 'visual 'global (kbd "TAB") #'indent-rigidly)
-  (evil-define-key 'normal 'global "q" #'er/expand-region)
   (evil-define-key 'normal 'global "e" (lambda () (interactive)
                                          (evil-forward-word-end)
                                          (evil-forward-char)))
   (evil-define-key 'normal 'global "E" (lambda () (interactive)
                                          (evil-forward-WORD-end)
-                                         (evil-forward-char))))
+                                         (evil-forward-char)))
 
-;; Why even bother with the default status bar?
-(use-package spaceline
+  ;; Some commands
+  (evil-ex-define-cmd "b" 'ido-switch-buffer)
+  (evil-ex-define-cmd "f" 'ido-find-file)
+  (evil-ex-define-cmd "k" 'kill-buffer-and-window))
+
+(;; Auto-completion
+ use-package company
+ :ensure t
+ :config
+ (global-company-mode)
+ (setq company-idle-delay 0.2
+       company-selection-wrap-around t)
+ (define-key company-active-map [tab] 'company-complete)
+ (define-key company-active-map (kbd "C-n") 'company-select-next)
+ (define-key company-active-map (kbd "C-p") 'company-select-previous)
+ ;; Delete word when in automcomplete
+ (define-key company-active-map (kbd "C-w") 'evil-delete-backward-word))
+
+(use-package avy
+  ;; The dopest snipe package ever
   :ensure t
-  :init (setq powerline-default-separator 'arrow)
   :config
-  (require 'spaceline-config)
-  (spaceline-spacemacs-theme))
+  (evil-define-key 'normal 'global (kbd "s") #'avy-goto-char-2))
+
+(;; Why even bother with the default status bar?
+ use-package spaceline
+ :ensure t
+ :init (setq powerline-default-separator 'arrow)
+ :config
+ (require 'spaceline-config)
+ (spaceline-spacemacs-theme))
 
 (use-package ido-vertical-mode
-  ;; Ido-mode
+  ;; Ido-mode: a regexp smart search framework
   :ensure t
   :init
   (ido-mode 1)
   (setq ido-enable-flex-matching nil
         ido-create-new-buffer 'always
-        ido-everywhere t)
-  :config (ido-vertical-mode 1))
+        ido-everywhere t
+        ido-use-filename-at-point 'guess
+        ido-create-new-buffer 'always)
+  :config
+  (ido-vertical-mode 1)
+  (defun bind-ido-keys ()
+    "Keybindings for ido mode."
+    )
+  (add-hook 'ido-setup-hook
+            (lambda ()
+              (define-key ido-completion-map (kbd "C-n") 'ido-next-match)
+              (define-key ido-completion-map (kbd "C-p") 'ido-prev-match))))
 
 (use-package smex
-  ;; Same but for buffer
+  ;; Command completion, using Ido above
   :ensure t
   :init (smex-initialize)
   :bind ("M-x" . smex))
@@ -186,25 +199,24 @@
   (setq linum-relative-current-symbol "")
   (linum-relative-global-mode))
 
-(column-number-mode 1)  ; Show columns
+(;; Show columns
+ column-number-mode 1)
 
 ;; List of buffers to not open in a new window
 (add-to-list 'same-window-buffer-names "*Buffer List*")
 (add-to-list 'same-window-buffer-names "*Help*")
 
-(use-package rainbow-delimiters
-  :ensure t
-  :config
-  (add-hook 'prog-mode-hook 'rainbow-delimiters-mode))
+(;; Color those parentheses
+ use-package rainbow-delimiters
+ :ensure t
+ :config
+ (add-hook 'prog-mode-hook 'rainbow-delimiters-mode))
 
-(setq-default indent-tabs-mode nil)  ;; No tabs!
+(;; No tabs!
+ setq-default indent-tabs-mode nil)
 
-(use-package sudo-edit
-  :ensure t
-  :bind
-  ("s-e" . sudo-edit))
-
-(global-auto-revert-mode 1)  ; Automatically update changed buffer
+(;; Automatically update changed buffer
+ global-auto-revert-mode 1)
 
 (progn
   ;; Highlight matching brackets
@@ -213,9 +225,14 @@
   (set-face-foreground 'show-paren-match "#def")
   (set-face-attribute 'show-paren-match nil :weight 'extra-bold))
 
+(use-package magit
+  ;; Git package
+  :ensure t)
+
 (use-package expand-region
   ;; Magic that I saw once.
-  :ensure t)
+  :ensure t
+  :config (evil-define-key 'normal 'global "q" #'er/expand-region))
 
 (use-package popup-kill-ring
   ;; Use this to yank multiple things.
@@ -225,8 +242,7 @@
 (use-package evil-lion
   ;; Alignment
   :ensure t
-  :config
-  (evil-lion-mode))
+  :config (evil-lion-mode))
 
 (use-package evil-numbers
   ;; Vim Numbering
@@ -245,6 +261,11 @@
 
 (; Save current desktop configs on exit
  desktop-save-mode 1)
+
+(;; Please don't ask whether to kill running processes
+ add-hook 'comint-exec-hook
+ (lambda () (set-process-query-on-exit-flag
+        (get-buffer-process (current-buffer)) nil)))
 
 (setq
  ;; stop making backup files
@@ -317,18 +338,7 @@
   (put 'trace-define   sif 1)
   )
 
-(global-set-key
- ;; Always kill current buffer
- (kbd "C-x k") 'kill-current-buffer)
-(global-set-key
- (kbd "C-x C-k") 'kill-current-buffer)
-(global-set-key
- (kbd "C-x C-0") 'kill-buffer-and-window)
 
-(;; Please don't ask whether to kill running processes
- add-hook 'comint-exec-hook
- (lambda () (set-process-query-on-exit-flag
-        (get-buffer-process (current-buffer)) nil)))
 
 ;;; Prolog stuff
 (autoload 'run-prolog   "prolog" "Start a Prolog sub-process."              t)
@@ -356,9 +366,7 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
-   '(sudo-edit spaceline avy smex ido-vertical-mode beacon company evil-numbers evil-lion evil-commentary rainbow-delimiters linum-relative evil-surround evil use-package))
- '(show-paren-mode t)
- '(tool-bar-mode nil))
+   '(spaceline avy smex ido-vertical-mode beacon company evil-numbers evil-lion evil-commentary rainbow-delimiters linum-relative evil-surround evil use-package)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
