@@ -101,6 +101,8 @@
 
 ;;; Key bindings
   (evil-define-key 'normal 'global ";" 'evil-ex)
+  (;; No more M-x!
+   evil-define-key 'normal 'global ":" 'smex)
   (evil-define-key 'normal 'global "a" 'evil-append-line)
   (evil-define-key 'normal 'global "A" 'evil-append)
   (evil-define-key 'normal 'global "p" 'evil-paste-before)
