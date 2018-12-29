@@ -72,6 +72,9 @@
   :init
   (evil-mode 1)
   :config
+  (;; Do not regexp search when type "/"
+   setq evil-regexp-search nil)
+
   ;; Switch line highlighting off when in insert mode.
   (add-hook 'evil-insert-state-entry-hook
             '(lambda () (global-hl-line-mode -1)))
@@ -97,14 +100,13 @@
     :config (evil-commentary-mode))
 
 ;;; Key bindings
-  (define-key evil-motion-state-map ";" 'evil-ex)
-  (define-key evil-normal-state-map "a" 'evil-append-line)
-  (define-key evil-normal-state-map "A" 'evil-append)
-  (define-key evil-normal-state-map "p" 'evil-paste-before)
-  (define-key evil-normal-state-map "P" 'evil-paste-after)
-  (evil-define-key 'insert 'global (kbd "C-v") 'evil-paste-before)
-  (define-key evil-motion-state-map (kbd "RET") 'evil-write-all)
-  (evil-define-key 'normal 'global (kbd "K") #'open-line)
+  (evil-define-key 'normal 'global ";" 'evil-ex)
+  (evil-define-key 'normal 'global "a" 'evil-append-line)
+  (evil-define-key 'normal 'global "A" 'evil-append)
+  (evil-define-key 'normal 'global "p" 'evil-paste-before)
+  (evil-define-key 'normal 'global "P" 'evil-paste-after)
+  (evil-define-key 'normal 'global (kbd "RET") 'evil-write-all)
+  (evil-define-key 'normal 'global (kbd "K") 'open-line)
   (evil-define-key 'normal 'global (kbd "SPC") (lambda () (interactive)
                                                  (insert-char ?\s)))
   (evil-define-key 'normal 'global (kbd "C-j") (lambda () (interactive)
@@ -115,14 +117,17 @@
                                                  (save-excursion
                                                    (end-of-line 0)
                                                    (open-line 1))))
-  (evil-define-key 'normal 'global (kbd "C-a") #'mark-whole-buffer)
-  (evil-define-key 'visual 'global (kbd "TAB") #'indent-rigidly)
   (evil-define-key 'normal 'global "e" (lambda () (interactive)
                                          (evil-forward-word-end)
                                          (evil-forward-char)))
   (evil-define-key 'normal 'global "E" (lambda () (interactive)
                                          (evil-forward-WORD-end)
                                          (evil-forward-char)))
+  (evil-define-key 'normal 'global (kbd "C-a") 'mark-whole-buffer)
+  (evil-define-key 'normal 'global (kbd "DEL") 'backward-delete-char-untabify)
+  (evil-define-key 'insert 'global (kbd "C-v") 'evil-paste-before)
+  (evil-define-key 'visual 'global (kbd "TAB") 'indent-rigidly)
+
 
   ;; Some commands
   (evil-ex-define-cmd "b" 'ido-switch-buffer)
@@ -168,13 +173,7 @@
         ido-create-new-buffer 'always)
   :config
   (ido-vertical-mode 1)
-  (defun bind-ido-keys ()
-    "Keybindings for ido mode."
-    )
-  (add-hook 'ido-setup-hook
-            (lambda ()
-              (define-key ido-completion-map (kbd "C-n") 'ido-next-match)
-              (define-key ido-completion-map (kbd "C-p") 'ido-prev-match))))
+  (setq ido-vertical-define-keys 'C-n-C-p-up-down-left-right))
 
 (use-package smex
   ;; Command completion, using Ido above
