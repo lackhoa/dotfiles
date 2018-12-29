@@ -100,9 +100,8 @@
     :config (evil-commentary-mode))
 
 ;;; Key bindings
-  (evil-define-key 'normal 'global ";" 'evil-ex)
-  (;; No more M-x!
-   evil-define-key 'normal 'global ":" 'smex)
+  (;; No more M-x! Use smex instead of evil-ex
+   evil-define-key 'normal 'global ";" 'smex)
   (evil-define-key 'normal 'global "a" 'evil-append-line)
   (evil-define-key 'normal 'global "A" 'evil-append)
   (evil-define-key 'normal 'global "p" 'evil-paste-before)
@@ -130,11 +129,10 @@
   (evil-define-key 'insert 'global (kbd "C-v") 'evil-paste-before)
   (evil-define-key 'visual 'global (kbd "TAB") 'indent-rigidly)
 
-
-  ;; Some commands
-  (evil-ex-define-cmd "b" 'ido-switch-buffer)
-  (evil-ex-define-cmd "f" 'ido-find-file)
-  (evil-ex-define-cmd "k" 'kill-buffer-and-window))
+  ;; Some vital command alias
+  (defalias 'k 'kill-buffer-and-window)
+  (defalias 'f 'ido-find-file)
+  (defalias 'b 'ido-switch-buffer))
 
 (;; Auto-completion
  use-package company
