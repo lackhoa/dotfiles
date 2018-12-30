@@ -132,7 +132,8 @@
   ;; Some vital command alias
   (defalias 'k 'kill-buffer-and-window)
   (defalias 'f 'ido-find-file)
-  (defalias 'b 'ido-switch-buffer))
+  (defalias 'b 'ido-switch-buffer)
+  (defalias 'ls 'buffer-menu))
 
 (;; Auto-completion
  use-package company
