@@ -99,41 +99,58 @@
     :ensure t
     :config (evil-commentary-mode))
 
-;;; Key bindings
-  (;; No more M-x! Use smex instead of evil-ex
-   evil-define-key 'normal 'global ";" 'smex)
-  (evil-define-key 'normal 'global "a" 'evil-append-line)
-  (evil-define-key 'normal 'global "A" 'evil-append)
-  (evil-define-key 'normal 'global "p" 'evil-paste-before)
-  (evil-define-key 'normal 'global "P" 'evil-paste-after)
-  (evil-define-key 'normal 'global (kbd "RET") 'evil-write-all)
-  (evil-define-key 'normal 'global (kbd "K") 'open-line)
-  (evil-define-key 'normal 'global (kbd "SPC") (lambda () (interactive)
-                                                 (insert-char ?\s)))
-  (evil-define-key 'normal 'global (kbd "C-j") (lambda () (interactive)
-                                                 (save-excursion
-                                                   (end-of-line)
-                                                   (open-line 1))))
-  (evil-define-key 'normal 'global (kbd "C-k") (lambda () (interactive)
-                                                 (save-excursion
-                                                   (end-of-line 0)
-                                                   (open-line 1))))
-  (evil-define-key 'normal 'global "e" (lambda () (interactive)
-                                         (evil-forward-word-end)
-                                         (evil-forward-char)))
-  (evil-define-key 'normal 'global "E" (lambda () (interactive)
-                                         (evil-forward-WORD-end)
-                                         (evil-forward-char)))
-  (evil-define-key 'normal 'global (kbd "C-a") 'mark-whole-buffer)
-  (evil-define-key 'normal 'global (kbd "DEL") 'backward-delete-char-untabify)
-  (evil-define-key 'insert 'global (kbd "C-v") 'evil-paste-before)
-  (evil-define-key 'visual 'global (kbd "TAB") 'indent-rigidly)
+  )
 
-  ;; Some vital command alias
-  (defalias 'k 'kill-buffer-and-window)
-  (defalias 'f 'ido-find-file)
-  (defalias 'b 'ido-switch-buffer)
-  (defalias 'ls 'buffer-menu))
+
+
+
+
+;;; Key bindings
+(;; No more M-x! Use smex instead of evil-ex
+ evil-define-key 'normal 'global ";" 'smex)
+(evil-define-key 'normal 'global "a" 'evil-append-line)
+(evil-define-key 'normal 'global "A" 'evil-append)
+(evil-define-key 'normal 'global "p" 'evil-paste-before)
+(evil-define-key 'normal 'global "P" 'evil-paste-after)
+(evil-define-key 'normal 'global (kbd "RET") 'evil-write-all)
+(evil-define-key 'normal 'global (kbd "K") 'open-line)
+(evil-define-key 'normal 'global (kbd "SPC") (lambda () (interactive)
+                                               (insert-char ?\s)))
+(evil-define-key 'normal 'global (kbd "C-j") (lambda () (interactive)
+                                               (save-excursion
+                                                 (end-of-line)
+                                                 (open-line 1))))
+(evil-define-key 'normal 'global (kbd "C-k") (lambda () (interactive)
+                                               (save-excursion
+                                                 (end-of-line 0)
+                                                 (open-line 1))))
+(evil-define-key 'normal 'global "e" (lambda () (interactive)
+                                       (evil-forward-word-end)
+                                       (evil-forward-char)))
+(evil-define-key 'normal 'global "E" (lambda () (interactive)
+                                       (evil-forward-WORD-end)
+                                       (evil-forward-char)))
+(evil-define-key 'normal 'global (kbd "C-a") 'mark-whole-buffer)
+(evil-define-key 'normal 'global (kbd "DEL") 'backward-delete-char-untabify)
+(evil-define-key 'normal 'global (kbd "C-.") 'next-buffer)
+(evil-define-key 'normal 'global (kbd "C-,") 'previous-buffer)
+
+(evil-define-key 'insert 'global (kbd "C-.") 'next-buffer)
+(evil-define-key 'insert 'global (kbd "C-,") 'previous-buffer)
+(evil-define-key 'insert 'global (kbd "C-v") 'evil-paste-before)
+
+(evil-define-key 'visual 'global (kbd "TAB") 'indent-rigidly)
+
+;;; Some vital command alias
+(defalias 'k 'kill-buffer-and-window)
+(defalias 'f 'ido-find-file)
+(defalias 'b 'ido-switch-buffer)
+(defalias 'ls 'buffer-menu)
+
+
+
+
+
 
 (;; Auto-completion
  use-package company
@@ -336,6 +353,12 @@
   (put 'place          sif 1)
   (put 'trace-lambda   sif 'defun)
   (put 'trace-define   sif 1)
+  ;; miniKanren
+  (put 'fresh     sif 1)
+  (put 'run       sif 2)
+  (put 'run*      sif 1)
+  (put 'lambdag@  sif 1)
+  (put 'lambdaf@  sif 1)
   )
 
 
