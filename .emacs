@@ -359,6 +359,8 @@
   (put 'run*      sif 1)
   (put 'lambdag@  sif 1)
   (put 'lambdaf@  sif 1)
+  (put 'project   sif 1)
+  (put 'pmatch    sif 1)
   )
 
 
