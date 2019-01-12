@@ -8,7 +8,7 @@ window-size=(750, 693)
 sort-directories-first=true
 date-format='regular'
 sort-order='ascending'
-location-mode='path-bar'
+location-mode='filename-entry'
 
 [settings/color-chooser]
 selected-color=(true, 0.25490196078431371, 0.0039215686274509803, 0.25098039215686274, 1.0)

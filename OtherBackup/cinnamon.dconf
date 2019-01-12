@@ -6,7 +6,7 @@ applet-cache-updated=1528953413
 workspace-osd-visible=true
 desktop-effects-map-effect='none'
 workspace-osd-y=50
-command-history=['khoa-update', 'sudo khoa-update', 'touch dick', 'gnome-terminal -x sleep 10h', 'bash', 'shell', 'sudo apt-get install --reinstall gnome-terminal', 'sudo apt-get install xterm', 'sudo apt-get instsall gnome-terminal', 'terminal-emulator', 'wireless', 'conky-config', 'conky-conf', 'coqtop', 'sudo', 'gksu', 'gksudo', 'pt', 'gnome-terminal', 'python3 ~/pywal-master/khoa_wal.py', 'python3 /home/khoa/pywal-master/khoa_wal.py', 'i3', 'keynav', 'vim something', 'gvim something', 'bash bin/khoa_motd.sh', 'gvim', 'bash ~/bin/khoa_motd.sh', 'bash khoa_motd.sh', 'khoa_motd', 'khoa_motd.sh', '~/bin/khoa_motd.sh', 'wireshark gtk', 'wireshark-gtk', 'nemo', 'redshift', '~/bin/inverter.py', 'uninv', 'coqie', 'subl', 'coq', 'terminal', 'term', 'x', 'noinv', 'droicam', 'droidcam', 'python3 ~/bin/inverter.py', 'coqide', 'sudo wireshark-gtk %f', 'sudo wireshark-gtk', 'python bin/inverter.py', 'packettracer', 'python ~/bin/inverter.py', 'python /home/khoa/bin/inverter.py', 'python /home/lac/inverter.py', 'conky', 'inv', 'u', 'i']
+command-history=['khoa-update', 'sudo khoa-update', 'touch dick', 'gnome-terminal -x sleep 10h', 'bash', 'shell', 'sudo apt-get install --reinstall gnome-terminal', 'sudo apt-get install xterm', 'sudo apt-get instsall gnome-terminal', 'terminal-emulator', 'wireless', 'conky-config', 'conky-conf', 'coqtop', 'sudo', 'gksu', 'gksudo', 'pt', 'gnome-terminal', 'python3 ~/pywal-master/khoa_wal.py', 'python3 /home/khoa/pywal-master/khoa_wal.py', 'i3', 'keynav', 'vim something', 'gvim something', 'bash bin/khoa_motd.sh', 'gvim', 'bash ~/bin/khoa_motd.sh', 'bash khoa_motd.sh', 'khoa_motd', 'khoa_motd.sh', '~/bin/khoa_motd.sh', 'wireshark gtk', 'wireshark-gtk', 'nemo', 'redshift', '~/bin/inverter.py', 'uninv', 'coqie', 'subl', 'coq', 'terminal', 'term', 'x', 'noinv', 'droicam', 'droidcam', 'python3 ~/bin/inverter.py', 'coqide', 'sudo wireshark-gtk %f', 'sudo wireshark-gtk', 'python bin/inverter.py', 'packettracer', 'python ~/bin/inverter.py', 'python /home/khoa/bin/inverter.py', 'python /home/lac/inverter.py', 'conky', 'inv', 'u', 'i', 'joe']
 alttab-switcher-show-all-workspaces=false
 desktop-effects-close-effect='none'
 desktop-effects-style='flyUp'
@@ -35,7 +35,7 @@ desktop-effects-maximize-effect='none'
 desktop-effects-on-menus=false
 enabled-applets=['panel1:center:0:menu@cinnamon.org:51', 'panel1:right:2:notifications@cinnamon.org:4', 'panel1:right:4:separator@cinnamon.org:55', 'panel1:right:5:removable-drives@cinnamon.org:6', 'panel1:right:6:systray@cinnamon.org:12', 'panel1:right:7:keyboard@cinnamon.org:7', 'panel1:right:8:network@cinnamon.org:9', 'panel1:right:9:separator@cinnamon.org:41', 'panel1:right:10:calendar@cinnamon.org:13', 'panel1:right:3:panel-launchers@cinnamon.org:59', 'panel1:right:11:windows-quick-list@cinnamon.org:61', 'panel1:left:0:window-list@cinnamon.org:63']
 desktop-effects-minimize-time=100
-alttab-switcher-delay=100
+alttab-switcher-delay=0
 desktop-effects-tile-effect='none'
 desktop-effects-close-transition='easeInBack'
 workspace-osd-duration=400
@@ -54,13 +54,14 @@ panels-autohide=['1:false', '2:false']
 startup-animation=false
 
 [muffin]
-button-layout=':minimize,maximize,close'
-placement-mode='automatic'
-resize-threshold=24
-tile-hud-threshold=25
 workspace-cycle=false
+tile-hud-threshold=25
 attach-modal-dialogs=true
 edge-tiling=true
+placement-mode='automatic'
+button-layout=':minimize,maximize,close'
+legacy-snap=false
+resize-threshold=24
 
 [desktop/interface]
 text-scaling-factor=1.0
@@ -186,7 +187,7 @@ volume-sound-enabled=true
 event-sounds=false
 
 [desktop/background]
-picture-uri='file:///home/khoa/Pictures/635231.jpg'
+picture-uri='file:///home/khoa/Pictures/flash-wins-mc.jpg'
 picture-options='zoom'
 
 [desktop/background/slideshow]

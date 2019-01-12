@@ -441,8 +441,8 @@ ignore-ca-cert=false
 [gnome-system-monitor]
 current-tab='resources'
 show-whose-processes='user'
-window-state=(1366, 726, -1, -32)
-maximized=true
+window-state=(681, 693, 683, 0)
+maximized=false
 show-dependencies=false
 
 [gnome-system-monitor/proctree]
