@@ -115,7 +115,8 @@
 (evil-define-key 'normal 'global (kbd "RET") 'evil-write-all)
 (evil-define-key 'normal 'global (kbd "K") 'open-line)
 (evil-define-key 'normal 'global (kbd "SPC") (lambda () (interactive)
-                                               (insert-char ?\s)))
+                                               (insert-char ?\s)
+                                               (evil-backward-char)))
 (evil-define-key 'normal 'global (kbd "C-j") (lambda () (interactive)
                                                (save-excursion
                                                  (end-of-line)
