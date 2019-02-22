@@ -362,11 +362,13 @@
   (put 'run*      sif 1)
   (put 'lambdag@  sif 1)
   (put 'lambdaf@  sif 1)
+  (put 'case-inf   sif 1)
   (put 'project   sif 1)
   (put 'pmatch    sif 1)
   (put 'match     sif 1)
   (put 'matche    sif 1)
   (put 'fresht    sif 1)
+  (put 'take      sif 1)
   )
 
 
