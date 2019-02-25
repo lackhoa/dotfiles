@@ -250,7 +250,9 @@
 (use-package expand-region
   ;; Magic that I saw once.
   :ensure t
-  :config (evil-define-key 'normal 'global "q" #'er/expand-region))
+  :config
+  (evil-define-key 'normal 'global "q" #'er/expand-region)
+  (evil-define-key 'normal 'global "Q" #'er/contract-region))
 
 (use-package popup-kill-ring
   ;; Use this to yank multiple things.
@@ -416,6 +418,7 @@
  '(rainbow-delimiters-depth-5-face ((t (:inherit rainbow-delimiters-base-face :foreground "magenta"))))
  '(rainbow-delimiters-depth-6-face ((t (:inherit rainbow-delimiters-base-face :foreground "cyan"))))
  '(rainbow-delimiters-depth-7-face ((t (:inherit rainbow-delimiters-base-face :foreground "dark green"))))
- '(rainbow-delimiters-depth-8-face ((t (:inherit rainbow-delimiters-base-face :foreground "navy"))))
- '(rainbow-delimiters-depth-9-face ((t (:inherit rainbow-delimiters-base-face :foreground "sienna4"))))
+ '(rainbow-delimiters-depth-8-face ((t (:inherit rainbow-delimiters-base-face :foreground "orange"))))
+ '(rainbow-delimiters-depth-9-face ((t (:inherit rainbow-delimiters-base-face :foreground "purple"))))
+ '(rainbow-delimiters-unmatched-face ((t (:inherit rainbow-delimiters-base-face :foreground "dark green"))))
  '(show-paren-match ((t (:underline "cyan" :weight extra-bold)))))
