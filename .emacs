@@ -358,6 +358,7 @@
   (put 'place          sif 1)
   (put 'trace-lambda   sif 'defun)
   (put 'trace-define   sif 1)
+  (put 'with-syntax    sif 1)
   ;; miniKanren
   (put 'fresh     sif 1)
   (put 'run       sif 2)
