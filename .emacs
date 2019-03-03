@@ -372,6 +372,7 @@
   (put 'matche    sif 1)
   (put 'fresht    sif 1)
   (put 'take      sif 1)
+  (put 'case-term sif 1)
   )
 
 
