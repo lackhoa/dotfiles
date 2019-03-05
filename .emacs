@@ -313,10 +313,7 @@
            ("exists"  . ?∃)
            ("exist"   . ?∃)
            ("compose" . ?∘)
-           ("in"      . ?∈)
-           ("false"   . ?⊥)
-           ("and"     . ?∧)
-           ("or"      . ?∨)))))
+           ("false"   . ?⊥)))))
 (global-prettify-symbols-mode 1)
 
 (add-hook
@@ -373,6 +370,7 @@
   (put 'fresht    sif 1)
   (put 'take      sif 1)
   (put 'case-term sif 1)
+  (put 'mv-let    sif 1)
   )
 
 
