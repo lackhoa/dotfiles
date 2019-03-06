@@ -313,7 +313,8 @@
            ("exists"  . ?∃)
            ("exist"   . ?∃)
            ("compose" . ?∘)
-           ("false"   . ?⊥)))))
+           ("false"   . ?⊥)
+           ("!-"      . ?⊢)))))
 (global-prettify-symbols-mode 1)
 
 (add-hook
