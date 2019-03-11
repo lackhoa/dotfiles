@@ -230,6 +230,12 @@
  :config
  (add-hook 'prog-mode-hook 'rainbow-delimiters-mode))
 
+(;; Color those identifiers
+ use-package rainbow-identifiers
+ :ensure t
+ :config
+ (add-hook 'prog-mode-hook 'rainbow-identifiers-mode))
+
 (;; No tabs!
  setq-default indent-tabs-mode nil)
 
@@ -402,7 +408,7 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
-   '(spaceline avy smex ido-vertical-mode beacon company evil-numbers evil-lion evil-commentary rainbow-delimiters linum-relative evil-surround evil use-package)))
+   '(rainbow-identifiers company-lean lean-mode spaceline avy smex ido-vertical-mode beacon company evil-numbers evil-lion evil-commentary rainbow-delimiters linum-relative evil-surround evil use-package)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
