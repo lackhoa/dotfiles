@@ -153,18 +153,7 @@
 
 
 
-(;; Auto-completion
- use-package company
- :ensure t
- :config
- (global-company-mode)
- (setq company-idle-delay 0.2
-       company-selection-wrap-around t)
- (define-key company-active-map [tab] 'company-complete)
- (define-key company-active-map (kbd "C-n") 'company-select-next)
- (define-key company-active-map (kbd "C-p") 'company-select-previous)
- ;; Delete word when in automcomplete
- (define-key company-active-map (kbd "C-w") 'evil-delete-backward-word))
+
 
 (use-package avy
   ;; The dopest snipe package ever
@@ -408,7 +397,7 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
-   '(rainbow-identifiers company-lean lean-mode spaceline avy smex ido-vertical-mode beacon company evil-numbers evil-lion evil-commentary rainbow-delimiters linum-relative evil-surround evil use-package)))
+   '(rainbow-identifiers spaceline avy smex ido-vertical-mode beacon evil-numbers evil-lion evil-commentary rainbow-delimiters linum-relative evil-surround evil use-package)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
