@@ -1,4 +1,9 @@
 (require 'package)
+
+;; Version 27.0 automatically initializes packages for you
+(when (version< emacs-version "27.0")
+  (package-initialize))
+
 (setq package-archives
       '(("elpy" . "http://jorgenschaefer.github.io/packages/")
         ("melpa" . "https://melpa.org/packages/")
@@ -12,10 +17,6 @@
 ;; This is only needed once, near the top of the file
 (eval-when-compile
   (require 'use-package))
-
-;; Version 27.0 automatically initializes packages for you
-(when (version< emacs-version "27.0")
-  (package-initialize))
 
 ;; Ignore case in minibuffer's tab completion
 (setq completion-ignore-case t
@@ -153,7 +154,10 @@
 
 
 
-
+(defun disable-all-themes ()
+  "disable all active themes."
+  (dolist (i custom-enabled-themes)
+    (disable-theme i)))
 
 (use-package avy
   ;; The dopest snipe package ever
