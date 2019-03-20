@@ -221,7 +221,8 @@
  use-package rainbow-delimiters
  :ensure t
  :config
- (add-hook 'prog-mode-hook 'rainbow-delimiters-mode))
+ (add-hook 'prog-mode-hook 'rainbow-delimiters-mode)
+ (add-hook 'text-mode-hook 'rainbow-delimiters-mode))
 
 (;; Color those identifiers
  use-package rainbow-identifiers
@@ -291,21 +292,20 @@
  make-backup-files nil
  auto-save-default nil)
 
-(add-hook
- ;; Prettify symbols
- 'prog-mode-hook
- (lambda ()
-   (setq prettify-symbols-alist
-         '(("alpha" . ?α) ("beta" . ?β) ("lambda" . ?λ) ("Gamma" . Γ)  ("delta" . ?δ) ("Delta" . ?Δ) ("epsilon" . ?ε) ("zeta" . ?ζ) ("eta" . ?η) ("theta" . ?θ) ("Theta" . ?Θ) ("iota" . ?ι) ("lambda" . ?λ) ("Lambda" . ?Λ) ("mu" . ?μ) ("nu" . ?ν) ("xi" . ?ξ) ("Xi" . ?Ξ) ("pi" . ?π) ("Pi" . ?Π) ("rho" . ?ρ) ("sigma" . ?σ) ("Sigma" . ?Σ) ("tau" . ?τ) ("upsilon" . ?υ) ("phi" . ?φ) ("Phi" . ?Φ) ("chi" . ?χ) ("psi" . ?ψ) ("Psi" . ?Ψ) ("omega" . ?ω) ("Omega" . ?Ω)
-           ("+-" . ?±)
-           ("=>" . ?➾)
-           ("<=" . ?≤) (">=" . ?≥)
-           ("->" . ?→) ("<-" . ?←) ("<->" . ?↔)
-           ("==" . ?≡) ("=/=" . ?≠)
-           ("forall" . ?∀) ("for-all" . ?∀) ("exists" . ?∃) ("exist" . ?∃)
-           ("compose" . ?∘)
-           ("false" . ?⊥)
-           ("!-" . ?⊢) (":-" . ?⊢)))))
+(defun symlist ()
+  (setq prettify-symbols-alist
+        '(("alpha" . ?α) ("beta" . ?β) ("lambda" . ?λ) ("gamma" . ?γ) ("Gamma" . ?Γ) ("delta" . ?δ) ("Delta" . ?Δ) ("epsilon" . ?ε) ("zeta" . ?ζ) ("eta" . ?η) ("theta" . ?θ) ("Theta" . ?Θ) ("iota" . ?ι) ("lambda" . ?λ) ("Lambda" . ?Λ) ("mu" . ?μ) ("nu" . ?ν) ("xi" . ?ξ) ("Xi" . ?Ξ) ("pi" . ?π) ("Pi" . ?Π) ("rho" . ?ρ) ("sigma" . ?σ) ("Sigma" . ?Σ) ("tau" . ?τ) ("upsilon" . ?υ) ("phi" . ?φ) ("Phi" . ?Φ) ("chi" . ?χ) ("psi" . ?ψ) ("Psi" . ?Ψ) ("omega" . ?ω) ("Omega" . ?Ω)
+          ("+-" . ?±)
+          ("=>" . ?➾)
+          ("<=" . ?≤) (">=" . ?≥)
+          ("->" . ?→) ("<-" . ?←) ("<->" . ?↔)
+          ("==" . ?≡) ("=/=" . ?≠)
+          ("forall" . ?∀) ("for-all" . ?∀) ("exists" . ?∃) ("exist" . ?∃)
+          ("compose" . ?∘)
+          ("false" . ?⊥)
+          ("!-" . ?⊢) (":-" . ?⊢))))
+(add-hook 'prog-mode-hook 'symlist)
+(add-hook 'text-mode-hook 'symlist)
 (global-prettify-symbols-mode 1)
 
 (add-hook
