@@ -307,6 +307,15 @@
 (add-hook 'prog-mode-hook 'symlist)
 (add-hook 'text-mode-hook 'symlist)
 (global-prettify-symbols-mode 1)
+;; Reminder when you copy something from the Internet
+(defun hi-lam () (highlight-regexp "λ"))
+(defun deGreek ()
+  (interactive)
+  (replace-string "λ" "lambda")
+  (replace-string "→" "->")
+  (replace-string "Γ" "Gamma")
+  (replace-string "ρ" "rho"))
+
 
 (add-hook
  ;; Delete trailing whitespaces on save.
@@ -365,6 +374,8 @@
   (put 'take      sif 1)
   (put 'case-term sif 1)
   (put 'mv-let    sif 1)
+  ;; Misc
+  (put 'go-on     sif 1)
   )
 
 
