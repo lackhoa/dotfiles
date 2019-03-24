@@ -136,6 +136,7 @@
 (evil-define-key 'normal 'global (kbd "DEL") 'backward-delete-char-untabify)
 (evil-define-key 'normal 'global (kbd "C-.") 'next-buffer)
 (evil-define-key 'normal 'global (kbd "C-,") 'previous-buffer)
+(evil-define-key 'normal 'global (kbd "\\")  (lambda () (interactive) (message "Want Enter?")))
 
 (evil-define-key 'insert 'global (kbd "C-.") 'next-buffer)
 (evil-define-key 'insert 'global (kbd "C-,") 'previous-buffer)
@@ -307,14 +308,14 @@
 (add-hook 'prog-mode-hook 'symlist)
 (add-hook 'text-mode-hook 'symlist)
 (global-prettify-symbols-mode 1)
-;; Reminder when you copy something from the Internet
-(defun hi-lam () (highlight-regexp "λ"))
+;; deGreek: at least I know how to Emacs Lisp, Jesus!. You cann start with either, and the other one will finish the job. You cann start with either, and the other one will finish the job
 (defun deGreek ()
   (interactive)
-  (replace-string "λ" "lambda")
-  (replace-string "→" "->")
-  (replace-string "Γ" "Gamma")
-  (replace-string "ρ" "rho"))
+  (let ((egfl #'evil-goto-first-line))
+    (replace-string "λ" "lambda") (funcall egfl)
+    (replace-string "→" "->") (funcall egfl)
+    (replace-string "Γ" "Gamma") (funcall egfl)
+    (replace-string "ρ" "rho") (funcall egfl)))
 
 
 (add-hook
@@ -359,6 +360,7 @@
   (put 'with-syntax    sif 1)
   ;; miniKanren
   (put 'fresh     sif 1)
+  (put 'eigen     sif 1)
   (put 'run       sif 2)
   (put 'run*      sif 1)
   (put 'lambdag@  sif 1)
