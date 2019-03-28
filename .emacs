@@ -363,6 +363,8 @@
   (put 'eigen     sif 1)
   (put 'run       sif 2)
   (put 'run*      sif 1)
+  (put 'run*au    sif 1)
+  (put 'run*su    sif 1)
   (put 'lambdag@  sif 1)
   (put 'letg@     sif 1)
   (put 'lambdaf@  sif 1)
