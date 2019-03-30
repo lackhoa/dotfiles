@@ -75,7 +75,7 @@ clock-show-seconds=false
 cursor-blink-time=1200
 icon-theme='Mint-X-Red'
 gtk-overlay-scrollbars=false
-keyboard-layout-show-flags=false
+keyboard-layout-show-flags=true
 gtk-theme='Vivaldi-ZorinOS'
 clock-show-date=true
 
@@ -85,6 +85,7 @@ command='xcalib -i -a'
 name='Invert Color'
 
 [desktop/keybindings]
+magnifier-zoom-out=['<Super>plus']
 custom-list=['custom0']
 
 [desktop/keybindings/media-keys]
@@ -194,7 +195,7 @@ picture-options='zoom'
 image-source='directory:///home/khoa/Pictures'
 random-order=true
 delay=10
-slideshow-enabled=true
+slideshow-enabled=false
 
 [settings-daemon/plugins/power]
 lid-close-suspend-with-external-monitor=false

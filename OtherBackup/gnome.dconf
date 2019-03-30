@@ -75,6 +75,7 @@ accuracy=9
 
 [charmap/window-state]
 size=(768, 408)
+maximized=true
 
 [charmap]
 last-char=uint32 617
@@ -250,14 +251,14 @@ delay=0
 last-save-directory='file:///home/khoa/Desktop'
 
 [libgnomekbd/preview]
-width=1464
-height=624
+width=1049
+height=467
 x=240
 y=135
 
 [libgnomekbd/keyboard]
 layouts=['us', 'fi']
-options=['grp\tgrp:alts_toggle', 'caps\tcaps:swapescape', 'currencysign\teurosign:4']
+options=['caps\tcaps:swapescape', 'currencysign\teurosign:4', 'grp\tgrp:win_space_toggle']
 
 [libgnomekbd/desktop]
 default-group=0
