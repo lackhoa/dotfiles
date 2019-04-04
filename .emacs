@@ -295,7 +295,7 @@
 
 (defun symlist ()
   (setq prettify-symbols-alist
-        '(("alpha" . ?α) ("beta" . ?β) ("lambda" . ?λ) ("gamma" . ?γ) ("Gamma" . ?Γ) ("delta" . ?δ) ("Delta" . ?Δ) ("epsilon" . ?ε) ("zeta" . ?ζ) ("eta" . ?η) ("theta" . ?θ) ("Theta" . ?Θ) ("iota" . ?ι) ("lambda" . ?λ) ("Lambda" . ?Λ) ("mu" . ?μ) ("nu" . ?ν) ("xi" . ?ξ) ("Xi" . ?Ξ) ("pi" . ?π) ("Pi" . ?Π) ("rho" . ?ρ) ("sigma" . ?σ) ("Sigma" . ?Σ) ("tau" . ?τ) ("upsilon" . ?υ) ("phi" . ?φ) ("Phi" . ?Φ) ("chi" . ?χ) ("psi" . ?ψ) ("Psi" . ?Ψ) ("omega" . ?ω) ("Omega" . ?Ω)
+        '(("alpha" . ?α) ("beta" . ?β) ("gamma" . ?γ) ("Gamma" . ?Γ) ("delta" . ?δ) ("Delta" . ?Δ) ("epsilon" . ?ε) ("zeta" . ?ζ) ("eta" . ?η) ("theta" . ?θ) ("Theta" . ?Θ) ("iota" . ?ι) ("lam" . ?λ) ("lambda" . ?λ) ("Lambda" . ?Λ) ("mu" . ?μ) ("nu" . ?ν) ("xi" . ?ξ) ("Xi" . ?Ξ) ("pi" . ?π) ("Pi" . ?Π) ("rho" . ?ρ) ("sigma" . ?σ) ("Sigma" . ?Σ) ("tau" . ?τ) ("upsilon" . ?υ) ("phi" . ?φ) ("Phi" . ?Φ) ("chi" . ?χ) ("psi" . ?ψ) ("Psi" . ?Ψ) ("omega" . ?ω) ("Omega" . ?Ω)
           ("+-" . ?±)
           ("=>" . ?➾)
           ("<=" . ?≤) (">=" . ?≥)
