@@ -380,6 +380,7 @@
   (put 'mv-let    sif 1)
   ;; Misc
   (put 'go-on     sif 1)
+  (put 'prove     sif 1)
   )
 
 
