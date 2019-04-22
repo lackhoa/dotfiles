@@ -5,4 +5,4 @@
 
 LINE_NUM=`wc -l < ~/bin/k_motd.txt`
 RAN_LINE=$(( ($RANDOM % $LINE_NUM) + 1))
-gvim +$RAN_LINE ~/bin/k_motd.txt
+emacs +$RAN_LINE ~/note/thought.txt

@@ -16,6 +16,9 @@ abbr rm          'rm -rf'
 abbr cat         'bat'
 abbr rmk         'raco make'
 abbr rkt         'racket'
+abbr pull        'cd ~/ ; git pull
+                ; cd note/ ; git pull
+                ; cd ~/code/kara/ ; git pull'
 
 # clean up stuff that were created less than 1 minute ago
 abbr clean 'find . -type f -cmin -1 -delete'
