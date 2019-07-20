@@ -225,7 +225,8 @@
  use-package rainbow-identifiers
  :ensure t
  :config
- (add-hook 'prog-mode-hook 'rainbow-identifiers-mode))
+ (add-hook 'prog-mode-hook 'rainbow-identifiers-mode)
+ (add-hook 'text-mode-hook 'rainbow-identifiers-mode))
 
 (;; No tabs!
  setq-default indent-tabs-mode nil)
