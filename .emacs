@@ -292,20 +292,33 @@
 
 (defun symlist ()
   (setq prettify-symbols-alist
-        '(("alpha" . ?α) ("beta" . ?β) ("gamma" . ?γ) ("Gamma" . ?Γ) ("delta" . ?δ) ("Delta" . ?Δ) ("epsilon" . ?ε) ("zeta" . ?ζ) ("eta" . ?η) ("theta" . ?θ) ("Theta" . ?Θ) ("iota" . ?ι) ("lam" . ?λ) ("lambda" . ?λ) ("Lambda" . ?Λ) ("mu" . ?μ) ("nu" . ?ν) ("xi" . ?ξ) ("Xi" . ?Ξ) ("pi" . ?π) ("Pi" . ?Π) ("rho" . ?ρ) ("sigma" . ?σ) ("Sigma" . ?Σ) ("tau" . ?τ) ("upsilon" . ?υ) ("phi" . ?φ) ("Phi" . ?Φ) ("chi" . ?χ) ("psi" . ?ψ) ("Psi" . ?Ψ) ("omega" . ?ω) ("Omega" . ?Ω)
-          ("+-" . ?±)
+        '(("+-" . ?±)
           ("=>" . ?➾)
           ("<=" . ?≤) (">=" . ?≥)
           ("->" . ?→) ("<-" . ?←) ("<->" . ?↔)
           ("==" . ?≡) ("=/=" . ?≠)
-          ("forall" . ?∀) ("for-all" . ?∀) ("exists" . ?∃) ("exist" . ?∃)
-          ("compose" . ?∘)
-          ("false" . ?⊥)
           ("!-" . ?⊢) (":-" . ?⊢))))
 (add-hook 'prog-mode-hook 'symlist)
 (add-hook 'text-mode-hook 'symlist)
 (global-prettify-symbols-mode 1)
-;; deGreek: at least I know how to Emacs Lisp, Jesus!. You cann start with either, and the other one will finish the job. You cann start with either, and the other one will finish the job
+(setq prettify-symbols-unprettify-at-point 'right-edge)
+
+(define-abbrev-table 'global-abbrev-table
+  '(("alpha" "α") ("beta" "β") ("gamma" "γ") ("Gamma" "Γ") ("delta" "δ") ("Delta" "Δ") ("epsilon" "ε") ("zeta" "ζ") ("eta" "η") ("theta" "θ") ("Theta" "Θ") ("iota" "ι") ("lam" "λ") ("lambda" "λ") ("Lambda" "Λ") ("mu" "μ") ("nu" "ν") ("xi" "ξ") ("Xi" "Ξ") ("pi" "π") ("Pi" "Π") ("rho" "ρ") ("sigma" "σ") ("Sigma" "Σ") ("tau" "τ") ("upsilon" "υ") ("phi" "φ") ("Phi" "Φ") ("chi" "χ") ("psi" "ψ") ("Psi" "Ψ") ("omega" "ω") ("Omega" "Ω")
+    ("pm" "±")
+    ("Rar" "➾")
+    ("≤" "≤") ("≥" "≥")
+    ("→" "→") ("←" "←") ("↔" "↔")
+    ("≡" "≡") ("≠" "≠")
+    ("∀" "∀") ("∃" "∃")
+    ("∘" "∘")
+    ("⊥" "⊥")
+    ("⊢" "⊢")
+    ("∞" "∞")))
+
+(abbrev-mode 1) ; turn on abbrev mode
+
+;; deGreek: at least I know how to Emacs Lisp!. You can start with either, and the other one will finish the job.
 (defun deGreek ()
   (interactive)
   (let ((egfl #'evil-goto-first-line))
@@ -379,8 +392,6 @@
   (put 'go-on     sif 1)
   (put 'prove     sif 1)
   )
-
-
 
 ;;; Prolog stuff
 (autoload 'run-prolog   "prolog" "Start a Prolog sub-process."              t)
