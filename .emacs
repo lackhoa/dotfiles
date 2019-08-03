@@ -290,52 +290,35 @@
  make-backup-files nil
  auto-save-default nil)
 
-(defun symlist ()
-  (setq prettify-symbols-alist
-        '(("+-" . ?±)
-          ("=>" . ?➾)
-          ("<=" . ?≤) (">=" . ?≥)
-          ("->" . ?→) ("<-" . ?←) ("<->" . ?↔)
-          ("==" . ?≡) ("=/=" . ?≠)
-          ("!-" . ?⊢) (":-" . ?⊢))))
-(add-hook 'prog-mode-hook 'symlist)
-(add-hook 'text-mode-hook 'symlist)
-(global-prettify-symbols-mode 1)
-(setq prettify-symbols-unprettify-at-point 'right-edge)
+(use-package math-symbol-lists
+  :ensure t
+  :config
+  (quail-define-package "math" "UTF-8" "Ω" t)
+  (quail-define-rules ; add custom rules...
+   ("\\ra" ?→) ("\\ua" ?↑) ("\\da" ?↓) ("\\ra" ?→) ("\\la" ?←) ("\\lra" ?↔)
+   ("\\Ra" ?➾))
+  (;; Use the symbol list
+   mapc (lambda (x)
+          (if (cddr x)
+              (quail-defrule (cadr x) (car (cddr x)))))
+   (append math-symbol-list-basic
+           math-symbol-list-extended
+           math-symbol-list-subscripts
+           math-symbol-list-superscripts))
+  (add-hook 'text-mode-hook
+            (lambda () (set-input-method "math")))
 
-(setq abbr
-      '(("alpha" "α") ("beta" "β") ("gamma" "γ") ("Gamma" "Γ") ("delta" "δ") ("Delta" "Δ") ("epsilon" "ε") ("zeta" "ζ") ("eta" "η") ("theta" "θ") ("Theta" "Θ") ("iota" "ι") ("kappa" "κ") ("lambda" "λ") ("Lambda" "Λ") ("mu" "μ") ("nu" "ν") ("xi" "ξ") ("Xi" "Ξ") ("pi" "π") ("Pi" "Π") ("rho" "ρ") ("sigma" "σ") ("Sigma" "Σ") ("tau" "τ") ("upsilon" "υ") ("phi" "ϕ") ("vphi" "φ") ("Phi" "Φ") ("chi" "χ") ("psi" "ψ") ("Psi" "Ψ") ("omega" "ω") ("Omega" "Ω")
-        ("cA" "𝓐") ("cB" "𝓑") ("cC" "𝓒") ("cD" "𝓓") ("cE" "𝓔")("cF" "𝓕")("cG" "𝓖")("cH" "𝓗")("cI" "𝓘")("cJ" "𝓙")("cK" "𝓚")("cL" "𝓛")("cM" "𝓜")("cN" "𝓝")("cO" "𝓞")("cP" "𝓟")("cQ" "𝓠")("cR" "𝓡")("cS" "𝓢")("cT" "𝓣")("cU" "𝓤")("cV" "𝓥")("cW" "𝓦")("cX" "𝓧")("cY" "𝓨")("cZ" "𝓩")
-        ("dA" "𝔸") ("dB" "𝔹") ("dC" "ℂ") ("dD" "𝔻") ("dE" "𝔼")("dF" "𝔽")("dG" "𝔾")("dH" "ℍ")("dI" "𝕀")("dJ" "𝕁")("dK" "𝕂")("dL" "𝕃")("dM" "𝕄")("dN" "ℕ")("dO" "𝕆")("dP" "ℙ")("dQ" "ℚ")("dR" "ℝ")("dS" "𝕊")("dT" "𝕋")("dU" "𝕌")("dV" "𝕍")("dW" "𝕎")("dX" "𝕏")("dY" "𝕐")("dZ" "ℤ")
-        ("fA" "𝕬") ("fB" "𝕭") ("fC" "𝕮") ("fD" "𝕯") ("fE" "𝕰") ("fF" "𝕱") ("fG" "𝕲") ("fH" "𝕳") ("fI" "𝕴") ("fJ" "𝕵") ("fK" "𝕶") ("fL" "𝕷") ("fM" "𝕸") ("fN" "𝕹") ("fO" "𝕺") ("fP" "𝕻") ("fQ" "𝕼") ("fR" "𝕽") ("fS" "𝕾") ("fT" "𝕿") ("fU" "𝖀") ("fV" "𝖁") ("fW" "𝖂") ("fX" "𝖃") ("fY" "𝖄") ("fZ" "𝖅")
-        ("le" "≤") ("ge" "≥") ("prec" "≺") ("succ" "≻")
-        ("±" "±")
-        ("Ra" "➾")
-        ("↑" "↑")("↓" "↓") ("→" "→") ("←" "←") ("↔" "↔")
-        ("∈" "∈") ("⊆" "⊆") ("⊂" "⊂")
-        ("≡" "≡") ("≠" "≠")
-        ("∀" "∀") ("exists" "∃") ("∧" "∧") ("∨" "∨")
-        ("∘" "∘")
-        ("⊥" "⊥") ("⊢" "⊢")
-        ("∩" "∩") ("∪" "∪")
-        ("∞" "∞")
-        ("times" "×") ("oplus" "⊕")
-        ("overline" "‾")))
-(setq abbr
-      (mapcar (lambda (p) `(,(concat "z" (car p)) ,(cadr p)))
-              abbr))
-(define-abbrev-table 'global-abbrev-table abbr)
-(abbrev-mode 1) ; turn on abbrev mode
+  ;; The fonts are: mscr (script), mbfscrE (bold script), mfrak (frankfurt), mbf (boldface), Bbb (Double stroke)
+  )
 
-;; deGreek: at least I know how to Emacs Lisp!. You can start with either, and the other one will finish the job.
 (defun deGreek ()
+  ;; deGreek: at least I know how to Emacs Lisp!. You can start with either, and the other one will finish the job.
   (interactive)
   (let ((egfl #'evil-goto-first-line))
     (replace-string "λ" "lambda") (funcall egfl)
     (replace-string "→" "->") (funcall egfl)
     (replace-string "Γ" "Gamma") (funcall egfl)
     (replace-string "ρ" "rho") (funcall egfl)))
-
 
 (add-hook
  ;; Delete trailing whitespaces on save.
@@ -428,7 +411,7 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
-   '(rainbow-identifiers spaceline avy smex ido-vertical-mode beacon evil-numbers evil-lion evil-commentary rainbow-delimiters linum-relative evil-surround evil use-package)))
+   '(math-symbol-lists rainbow-identifiers spaceline avy smex ido-vertical-mode beacon evil-numbers evil-lion evil-commentary rainbow-delimiters linum-relative evil-surround evil use-package)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
