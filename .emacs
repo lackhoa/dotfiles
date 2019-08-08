@@ -294,21 +294,26 @@
   :ensure t
   :config
   (quail-define-package "math" "UTF-8" "Ω" t)
-  (quail-define-rules ; add custom rules...
-   ("\\ra" ?→) ("\\ua" ?↑) ("\\da" ?↓) ("\\ra" ?→) ("\\la" ?←) ("\\lra" ?↔)
-   ("\\Ra" ?➾))
-  (;; Use the symbol list
+  (mapc
+   ;; My rules
+   (lambda (x)
+     (quail-defrule (car x) (cadr x)))
+   '(("\\==" ?≡) ("\\=>" ?➾) ("\\Ra" ?➾) ("\\->" ?→) ("\\ra" ?→) ("\\<-" ?←) ("\\la" ?←) ("\\<->" ?↔) ("\\lra" ?↔) ("\\ua" ?↑) ("\\da" ?↓) ("\\h->" ?↪) ("\\hra" ?↪) ("\\nw" ?↖) ("\\nea" ?↗) ("\\sw" ?↙) ("\\se" ?↘)
+     ("\\sub" ?⊆)
+     ("\\ex" ?∃) ("\\for" ?∀)))
+  (;; Use the rules
    mapc (lambda (x)
           (if (cddr x)
               (quail-defrule (cadr x) (car (cddr x)))))
-   (append math-symbol-list-basic
-           math-symbol-list-extended
-           math-symbol-list-subscripts
-           math-symbol-list-superscripts))
+   (append
+    math-symbol-list-basic
+    math-symbol-list-extended
+    math-symbol-list-subscripts
+    math-symbol-list-superscripts))
   (add-hook 'text-mode-hook
             (lambda () (set-input-method "math")))
 
-  ;; The fonts are: mscr (script), mbfscrE (bold script), mfrak (frankfurt), mbf (boldface), Bbb (Double stroke)
+  ;; The fonts are: mscr (script), mbfscr (bold script), mfrak (frankfurt), mbf (boldface), Bbb (Double stroke)
   )
 
 (defun deGreek ()
