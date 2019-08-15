@@ -257,6 +257,16 @@
   :ensure t
   :bind ("M-y" . popup-kill-ring))
 
+(use-package disable-mouse
+  :ensure t
+  :config
+  (mapc #'disable-mouse-in-keymap
+        (list evil-motion-state-map
+              evil-normal-state-map
+              evil-visual-state-map
+              evil-insert-state-map))
+  (global-disable-mouse-mode))
+
 (use-package evil-lion
   ;; Alignment
   :ensure t
@@ -298,10 +308,13 @@
    ;; My rules
    (lambda (x)
      (quail-defrule (car x) (cadr x)))
-   '(("\\==" ?≡) ("\\=>" ?➾) ("\\Ra" ?➾) ("\\->" ?→) ("\\ra" ?→) ("\\<-" ?←) ("\\la" ?←) ("\\<->" ?↔) ("\\lra" ?↔) ("\\ua" ?↑) ("\\da" ?↓) ("\\h->" ?↪) ("\\hra" ?↪) ("\\nw" ?↖) ("\\nea" ?↗) ("\\sw" ?↙) ("\\se" ?↘)
-     ("\\sub" ?⊆)
-     ("\\ex" ?∃) ("\\for" ?∀)))
-  (;; Use the rules
+   '(("\\==" ?≡) ("\\<=>" ?⇔) ("\\=>" ?➾) ("\\Ra" ?➾) ("\\->" ?→) ("\\ra" ?→) ("\\<-" ?←) ("\\la" ?←) ("\\<->" ?↔) ("\\lra" ?↔) ("\\ua" ?↑) ("\\da" ?↓) ("\\h->" ?↪) ("\\hra" ?↪) ("\\nw" ?↖) ("\\nea" ?↗) ("\\sw" ?↙) ("\\se" ?↘)
+     ("\\sub" ?⊆) ("\\sup" ?⊇)
+     ("\\ex" ?∃) ("\\for" ?∀)
+     ("\\lang" "⟨⟩")
+     ("\\+-" ?±) ("\\<=" ?≤) ("\\>=" ?≥)
+     ("\\Nat" ?ℕ) ("\\Integer" ?ℤ)))
+  (;; math-symbol-list rules
    mapc (lambda (x)
           (if (cddr x)
               (quail-defrule (cadr x) (car (cddr x)))))
@@ -416,7 +429,7 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
-   '(math-symbol-lists rainbow-identifiers spaceline avy smex ido-vertical-mode beacon evil-numbers evil-lion evil-commentary rainbow-delimiters linum-relative evil-surround evil use-package)))
+   '(disable-mouse math-symbol-lists rainbow-identifiers spaceline avy smex ido-vertical-mode beacon evil-numbers evil-lion evil-commentary rainbow-delimiters linum-relative evil-surround evil use-package)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
