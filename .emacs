@@ -230,6 +230,7 @@
 
 (;; No tabs!
  setq-default indent-tabs-mode nil)
+(setq-default tab-width 2)
 
 (;; Automatically update changed buffer
  global-auto-revert-mode 1)
@@ -293,7 +294,7 @@
 (;; Please don't ask whether to kill running processes
  add-hook 'comint-exec-hook
  (lambda () (set-process-query-on-exit-flag
-        (get-buffer-process (current-buffer)) nil)))
+             (get-buffer-process (current-buffer)) nil)))
 
 (setq
  ;; stop making backup files
@@ -313,7 +314,7 @@
      ("\\ex" ?∃) ("\\for" ?∀)
      ("\\lang" "⟨⟩")
      ("\\+-" ?±) ("\\<=" ?≤) ("\\>=" ?≥)
-     ("\\Nat" ?ℕ) ("\\Integer" ?ℤ)))
+     ("\\Nat" ?ℕ) ("\\Int" ?ℤ)))
   (;; math-symbol-list rules
    mapc (lambda (x)
           (if (cddr x)

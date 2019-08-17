@@ -19,7 +19,8 @@ abbr rkt         'racket'
 abbr pull        'cd ~/ ; git pull
                 ; cd note/ ; git pull
                 ; cd ~/code/kara/ ; git pull'
-abbr sync        'cd ~/note ; git commit -a -m \'sync\' ; git push'
+abbr sync        'cd ~; git commit -a -m \'sync\' ; git push ;
+                  cd ~/note ; git commit -a -m \'sync\' ; git push'
 
 # clean up stuff that were created less than 1 minute ago
 abbr clean 'find . -type f -cmin -1 -delete'
