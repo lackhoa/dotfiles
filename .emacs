@@ -53,9 +53,7 @@
 
 (;; Adding new file extension to modes
  setq auto-mode-alist (append '(("\\.rkt\\'" . scheme-mode)
-                                ("\\.md\\'"  . prog-mode)
-                                ("\\.pl$"    . prolog-mode)
-                                ("\\.m$"     . mercury-mode))
+                                ("\\.pl$"    . prolog-mode))
                               auto-mode-alist))
 
 ;; Get rid of UI elements
@@ -139,6 +137,7 @@
 (evil-define-key 'insert 'global (kbd "C-v") 'evil-paste-before)
 
 (evil-define-key 'visual 'global (kbd "TAB") 'indent-rigidly)
+(evil-define-key 'visual 'global (kbd ";")   'smex)
 
 ;;; Some vital command alias
 (defalias 'k 'kill-buffer-and-window)
@@ -258,20 +257,15 @@
   :ensure t
   :bind ("M-y" . popup-kill-ring))
 
-(use-package disable-mouse
-  :ensure t
-  :config
-  (mapc #'disable-mouse-in-keymap
-        (list evil-motion-state-map
-              evil-normal-state-map
-              evil-visual-state-map
-              evil-insert-state-map))
-  (global-disable-mouse-mode))
-
-(use-package evil-lion
-  ;; Alignment
-  :ensure t
-  :config (evil-lion-mode))
+;; (use-package disable-mouse
+;;   :ensure t
+;;   :config
+;;   (mapc #'disable-mouse-in-keymap
+;;         (list evil-motion-state-map
+;;               evil-normal-state-map
+;;               evil-visual-state-map
+;;               evil-insert-state-map))
+;;   (global-disable-mouse-mode))
 
 (use-package evil-numbers
   ;; Vim Numbering
@@ -309,12 +303,15 @@
    ;; My rules
    (lambda (x)
      (quail-defrule (car x) (cadr x)))
-   '(("\\==" ?≡) ("\\<=>" ?⇔) ("\\=>" ?➾) ("\\Ra" ?➾) ("\\->" ?→) ("\\ra" ?→) ("\\<-" ?←) ("\\la" ?←) ("\\<->" ?↔) ("\\lra" ?↔) ("\\ua" ?↑) ("\\da" ?↓) ("\\h->" ?↪) ("\\hra" ?↪) ("\\nw" ?↖) ("\\nea" ?↗) ("\\sw" ?↙) ("\\se" ?↘)
+   '(("\\==" ?≡) ("\\<=>" ?⇔) ("\\=>" ?➾) ("\\->" ?→) ("\\-->" ?⟶) ("\\<-" ?←) ("\\<." ?⬸) ("\\.>" ?⤑) ("\\<->" ?↔) ("\\lra" ?↔) ("\\up" ?↑) ("\\down" ?↓) ("\\h->" ?↪) ("\\ul" ?↖) ("\\ur" ?↗) ("\\dl" ?↙) ("\\dr" ?↘) ("\\o<" ?⟲) ("\\o>" ?⟳) ("\\<<-" ?↞) ("\\->>" ?↠) ("\\-><" ?⇄)
+
      ("\\sub" ?⊆) ("\\sup" ?⊇)
      ("\\ex" ?∃) ("\\for" ?∀)
      ("\\lang" "⟨⟩")
-     ("\\+-" ?±) ("\\<=" ?≤) ("\\>=" ?≥)
-     ("\\Nat" ?ℕ) ("\\Int" ?ℤ)))
+     ("\\+-" ?±) ("\\<=" ?≤) ("\\>=" ?≥) ("\\=~" ?≅)
+     ("\\Nat" ?ℕ) ("\\Int" ?ℤ)
+     ("\\and" ?∧) ("\\or" ?v) ("\\false" ?⊥) ("\\|=" ?⊨) ("\\|-" ?⊢)
+     ("\\cancer" ?♋)))
   (;; math-symbol-list rules
    mapc (lambda (x)
           (if (cddr x)
@@ -329,15 +326,6 @@
 
   ;; The fonts are: mscr (script), mbfscr (bold script), mfrak (frankfurt), mbf (boldface), Bbb (Double stroke)
   )
-
-(defun deGreek ()
-  ;; deGreek: at least I know how to Emacs Lisp!. You can start with either, and the other one will finish the job.
-  (interactive)
-  (let ((egfl #'evil-goto-first-line))
-    (replace-string "λ" "lambda") (funcall egfl)
-    (replace-string "→" "->") (funcall egfl)
-    (replace-string "Γ" "Gamma") (funcall egfl)
-    (replace-string "ρ" "rho") (funcall egfl)))
 
 (add-hook
  ;; Delete trailing whitespaces on save.
@@ -404,13 +392,34 @@
   (put 'prove     sif 1)
   )
 
-;;; Prolog stuff
-(autoload 'run-prolog   "prolog" "Start a Prolog sub-process."              t)
-(autoload 'prolog-mode  "prolog" "Major mode for editing Prolog programs."  t)
-(autoload 'mercury-mode "prolog" "Major mode for editing Mercury programs." t)
-(setq prolog-system 'swi)
+(defun gk-display-buffer-please-no (buf &rest ignore)
+  (error "Inhibited buffer: %s" (buffer-name buf)))
+(setq display-buffer-alist
+      `('("\\*Quail Completions" . (gk-display-buffer-please-no)) . ,display-buffer-alist))
 
+;;; Custom functions
+(defun deGreek ()
+  ;; deGreek: at least I know how to Emacs Lisp!. You can start with either, and the other one will finish the job.
+  (interactive)
+  (let ((egfl #'evil-goto-first-line))
+    (replace-string "λ" "lambda") (funcall egfl)
+    (replace-string "→" "->") (funcall egfl)
+    (replace-string "Γ" "Gamma") (funcall egfl)
+    (replace-string "ρ" "rho") (funcall egfl)))
 
+(defun revert-buffer-no-confirm ()
+  "Revert buffer without confirmation."
+  (interactive)
+  (revert-buffer :ignore-auto :noconfirm))
+
+(defun dot (start end)
+  (interactive "r")
+  (if (use-region-p)
+      (let ((regionp (buffer-substring start end)))
+        (write-region regionp nil "~/note/graph" nil)
+        (shell-command "dot -Tsvg ~/note/graph -o ~/note/graph.svg")
+        (sit-for 1)
+        (find-file "~/note/graph.svg"))))
 
 
 
