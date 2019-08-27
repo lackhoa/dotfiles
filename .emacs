@@ -96,48 +96,51 @@
   (use-package evil-commentary
     ;; Commentary
     :ensure t
-    :config (evil-commentary-mode))
-
-  )
+    :config (evil-commentary-mode)))
 
 
 
 
 
 ;;; Key bindings
-(;; No more M-x! Use smex instead of evil-ex
- evil-define-key 'normal 'global ";" 'smex)
-(evil-define-key 'normal 'global "a" 'evil-append-line)
-(evil-define-key 'normal 'global "A" 'evil-append)
-(evil-define-key 'normal 'global "p" 'evil-paste-before)
-(evil-define-key 'normal 'global "P" 'evil-paste-after)
-(evil-define-key 'normal 'global "W" 'forward-sexp)
-(evil-define-key 'normal 'global "B" 'backward-sexp)
-(evil-define-key 'normal 'global (kbd "RET") 'evil-write-all)
-(evil-define-key 'normal 'global (kbd "K") 'open-line)
-(evil-define-key 'normal 'global (kbd "SPC") (lambda () (interactive)
-                                               (insert-char ?\s)
-                                               (evil-backward-char)))
-(evil-define-key 'normal 'global (kbd "C-j") (lambda () (interactive)
-                                               (save-excursion
-                                                 (end-of-line)
-                                                 (open-line 1))))
-(evil-define-key 'normal 'global (kbd "C-k") (lambda () (interactive)
-                                               (save-excursion
-                                                 (end-of-line 0)
-                                                 (open-line 1))))
-(evil-define-key 'normal 'global (kbd "C-a") 'mark-whole-buffer)
-(evil-define-key 'normal 'global (kbd "DEL") 'backward-delete-char-untabify)
-(evil-define-key 'normal 'global (kbd "C-.") 'next-buffer)
-(evil-define-key 'normal 'global (kbd "C-,") 'previous-buffer)
-(evil-define-key 'normal 'global (kbd "\\")  (lambda () (interactive) (message "Want Enter?")))
+(progn
+ (;; No more M-x! Use smex instead of evil-ex
+  evil-define-key 'normal 'global ";" 'smex)
+ (evil-define-key 'normal 'global "a" 'evil-append-line)
+ (evil-define-key 'normal 'global "A" 'evil-append)
+ (evil-define-key 'normal 'global "p" 'evil-paste-before)
+ (evil-define-key 'normal 'global "P" 'evil-paste-after)
+ (evil-define-key 'normal 'global "W" 'forward-sexp)
+ (evil-define-key 'normal 'global "B" 'backward-sexp)
+ (evil-define-key 'normal 'global (kbd "<up>") 'evil-scroll-line-up)
+ (evil-define-key 'normal 'global (kbd "<down>") 'evil-scroll-line-down)
+ (evil-define-key 'normal 'global (kbd "<left>") 'previous-buffer)
+ (evil-define-key 'normal 'global (kbd "<right>") 'next-buffer)
+ (evil-define-key 'normal 'global (kbd "RET") 'evil-write-all)
+ (evil-define-key 'normal 'global (kbd "K") 'open-line)
+ (evil-define-key 'normal 'global (kbd "SPC") (lambda () (interactive)
+                                                (insert-char ?\s)
+                                                (evil-backward-char)))
+ (evil-define-key 'normal 'global (kbd "C-j") (lambda () (interactive)
+                                                (save-excursion
+                                                  (end-of-line)
+                                                  (open-line 1))))
+ (evil-define-key 'normal 'global (kbd "C-k") (lambda () (interactive)
+                                                (save-excursion
+                                                  (end-of-line 0)
+                                                  (open-line 1))))
+ (evil-define-key 'normal 'global (kbd "C-a") 'mark-whole-buffer)
+ (evil-define-key 'normal 'global (kbd "DEL") 'backward-delete-char-untabify)
+ (evil-define-key 'normal 'global (kbd "C-.") 'next-buffer)
+ (evil-define-key 'normal 'global (kbd "C-,") 'previous-buffer)
+ (evil-define-key 'normal 'global (kbd "\\")  (lambda () (interactive) (message "Want Enter?")))
 
-(evil-define-key 'insert 'global (kbd "C-.") 'next-buffer)
-(evil-define-key 'insert 'global (kbd "C-,") 'previous-buffer)
-(evil-define-key 'insert 'global (kbd "C-v") 'evil-paste-before)
+ (evil-define-key 'insert 'global (kbd "C-.") 'next-buffer)
+ (evil-define-key 'insert 'global (kbd "C-,") 'previous-buffer)
+ (evil-define-key 'insert 'global (kbd "C-v") 'evil-paste-before)
 
-(evil-define-key 'visual 'global (kbd "TAB") 'indent-rigidly)
-(evil-define-key 'visual 'global (kbd ";")   'smex)
+ (evil-define-key 'visual 'global (kbd "TAB") 'indent-rigidly)
+ (evil-define-key 'visual 'global (kbd ";")   'smex))
 
 ;;; Some vital command alias
 (defalias 'k 'kill-buffer-and-window)
@@ -257,16 +260,6 @@
   :ensure t
   :bind ("M-y" . popup-kill-ring))
 
-;; (use-package disable-mouse
-;;   :ensure t
-;;   :config
-;;   (mapc #'disable-mouse-in-keymap
-;;         (list evil-motion-state-map
-;;               evil-normal-state-map
-;;               evil-visual-state-map
-;;               evil-insert-state-map))
-;;   (global-disable-mouse-mode))
-
 (use-package evil-numbers
   ;; Vim Numbering
   :ensure t
@@ -303,8 +296,7 @@
    ;; My rules
    (lambda (x)
      (quail-defrule (car x) (cadr x)))
-   '(("\\==" ?≡) ("\\<=>" ?⇔) ("\\=>" ?➾) ("\\->" ?→) ("\\-->" ?⟶) ("\\<-" ?←) ("\\<." ?⬸) ("\\.>" ?⤑) ("\\<->" ?↔) ("\\lra" ?↔) ("\\up" ?↑) ("\\down" ?↓) ("\\h->" ?↪) ("\\ul" ?↖) ("\\ur" ?↗) ("\\dl" ?↙) ("\\dr" ?↘) ("\\o<" ?⟲) ("\\o>" ?⟳) ("\\<<-" ?↞) ("\\->>" ?↠) ("\\-><" ?⇄)
-
+   '(("\\==" ?≡) ("\\LRa" ?⇔) ("\\<=>" ?⇔) ("\\Ra" ?➾) ("\\=>" ?➾) ("\\ra" ?→) ("\\->" ?→) ("\\-->" ?⟶) ("\\la" ?←) ("\\<-" ?←) ("\\.<" ?⬸) ("\\.>" ?⤑) ("\\lra" ?↔) ("\\<->" ?↔) ("\\up" ?↑) ("\\down" ?↓) ("\\h->" ?↪) ("\\ul" ?↖) ("\\ur" ?↗) ("\\dl" ?↙) ("\\dr" ?↘) ("\\o<" ?⟲) ("\\refl" ?⟲) ("\\o>" ?⟳) ("\\lla" ?↞) ("\\<<-" ?↞) ("\\rra" ?↠) ("\\trans" ?↠) ("\\->>" ?↠) ("\\lr2" ?⇄) ("\\-><" ?⇄) ("\\symm" ?⇄) ("\\==>" ?⟹) ("\\idem" ?⊸) ("\\-o" ?⊸)
      ("\\sub" ?⊆) ("\\sup" ?⊇)
      ("\\ex" ?∃) ("\\for" ?∀)
      ("\\lang" "⟨⟩")
@@ -412,20 +404,51 @@
   (interactive)
   (revert-buffer :ignore-auto :noconfirm))
 
-(defun dot (start end)
+(defun get-selected-text (start end)
   (interactive "r")
+  (buffer-substring start end))
+
+(defun dot ()
+  (interactive)
   (if (use-region-p)
-      (let ((regionp (buffer-substring start end)))
-        (write-region regionp nil "~/note/graph" nil)
-        (shell-command "dot -Tsvg ~/note/graph -o ~/note/graph.svg")
+      (let ((selected-text (call-interactively 'get-selected-text)))
+        (write-region selected-text nil "~/note/graph" nil)
+        (shell-command
+         (concat "dot -Tsvg ~/note/graph -o ~/note/graph.svg"))
         (sit-for 1)
-        (find-file "~/note/graph.svg"))))
+        (find-file "~/note/graph.svg"))
+    (message "Select something first!")))
 
+;; Binary search: zingming.wordpress.com
+(defun line-number ()
+  (string-to-number (format-mode-line "%l")))
+(defun line-count ()
+  (count-lines (point-min) (point-max)))
+(setq bin-lower 0)
+(setq bin-upper (line-count))
+(defun bingo ()
+  "Start/reset binary search"
+  (interactive)
+  (setq bin-lower 0)
+  (setq bin-upper (line-count)))
+(defun binup ()
+  "Binary search up the file"
+  (interactive)
+  (setq bin-upper (line-number))
+  (evil-previous-line (/ (- bin-upper bin-lower) 2)))
+(defun bindown ()
+  "Binary search down the file"
+  (interactive)
+  (setq bin-lower (line-number))
+  (evil-next-line (/ (- bin-upper bin-lower) 2)))
 
-
-
-
-
+;; Pro lisp movements
+(setq evil-move-beyond-eol t)           ; The magic is here
+(progn
+  (evil-define-key 'normal 'global (kbd "M-h") 'backward-sexp)
+  (evil-define-key 'normal 'global (kbd "M-l") 'forward-sexp)
+  (evil-define-key 'normal 'global (kbd "M-k") 'backward-up-list)
+  (evil-define-key 'normal 'global (kbd "M-j") 'down-list))
 
 
 
@@ -439,7 +462,7 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
-   '(disable-mouse math-symbol-lists rainbow-identifiers spaceline avy smex ido-vertical-mode beacon evil-numbers evil-lion evil-commentary rainbow-delimiters linum-relative evil-surround evil use-package)))
+   '(lisp disable-mouse math-symbol-lists rainbow-identifiers spaceline avy smex ido-vertical-mode beacon evil-numbers evil-lion evil-commentary rainbow-delimiters linum-relative evil-surround evil use-package)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
