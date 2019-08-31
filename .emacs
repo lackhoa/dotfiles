@@ -413,10 +413,19 @@
   (if (use-region-p)
       (let ((selected-text (call-interactively 'get-selected-text)))
         (write-region selected-text nil "~/note/graph" nil)
-        (shell-command
-         (concat "dot -Tsvg ~/note/graph -o ~/note/graph.svg"))
+        (shell-command "dot -Tpng ~/note/graph -o ~/note/graph.png")
         (sit-for 1)
-        (find-file "~/note/graph.svg"))
+        (find-file "~/note/graph.png"))
+    (message "Select something first!")))
+
+(defun scot ()
+  (interactive)
+  (if (use-region-p)
+      (let ((selected-text (call-interactively 'get-selected-text)))
+        (write-region selected-text nil "~/note/graphin" nil)
+        (shell-command "scheme ~/note/scheme-graph.scm")
+        (sit-for 1)
+        (find-file "~/note/graph.png"))
     (message "Select something first!")))
 
 ;; Binary search: zingming.wordpress.com
