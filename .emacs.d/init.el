@@ -1,3 +1,5 @@
+(defun config () (interactive) (find-file "~/.emacs.d/init.el"))
+
 (require 'package)
 
 ;; Version 27.0 automatically initializes packages for you
@@ -315,7 +317,8 @@
     math-symbol-list-superscripts))
   (add-hook 'text-mode-hook
             (lambda () (set-input-method "math")))
-
+  (add-hook 'prog-mode-hook
+            (lambda () (set-input-method "math")))
   ;; The fonts are: mscr (script), mbfscr (bold script), mfrak (frankfurt), mbf (boldface), Bbb (Double stroke)
   )
 
@@ -412,7 +415,7 @@
   (interactive)
   (if (use-region-p)
       (let ((selected-text (call-interactively 'get-selected-text)))
-        (write-region selected-text nil "~/note/graph" nil)
+        (write-region selected-text nil "~/note/graph.dot" nil)
         (call-interactively 'view-graph))
     (message "Select something first!")))
 
@@ -420,18 +423,16 @@
   (interactive)
   (if (use-region-p)
       (let ((selected-text (call-interactively 'get-selected-text)))
-        (write-region selected-text nil "~/note/graphin" nil)
+        (write-region selected-text nil "~/note/graph.scm" nil)
         (shell-command "scheme ~/note/scheme-graph.scm")
         (call-interactively 'view-graph))
     (message "Select something first!")))
 
 (defun view-graph ()
   (interactive)
-  (shell-command "dot -Tpng ~/note/graph -o ~/note/graph.png")
+  (shell-command "dot -Tsvg ~/note/graph.dot -o ~/note/graph.svg")
   (sit-for 1)
-  (find-file "~/note/graph.png"))
-
-(defun fuckoff () (interactive) (message "Hello buddy!"))
+  (shell-command "xviewer ~/note/graph.svg"))
 
 ;; Binary search: zingming.wordpress.com
 (defun line-number ()
