@@ -1,4 +1,5 @@
 (defun config () (interactive) (find-file "~/.emacs.d/init.el"))
+(defun thought () (interactive) (find-file "~/note/thought.txt"))
 
 (require 'package)
 
@@ -24,9 +25,6 @@
 (setq completion-ignore-case t
       read-file-name-completion-ignore-case t
       read-buffer-completion-ignore-case t)
-
-;; Load THE theme
-(load-theme 'wheatgrass)
 
 (;; Windows redoer
  winner-mode 1)
@@ -150,9 +148,15 @@
 (defalias 'b 'ido-switch-buffer)
 (defalias 'ls 'buffer-menu)
 
-
-
-
+(use-package disable-mouse
+  :ensure t
+  :config
+  (global-disable-mouse-mode)
+  (mapc #'disable-mouse-in-keymap
+        (list evil-motion-state-map
+              evil-normal-state-map
+              evil-visual-state-map
+              evil-insert-state-map)))
 
 
 (defun disable-all-themes ()
@@ -166,13 +170,13 @@
   :config
   (evil-define-key 'normal 'global (kbd "s") #'avy-goto-char-2))
 
-(;; Why even bother with the default status bar?
- use-package spaceline
- :ensure t
- :init (setq powerline-default-separator 'arrow)
- :config
- (require 'spaceline-config)
- (spaceline-spacemacs-theme))
+;; (;; Why even bother with the default status bar?
+;;  use-package spaceline
+;;  :ensure t
+;;  :init (setq powerline-default-separator 'arrow)
+;;  :config
+;;  (require 'spaceline-config)
+;;  (spaceline-spacemacs-theme))
 
 (use-package ido-vertical-mode
   ;; Ido-mode: a regexp smart search framework
@@ -328,64 +332,7 @@
 
 ;;; Fix lisp indent
 (let ((sif 'scheme-indent-function))
-  (put 'lam            sif 'defun)
-  (put 'def            sif 1)
-  (put 'set!           sif 1)
-  (put 'class          sif 1)
-  (put 'class*         sif 2)
-  (put 'match          sif 1)
-  (put 'match*         sif 1)
-  (put 'send           sif 2)
-  (put 'for            sif 1)
-  (put 'for*           sif 1)
-  (put 'for/list       sif 1)
-  (put 'for*/list      sif 1)
-  (put 'for/seteq      sif 1)
-  (put 'for/set        sif 1)
-  (put 'for/or         sif 1)
-  (put 'let/cc         sif 1)
-  (put 'let/ec         sif 1)
-  (put 'trace-let      sif 2)
-  (put 'for/and        sif 1)
-  (put 'for/andb       sif 1)
-  (put 'for/orb        sif 1)
-  (put 'for>>          sif 2)
-  (put 'for/fold       sif 2)
-  (put 'for*/or        sif 1)
-  (put 'struct         sif 2)
-  (put 'apply          sif 1)
-  (put 'for*/and       sif 1)
-  (put 'generator      sif 1)
-  (put 'with-handlers  sif 1)
-  (put 'while          sif 1)
-  (put 'place          sif 1)
-  (put 'trace-lambda   sif 'defun)
-  (put 'trace-define   sif 1)
-  (put 'with-syntax    sif 1)
-  ;; miniKanren
-  (put 'fresh     sif 1)
-  (put 'eigen     sif 1)
-  (put 'run       sif 2)
-  (put 'run*      sif 1)
-  (put 'run*au    sif 1)
-  (put 'run*su    sif 1)
-  (put 'lambdag@  sif 1)
-  (put 'letg@     sif 1)
-  (put 'lambdaf@  sif 1)
-  (put 'case-inf  sif 1)
-  (put 'project   sif 1)
-  (put 'pmatch    sif 1)
-  (put 'match     sif 1)
-  (put 'matche    sif 1)
-  (put 'fresht    sif 1)
-  (put 'letv      sif 1)
-  (put 'take      sif 1)
-  (put 'case-term sif 1)
-  (put 'mv-let    sif 1)
-  ;; Misc
-  (put 'go-on     sif 1)
-  (put 'prove     sif 1)
-  )
+  (put 'set!           sif 1) (put 'match          sif 1) (put 'match*         sif 1) (put 'send           sif 2) (put 'let/cc         sif 1) (put 'let/ec         sif 1) (put 'trace-let      sif 2) (put 'for/and        sif 1) (put 'for/andb       sif 1) (put 'for/orb        sif 1) (put 'for>>          sif 2) (put 'for/fold       sif 2) (put 'for*/or        sif 1) (put 'struct         sif 2) (put 'apply          sif 1) (put 'for*/and       sif 1) (put 'generator      sif 1) (put 'with-handlers  sif 1) (put 'while          sif 1) (put 'place          sif 1) (put 'trace-lambda   sif 'defun) (put 'trace-define   sif 1) (put 'with-syntax    sif 1))
 
 (defun gk-display-buffer-please-no (buf &rest ignore)
   (error "Inhibited buffer: %s" (buffer-name buf)))
@@ -476,8 +423,14 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(ansi-color-faces-vector
+   [default default default italic underline success warning error])
+ '(ansi-color-names-vector
+   ["black" "#d55e00" "#009e73" "#f8ec59" "#0072b2" "#cc79a7" "#56b4e9" "white"])
+ '(custom-enabled-themes (quote (adwaita)))
  '(package-selected-packages
-   '(lisp disable-mouse math-symbol-lists rainbow-identifiers spaceline avy smex ido-vertical-mode beacon evil-numbers evil-lion evil-commentary rainbow-delimiters linum-relative evil-surround evil use-package)))
+   (quote
+    (lisp disable-mouse math-symbol-lists rainbow-identifiers spaceline avy smex ido-vertical-mode beacon evil-numbers evil-lion evil-commentary rainbow-delimiters linum-relative evil-surround evil use-package))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
