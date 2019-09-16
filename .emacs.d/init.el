@@ -8,8 +8,9 @@
   (package-initialize))
 
 (setq package-archives
+      ;; All archives should be "http://..."
       '(("elpy" . "http://jorgenschaefer.github.io/packages/")
-        ("melpa" . "https://melpa.org/packages/")
+        ("melpa" . "http://melpa.org/packages/")
         ("gnu" . "http://elpa.gnu.org/packages/")
         ("melpa-stable" . "https://stable.melpa.org/packages/")))
 
@@ -164,6 +165,10 @@
   (dolist (i custom-enabled-themes)
     (disable-theme i)))
 
+(use-package evil-vimish-fold
+  :ensure t
+  :config (evil-vimish-fold-mode 1))
+
 (use-package avy
   ;; The dopest snipe package ever
   :ensure t
@@ -298,8 +303,7 @@
   :ensure t
   :config
   (quail-define-package "math" "UTF-8" "Ω" t)
-  (mapc
-   ;; My rules
+  (mapc  ;; my rules
    (lambda (x)
      (quail-defrule (car x) (cadr x)))
    '(("\\==" ?≡) ("\\LRa" ?⇔) ("\\<=>" ?⇔) ("\\Ra" ?➾) ("\\=>" ?➾) ("\\ra" ?→) ("\\->" ?→) ("\\-->" ?⟶) ("\\la" ?←) ("\\<-" ?←) ("\\.<" ?⬸) ("\\.>" ?⤑) ("\\lra" ?↔) ("\\<->" ?↔) ("\\up" ?↑) ("\\down" ?↓) ("\\h->" ?↪) ("\\ul" ?↖) ("\\ur" ?↗) ("\\dl" ?↙) ("\\dr" ?↘) ("\\o<" ?⟲) ("\\refl" ?⟲) ("\\o>" ?⟳) ("\\lla" ?↞) ("\\<<-" ?↞) ("\\rra" ?↠) ("\\trans" ?↠) ("\\->>" ?↠) ("\\lr2" ?⇄) ("\\-><" ?⇄) ("\\symm" ?⇄) ("\\==>" ?⟹) ("\\idem" ?⊸) ("\\-o" ?⊸)
@@ -332,7 +336,29 @@
 
 ;;; Fix lisp indent
 (let ((sif 'scheme-indent-function))
-  (put 'set!           sif 1) (put 'match          sif 1) (put 'match*         sif 1) (put 'send           sif 2) (put 'let/cc         sif 1) (put 'let/ec         sif 1) (put 'trace-let      sif 2) (put 'for/and        sif 1) (put 'for/andb       sif 1) (put 'for/orb        sif 1) (put 'for>>          sif 2) (put 'for/fold       sif 2) (put 'for*/or        sif 1) (put 'struct         sif 2) (put 'apply          sif 1) (put 'for*/and       sif 1) (put 'generator      sif 1) (put 'with-handlers  sif 1) (put 'while          sif 1) (put 'place          sif 1) (put 'trace-lambda   sif 'defun) (put 'trace-define   sif 1) (put 'with-syntax    sif 1))
+  (put 'set!           sif 1)
+  (put 'match          sif 1)
+  (put 'match*         sif 1)
+  (put 'send           sif 2)
+  (put 'let/cc         sif 1)
+  (put 'let/ec         sif 1)
+  (put 'trace-let      sif 2)
+  (put 'for/and        sif 1)
+  (put 'for/andb       sif 1)
+  (put 'for/orb        sif 1)
+  (put 'for>>          sif 2)
+  (put 'for/fold       sif 2)
+  (put 'for*/or        sif 1)
+  (put 'struct         sif 2)
+  (put 'apply          sif 1)
+  (put 'for*/and       sif 1)
+  (put 'generator      sif 1)
+  (put 'with-handlers  sif 1)
+  (put 'while          sif 1)
+  (put 'place          sif 1)
+  (put 'trace-lambda   sif 'defun) 
+  (put 'trace-define   sif 1) 
+  (put 'with-syntax    sif 1))
 
 (defun gk-display-buffer-please-no (buf &rest ignore)
   (error "Inhibited buffer: %s" (buffer-name buf)))
