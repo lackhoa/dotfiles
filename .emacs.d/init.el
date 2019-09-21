@@ -36,14 +36,16 @@
   (setq inhibit-startup-buffer-menu t)
   (setq inhibit-startup-screen t))
 
-(fset 'yes-or-no-p 'y-or-n-p)  ;; No more typing the whole yes or no
+(fset 'yes-or-no-p 'y-or-n-p)  ; No more typing the whole yes or no
 
 (setq auto-mode-alist  ; Bind file extension to modes
       (append '(("\\.rkt\\'" . scheme-mode)
                 ("\\.pl$"    . prolog-mode))
               auto-mode-alist))
+(add-to-list 'load-path "~/.emacs.d/lisp/")
+(load "skeme")  ; My note-taking mode
 
-(progn  ;; Get rid of UI elements
+(progn  ; Get rid of UI elements
   (menu-bar-mode     -1)
   (toggle-scroll-bar -1)
   (tool-bar-mode     -1))
@@ -65,7 +67,7 @@
   (add-hook 'evil-insert-state-entry-hook
             '(lambda () (global-hl-line-mode -1)))
   (add-hook 'evil-normal-state-entry-hook
-            '(lambda () (global-hl-line-mode)))
+            '(lambda () (global-hl-line-mode 1)))
 
   (use-package evil-surround
     :ensure t
@@ -83,7 +85,7 @@
     :ensure t
     :config (evil-commentary-mode)))
 
-(progn  ;;; Key bindings
+(progn  ; Key bindings
   (;; No more M-x! Use smex instead of evil-ex
    evil-define-key 'normal 'global ";" 'smex)
   (evil-define-key 'normal 'global "a" 'evil-append-line)
@@ -99,16 +101,16 @@
   (evil-define-key 'normal 'global (kbd "RET") 'evil-write-all)
   (evil-define-key 'normal 'global (kbd "K") 'open-line)
   (evil-define-key 'normal 'global (kbd "SPC") (lambda () (interactive)
-  (insert-char ?\s)
-  (evil-backward-char)))
+                                                 (insert-char ?\s)
+                                                 (evil-backward-char)))
   (evil-define-key 'normal 'global (kbd "C-j") (lambda () (interactive)
-  (save-excursion
-  (end-of-line)
-  (open-line 1))))
+                                                 (save-excursion
+                                                   (end-of-line)
+                                                   (open-line 1))))
   (evil-define-key 'normal 'global (kbd "C-k") (lambda () (interactive)
-  (save-excursion
-  (end-of-line 0)
-  (open-line 1))))
+                                                 (save-excursion
+                                                   (end-of-line 0)
+                                                   (open-line 1))))
   (evil-define-key 'normal 'global (kbd "C-a") 'mark-whole-buffer)
   (evil-define-key 'normal 'global (kbd "DEL") 'backward-delete-char-untabify)
   (evil-define-key 'normal 'global (kbd "C-.") 'next-buffer)
@@ -182,7 +184,7 @@
 (use-package aggressive-indent
   ;; No more worries about lisp indentation
   :ensure t
-  :hook ((prog-mode) . aggressive-indent-mode))
+  :hook ((prog-mode text-mode) . aggressive-indent-mode))
 
 (column-number-mode 1)  ; Show columns
 
@@ -193,15 +195,11 @@
 
 (use-package rainbow-delimiters  ; Color those parentheses
   :ensure t
-  :config
-  (add-hook 'prog-mode-hook 'rainbow-delimiters-mode)
-  (add-hook 'text-mode-hook 'rainbow-delimiters-mode))
+  :hook ((prog-mode text-mode) . rainbow-delimiters-mode))
 
 (use-package rainbow-identifiers  ; Color those identifiers
   :ensure t
-  :config
-  (add-hook 'prog-mode-hook 'rainbow-identifiers-mode)
-  (add-hook 'text-mode-hook 'rainbow-identifiers-mode))
+  :hook ((prog-mode text-mode) . rainbow-identifiers-mode))
 
 (setq-default indent-tabs-mode nil)  ; No tabs!
 (setq-default tab-width 2)
@@ -268,15 +266,9 @@
     math-symbol-list-extended
     math-symbol-list-subscripts
     math-symbol-list-superscripts))
-  (add-hook 'text-mode-hook
-            (lambda () (set-input-method "math")))
-  (add-hook 'prog-mode-hook
-            (lambda () (set-input-method "math")))
+  (set-input-method "math")
   ;; The fonts are: mscr (script), mbfscr (bold script), mfrak (frankfurt), mbf (boldface), Bbb (Double stroke)
   )
-
-(add-hook ; Delete trailing whitespaces on save.
- 'before-save-hook 'delete-trailing-whitespace)
 
 (let ((sif 'scheme-indent-function))  ; Fix lisp indent
   (put 'set!           sif 1)
@@ -305,7 +297,7 @@
 
 ;;; Custom functions
 (defun config () (interactive) (find-file "~/.emacs.d/init.el"))
-(defun thought () (interactive) (find-file "~/note/thought.txt"))
+(defun thought () (interactive) (find-file "~/note/thought.skm"))
 
 (defun deGreek ()
   ;; deGreek: at least I know how to Emacs Lisp!. You can start with either, and the other one will finish the job.
