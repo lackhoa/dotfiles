@@ -85,51 +85,6 @@
     :ensure t
     :config (evil-commentary-mode)))
 
-(progn  ; Key bindings
-  (;; No more M-x! Use smex instead of evil-ex
-   evil-define-key 'normal 'global ";" 'smex)
-  (evil-define-key 'normal 'global "a" 'evil-append-line)
-  (evil-define-key 'normal 'global "A" 'evil-append)
-  (evil-define-key 'normal 'global "p" 'evil-paste-before)
-  (evil-define-key 'normal 'global "P" 'evil-paste-after)
-  (evil-define-key 'normal 'global "W" 'forward-sexp)
-  (evil-define-key 'normal 'global "B" 'backward-sexp)
-  (evil-define-key 'normal 'global (kbd "<up>") 'evil-scroll-line-up)
-  (evil-define-key 'normal 'global (kbd "<down>") 'evil-scroll-line-down)
-  (evil-define-key 'normal 'global (kbd "<left>") 'previous-buffer)
-  (evil-define-key 'normal 'global (kbd "<right>") 'next-buffer)
-  (evil-define-key 'normal 'global (kbd "RET") 'evil-write-all)
-  (evil-define-key 'normal 'global (kbd "K") 'open-line)
-  (evil-define-key 'normal 'global (kbd "SPC") (lambda () (interactive)
-                                                 (insert-char ?\s)
-                                                 (evil-backward-char)))
-  (evil-define-key 'normal 'global (kbd "C-j") (lambda () (interactive)
-                                                 (save-excursion
-                                                   (end-of-line)
-                                                   (open-line 1))))
-  (evil-define-key 'normal 'global (kbd "C-k") (lambda () (interactive)
-                                                 (save-excursion
-                                                   (end-of-line 0)
-                                                   (open-line 1))))
-  (evil-define-key 'normal 'global (kbd "C-a") 'mark-whole-buffer)
-  (evil-define-key 'normal 'global (kbd "DEL") 'backward-delete-char-untabify)
-  (evil-define-key 'normal 'global (kbd "C-.") 'next-buffer)
-  (evil-define-key 'normal 'global (kbd "C-,") 'previous-buffer)
-  (evil-define-key 'normal 'global (kbd "\\")  (lambda () (interactive) (message "Want Enter?")))
-
-  (evil-define-key 'insert 'global (kbd "C-.") 'next-buffer)
-  (evil-define-key 'insert 'global (kbd "C-,") 'previous-buffer)
-  (evil-define-key 'insert 'global (kbd "C-v") 'evil-paste-before)
-
-  (evil-define-key 'visual 'global (kbd "TAB") 'indent-rigidly)
-  (evil-define-key 'visual 'global (kbd ";")   'smex))
-
-;;; Some vital command alias
-(defalias 'k 'kill-buffer-and-window)
-(defalias 'f 'ido-find-file)
-(defalias 'b 'ido-switch-buffer)
-(defalias 'ls 'buffer-menu)
-
 (use-package disable-mouse
   :ensure t
   :config
@@ -299,6 +254,21 @@
 (defun config () (interactive) (find-file "~/.emacs.d/init.el"))
 (defun thought () (interactive) (find-file "~/note/thought.skm"))
 
+(progn  ; Region Search
+  (defun region-search-forward ()
+    (interactive)
+    (let ((selected (call-interactively 'get-selected-text)))
+      (evil-normal-state)
+      (evil-search selected t)))
+  (evil-define-key 'visual 'global "*" 'region-search-forward)
+
+  (defun region-search-backward ()
+    (interactive)
+    (let ((selected (call-interactively 'get-selected-text)))
+      (evil-normal-state)
+      (evil-search selected nil)))
+  (evil-define-key 'visual 'global "#" 'region-search-backward))
+
 (defun deGreek ()
   ;; deGreek: at least I know how to Emacs Lisp!. You can start with either, and the other one will finish the job.
   (interactive)
@@ -362,6 +332,51 @@
   (interactive)
   (setq bin-lower (line-number))
   (evil-next-line (/ (- bin-upper bin-lower) 2)))
+
+(progn  ; Key bindings
+  (;; No more M-x! Use smex instead of evil-ex
+   evil-define-key 'normal 'global ";" 'smex)
+  (evil-define-key 'normal 'global "a" 'evil-append-line)
+  (evil-define-key 'normal 'global "A" 'evil-append)
+  (evil-define-key 'normal 'global "p" 'evil-paste-before)
+  (evil-define-key 'normal 'global "P" 'evil-paste-after)
+  (evil-define-key 'normal 'global "W" 'forward-sexp)
+  (evil-define-key 'normal 'global "B" 'backward-sexp)
+  (evil-define-key 'normal 'global (kbd "<up>") 'evil-scroll-line-up)
+  (evil-define-key 'normal 'global (kbd "<down>") 'evil-scroll-line-down)
+  (evil-define-key 'normal 'global (kbd "<left>") 'previous-buffer)
+  (evil-define-key 'normal 'global (kbd "<right>") 'next-buffer)
+  (evil-define-key 'normal 'global (kbd "RET") 'evil-write-all)
+  (evil-define-key 'normal 'global (kbd "K") 'open-line)
+  (evil-define-key 'normal 'global (kbd "SPC") (lambda () (interactive)
+                                                 (insert-char ?\s)
+                                                 (evil-backward-char)))
+  (evil-define-key 'normal 'global (kbd "C-j") (lambda () (interactive)
+                                                 (save-excursion
+                                                   (end-of-line)
+                                                   (open-line 1))))
+  (evil-define-key 'normal 'global (kbd "C-k") (lambda () (interactive)
+                                                 (save-excursion
+                                                   (end-of-line 0)
+                                                   (open-line 1))))
+  (evil-define-key 'normal 'global (kbd "C-a") 'mark-whole-buffer)
+  (evil-define-key 'normal 'global (kbd "DEL") 'backward-delete-char-untabify)
+  (evil-define-key 'normal 'global (kbd "C-.") 'next-buffer)
+  (evil-define-key 'normal 'global (kbd "C-,") 'previous-buffer)
+  (evil-define-key 'normal 'global (kbd "\\")  (lambda () (interactive) (message "Want Enter?")))
+
+  (evil-define-key 'insert 'global (kbd "C-.") 'next-buffer)
+  (evil-define-key 'insert 'global (kbd "C-,") 'previous-buffer)
+  (evil-define-key 'insert 'global (kbd "C-v") 'evil-paste-before)
+
+  (evil-define-key 'visual 'global (kbd "TAB") 'indent-rigidly)
+  (evil-define-key 'visual 'global (kbd ";")   'smex))
+
+(progn  ; Vital command alias
+  (defalias 'k 'kill-buffer-and-window)
+  (defalias 'f 'ido-find-file)
+  (defalias 'b 'ido-switch-buffer)
+  (defalias 'ls 'buffer-menu))
 
 ;; Pro lisp movements
 (setq evil-move-beyond-eol t) ; The magic is here
