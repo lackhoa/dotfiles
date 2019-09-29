@@ -5,10 +5,11 @@
 
 (setq package-archives
       ;; All archives should be "http://..."
-      '(("elpy" . "http://jorgenschaefer.github.io/packages/")
-        ("melpa" . "http://melpa.org/packages/")
-        ("gnu" . "http://elpa.gnu.org/packages/")
-        ("melpa-stable" . "https://stable.melpa.org/packages/")))
+      (let ((proto "http://"))
+        '(("elpy"         . (concat proto "jorgenschaefer.github.io/packages/"))
+          ("melpa"        . (concat proto "http://melpa  .org/packages/"))
+          ("gnu"          . (concat proto "http://elpa   .gnu   .org/packages/"))
+          ("melpa-stable" . (concat proto "http://stable .melpa .org/packages/")))))
 
 (unless (package-installed-p 'use-package)
   (package-refresh-contents)
@@ -136,10 +137,9 @@
   :ensure t
   :init (beacon-mode 1))
 
-(use-package aggressive-indent
-  ;; No more worries about lisp indentation
-  :ensure t
-  :hook ((prog-mode text-mode) . aggressive-indent-mode))
+;; (use-package aggressive-indent  ; Resource-inatensive: Use with caution!
+;;   :ensure t
+;;   :hook ((prog-mode text-mode) . aggressive-indent-mode))
 
 (column-number-mode 1)  ; Show columns
 
@@ -221,11 +221,12 @@
     math-symbol-list-extended
     math-symbol-list-subscripts
     math-symbol-list-superscripts))
-  (set-input-method "math")
   ;; The fonts are: mscr (script), mbfscr (bold script), mfrak (frankfurt), mbf (boldface), Bbb (Double stroke)
+  (add-hook 'prog-mode-hook (lambda () (set-input-method 'math)))
+  (add-hook 'text-mode-hook (lambda () (set-input-method 'math)))
   )
 
-(let ((sif 'scheme-indent-function))  ; Fix lisp indent
+(let ((sif 'scheme-indent-function))  ; Customize Scheme indent
   (put 'set!           sif 1)
   (put 'match          sif 1)
   (put 'match*         sif 1)
@@ -248,7 +249,8 @@
   (put 'place          sif 1)
   (put 'trace-lambda   sif 'defun)
   (put 'trace-define   sif 1)
-  (put 'with-syntax    sif 1))
+  (put 'with-syntax    sif 1)
+  (put 'pmatch         sif 2))
 
 ;;; Custom functions
 (defun config () (interactive) (find-file "~/.emacs.d/init.el"))
@@ -268,6 +270,10 @@
       (evil-normal-state)
       (evil-search selected nil)))
   (evil-define-key 'visual 'global "#" 'region-search-backward))
+
+(defun ranline ()
+  (interactive)
+  (goto-line (+ 1 (random (line-count)))))
 
 (defun deGreek ()
   ;; deGreek: at least I know how to Emacs Lisp!. You can start with either, and the other one will finish the job.
@@ -313,7 +319,7 @@
 ;; Binary search
 (defun line-number ()
   (string-to-number (format-mode-line "%l")))
-(defun line-count ()
+(defun line-count ()  ;; count total line of buffer
   (count-lines (point-min) (point-max)))
 (setq bin-lower 0)
 (setq bin-upper (line-count))
@@ -364,6 +370,8 @@
   (evil-define-key 'normal 'global (kbd "C-.") 'next-buffer)
   (evil-define-key 'normal 'global (kbd "C-,") 'previous-buffer)
   (evil-define-key 'normal 'global (kbd "\\")  (lambda () (interactive) (message "Want Enter?")))
+  (evil-define-key 'normal 'global (kbd "TAB") 'evil-indent-line)
+  (evil-define-key 'normal 'global (kbd "(")   'insert-parentheses)
 
   (evil-define-key 'insert 'global (kbd "C-.") 'next-buffer)
   (evil-define-key 'insert 'global (kbd "C-,") 'previous-buffer)
@@ -378,14 +386,32 @@
   (defalias 'b 'ido-switch-buffer)
   (defalias 'ls 'buffer-menu))
 
-;; Pro lisp movements
-(setq evil-move-beyond-eol t) ; The magic is here
-(progn
+(progn  ; Pro lisp movements
+  (setq evil-move-beyond-eol t) ; The magic is here
   (evil-define-key 'normal 'global (kbd "M-h") 'backward-sexp)
-  (evil-define-key 'normal 'global (kbd "M-l") 'forward-sexp)
+  (evil-define-key 'normal 'global (kbd "M-l") (lambda () (interactive) (forward-sexp 2) (backward-sexp)))
   (evil-define-key 'normal 'global (kbd "M-k") 'backward-up-list)
   (evil-define-key 'normal 'global (kbd "M-j") 'down-list))
 
+;;; Proof General and Coq
+(setq proof-auto-raise-buffers nil)
+(setq proof-multiple-frames-enable nil)
+(setq proof-delete-empty-windows nil)
+(setq proof-three-window-mode t)
+
+
+(setq proof-splash-enable nil)  ;; Disable welcome screen
+(add-hook 'coq-mode-hook
+          (lambda () 
+            (interactive)
+            (deactivate-input-method)
+            (kill-all-abbrevs)
+            (evil-define-key 'normal 'global (kbd "C-n")
+              (lambda () (interactive)
+                (proof-assert-next-command-interactive)))
+            (evil-define-key 'normal 'global (kbd "C-p")
+              (lambda () (interactive)
+                (proof-undo-last-successful-command)))))
 
 
 
@@ -404,7 +430,7 @@
  '(custom-enabled-themes (quote (adwaita)))
  '(package-selected-packages
    (quote
-    (fold-this lisp disable-mouse math-symbol-lists rainbow-identifiers spaceline avy smex ido-vertical-mode beacon evil-numbers evil-lion evil-commentary rainbow-delimiters linum-relative evil-surround evil use-package))))
+    (proof-general fold-this lisp disable-mouse math-symbol-lists rainbow-identifiers spaceline avy smex ido-vertical-mode beacon evil-numbers evil-lion evil-commentary rainbow-delimiters evil-surround evil use-package))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
