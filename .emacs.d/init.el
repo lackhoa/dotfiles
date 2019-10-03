@@ -137,9 +137,12 @@
   :ensure t
   :init (beacon-mode 1))
 
-;; (use-package aggressive-indent  ; Resource-inatensive: Use with caution!
-;;   :ensure t
-;;   :hook ((prog-mode text-mode) . aggressive-indent-mode))
+(use-package aggressive-indent  ; Resource-inatensive: Use with caution!
+  :ensure t
+  :config
+  (add-hook 'prog-mode-hook #'aggressive-indent-mode)
+  (add-hook 'text-mode-hook #'aggressive-indent-mode)
+  (add-hook 'skeme-mode-hook (lambda () (aggressive-indent-mode -1))))
 
 (column-number-mode 1)  ; Show columns
 
@@ -160,6 +163,8 @@
 (setq-default tab-width 2)
 
 (global-auto-revert-mode 1)  ; Automatically update changed buffer
+
+(add-hook 'before-save-hook 'delete-trailing-whitespace)
 
 (progn  ; Highlight matching brackets
   (show-paren-mode)
@@ -227,6 +232,9 @@
   )
 
 (let ((sif 'scheme-indent-function))  ; Customize Scheme indent
+  (put 'prove          sif 1)
+  (put 'lam            sif 1)
+  (put 'defun          sif 'defun)
   (put 'set!           sif 1)
   (put 'match          sif 1)
   (put 'match*         sif 1)
@@ -250,6 +258,7 @@
   (put 'trace-lambda   sif 'defun)
   (put 'trace-define   sif 1)
   (put 'with-syntax    sif 1)
+  (put 'trace-define-syntax sif 1)
   (put 'pmatch         sif 2))
 
 ;;; Custom functions
@@ -389,7 +398,7 @@
 (progn  ; Pro lisp movements
   (setq evil-move-beyond-eol t) ; The magic is here
   (evil-define-key 'normal 'global (kbd "M-h") 'backward-sexp)
-  (evil-define-key 'normal 'global (kbd "M-l") (lambda () (interactive) (forward-sexp 2) (backward-sexp)))
+  (evil-define-key 'normal 'global (kbd "M-l") 'forward-sexp)
   (evil-define-key 'normal 'global (kbd "M-k") 'backward-up-list)
   (evil-define-key 'normal 'global (kbd "M-j") 'down-list))
 
@@ -402,7 +411,7 @@
 
 (setq proof-splash-enable nil)  ;; Disable welcome screen
 (add-hook 'coq-mode-hook
-          (lambda () 
+          (lambda ()
             (interactive)
             (deactivate-input-method)
             (kill-all-abbrevs)
