@@ -77,10 +77,12 @@
   ;; Auto-center search result
   (defadvice evil-search-next
       (after advice-for-evil-search-next activate)
-    (evil-scroll-line-to-center (line-number-at-pos)))
+    ;; (evil-scroll-line-to-center (line-number-at-pos))
+    )
   (defadvice evil-search-previous
       (after advice-for-evil-search-previous activate)
-    (evil-scroll-line-to-center (line-number-at-pos)))
+    ;; (evil-scroll-line-to-center (line-number-at-pos))
+    )
 
   (use-package evil-commentary
     :ensure t
@@ -228,10 +230,11 @@
     math-symbol-list-superscripts))
   ;; The fonts are: mscr (script), mbfscr (bold script), mfrak (frankfurt), mbf (boldface), Bbb (Double stroke)
   (add-hook 'prog-mode-hook (lambda () (set-input-method 'math)))
-  (add-hook 'text-mode-hook (lambda () (set-input-method 'math)))
-  )
+  (add-hook 'text-mode-hook (lambda () (set-input-method 'math))))
 
 (let ((sif 'scheme-indent-function))  ; Customize Scheme indent
+  (put 'formula@       sif 1)
+  (put 'term@          sif 1)
   (put 'prove          sif 1)
   (put 'lam            sif 1)
   (put 'defun          sif 'defun)
@@ -386,7 +389,7 @@
   (evil-define-key 'insert 'global (kbd "C-,") 'previous-buffer)
   (evil-define-key 'insert 'global (kbd "C-v") 'evil-paste-before)
 
-  (evil-define-key 'visual 'global (kbd "TAB") 'indent-rigidly)
+  (evil-define-key 'visual 'global (kbd "TAB") 'indent-region)
   (evil-define-key 'visual 'global (kbd ";")   'smex))
 
 (progn  ; Vital command alias
