@@ -44,7 +44,6 @@
                 ("\\.pl$"    . prolog-mode))
               auto-mode-alist))
 (add-to-list 'load-path "~/.emacs.d/lisp/")
-(load "skeme")  ; My note-taking mode
 
 (progn  ; Get rid of UI elements
   (menu-bar-mode     -1)
@@ -72,7 +71,8 @@
 
   (use-package evil-surround
     :ensure t
-    :config (global-evil-surround-mode))
+    :config (global-evil-surround-mode)
+    (evil-define-key 'visual 'global (kbd "s") #'evil-surround-region))
 
   ;; Auto-center search result
   (defadvice evil-search-next
@@ -108,12 +108,45 @@
   :config
   (fold-this-mode 1)
   (evil-define-key 'normal 'global (kbd "H") #'fold-this-sexp)
-  (evil-define-key 'visual 'global (kbd "H") #'fold-this-sexp))
+  (evil-define-key 'visual 'global (kbd "H") #'fold-this-sexp)
+  (defun fold-this-sexp ()
+    "Fold sexp around point.
+
+  If the point is at a symbol, fold the parent sexp.  If the point
+  is in front of a sexp, fold the following sexp."
+    (interactive)
+    (let* ((region
+            (cond
+             ((symbol-at-point)
+              (save-excursion
+                (when (nth 3 (syntax-ppss))
+                  (goto-char (nth 8 (syntax-ppss))))
+                (backward-up-list)
+                (cons (point)
+                      (progn
+                        (forward-sexp)
+                        (point)))))
+             ((or (looking-at-p (rx (* blank) "("))
+                  (looking-at-p (rx (* blank) "["))
+                  (looking-at-p (rx (* blank) "{")))
+              (save-excursion
+                (skip-syntax-forward " ")
+                (cons (point)
+                      (progn
+                        (forward-sexp)
+                        (point)))))
+             (t nil)))
+           (header (when region
+                     (save-excursion
+                       (goto-char (car region))
+                       (buffer-substring (point) (line-end-position))))))
+      (when region
+        (fold-this (car region) (cdr region) header)))))
 
 (use-package avy  ; The dopest snipe package ever
   :ensure t
   :config
-  (evil-define-key 'normal 'global (kbd "f") #'avy-goto-char)
+  ;; (evil-define-key 'normal 'global (kbd "f") #'avy-goto-char)
   (evil-define-key 'normal 'global (kbd "s") #'avy-goto-char-2))
 
 (use-package ido-vertical-mode ; Ido-mode: a regexp smart search framework
@@ -211,10 +244,12 @@
   (mapc  ;; my rules
    (lambda (x)
      (quail-defrule (car x) (cadr x)))
-   '(("\\==" ?≡) ("\\LRa" ?⇔) ("\\<=>" ?⇔) ("\\Ra" ?➾) ("\\=>" ?➾) ("\\ra" ?→) ("\\->" ?→) ("\\-->" ?⟶) ("\\la" ?←) ("\\<-" ?←) ("\\.<" ?⬸) ("\\.>" ?⤑) ("\\lra" ?↔) ("\\<->" ?↔) ("\\up" ?↑) ("\\down" ?↓) ("\\h->" ?↪) ("\\ul" ?↖) ("\\ur" ?↗) ("\\dl" ?↙) ("\\dr" ?↘) ("\\o<" ?⟲) ("\\refl" ?⟲) ("\\o>" ?⟳) ("\\lla" ?↞) ("\\<<-" ?↞) ("\\rra" ?↠) ("\\trans" ?↠) ("\\->>" ?↠) ("\\lr2" ?⇄) ("\\-><" ?⇄) ("\\symm" ?⇄) ("\\==>" ?⟹) ("\\idem" ?⊸) ("\\-o" ?⊸)
-     ("\\sub" ?⊆) ("\\sup" ?⊇)
+   '(("\\lam" ?λ)
+     ("\\==" ?≡) ("\\=/" ?≠)
+     ("\\LRa" ?⇔) ("\\<=>" ?⇔) ("\\Ra" ?➾) ("\\=>" ?➾) ("\\ra" ?→) ("\\->" ?→) ("\\-->" ?⟶) ("\\la" ?←) ("\\<-" ?←) ("\\.<" ?⬸) ("\\.>" ?⤑) ("\\lra" ?↔) ("\\<->" ?↔) ("\\up" ?↑) ("\\down" ?↓) ("\\h->" ?↪) ("\\ul" ?↖) ("\\ur" ?↗) ("\\dl" ?↙) ("\\dr" ?↘) ("\\o<" ?⟲) ("\\refl" ?⟲) ("\\o>" ?⟳) ("\\lla" ?↞) ("\\<<-" ?↞) ("\\rra" ?↠) ("\\trans" ?↠) ("\\->>" ?↠) ("\\lr2" ?⇄) ("\\-><" ?⇄) ("\\symm" ?⇄) ("\\==>" ?⟹) ("\\idem" ?⊸) ("\\-o" ?⊸) ("\\<-|" ?↤) ("\\|->" ?↦)
+     ("\\sub" ?⊆) ("\\sup" ?⊇) ("\\supset" ?⊃) ("\\union" ?∪) ("\\inter" ?∩)
      ("\\ex" ?∃) ("\\for" ?∀)
-     ("\\lang" "⟨⟩")
+     ("\\<" "⟨⟩") ("\\lang" "⟨⟩")
      ("\\+-" ?±) ("\\<=" ?≤) ("\\>=" ?≥) ("\\=~" ?≅)
      ("\\Nat" ?ℕ) ("\\Int" ?ℤ)
      ("\\and" ?∧) ("\\or" ?v) ("\\false" ?⊥) ("\\|=" ?⊨) ("\\|-" ?⊢)
@@ -233,8 +268,16 @@
   (add-hook 'text-mode-hook (lambda () (set-input-method 'math))))
 
 (let ((sif 'scheme-indent-function))  ; Customize Scheme indent
+  (put 'f@             sif 1)
+  (put 'forall         sif 1)
+  (put '∀              sif 1)
+  (put 'exists         sif 1)
+  (put '∃              sif 1)
+  (put 'go-on          sif 1)
+  (put 'let@           sif 1)
   (put 'formula@       sif 1)
   (put 'term@          sif 1)
+  (put 'expr@          sif 1)
   (put 'prove          sif 1)
   (put 'lam            sif 1)
   (put 'defun          sif 'defun)
@@ -262,11 +305,25 @@
   (put 'trace-define   sif 1)
   (put 'with-syntax    sif 1)
   (put 'trace-define-syntax sif 1)
-  (put 'pmatch         sif 2))
+  (put 'pmatch         sif 2)
+  (progn  ; miniKanren
+    (put 'run*    sif 1)
+    (put 'run     sif 2)
+    (put 'matche  sif 1)
+    (put 'project sif 1)
+    (put 'fresh   sif 1))
+  (progn  ; Everything else (e.g Skeme)
+    (put 'match     sif 1)
+    (put 'THE       sif 1)
+    (put 'assume    sif 1) (put 'Assume    sif 1)
+    (put 'induction sif 1) (put 'Induction sif 1)
+    (put 'since     sif 1) (put 'Since     sif 1)
+    (put 'theorem   sif 1) (put 'Theorem   sif 1)
+    (put 'destruct  sif 1) (put 'Destruct  sif 1)))
+
+(load "skeme")  ; My note-taking mode (it inherits keywords from scheme)
 
 ;;; Custom functions
-(defun config () (interactive) (find-file "~/.emacs.d/init.el"))
-(defun thought () (interactive) (find-file "~/note/thought.skm"))
 
 (progn  ; Region Search
   (defun region-search-forward ()
@@ -383,7 +440,6 @@
   (evil-define-key 'normal 'global (kbd "C-,") 'previous-buffer)
   (evil-define-key 'normal 'global (kbd "\\")  (lambda () (interactive) (message "Want Enter?")))
   (evil-define-key 'normal 'global (kbd "TAB") 'evil-indent-line)
-  (evil-define-key 'normal 'global (kbd "(")   'insert-parentheses)
 
   (evil-define-key 'insert 'global (kbd "C-.") 'next-buffer)
   (evil-define-key 'insert 'global (kbd "C-,") 'previous-buffer)
@@ -392,11 +448,25 @@
   (evil-define-key 'visual 'global (kbd "TAB") 'indent-region)
   (evil-define-key 'visual 'global (kbd ";")   'smex))
 
-(progn  ; Vital command alias
+(progn  ; Command alias
   (defalias 'k 'kill-buffer-and-window)
   (defalias 'f 'ido-find-file)
   (defalias 'b 'ido-switch-buffer)
-  (defalias 'ls 'buffer-menu))
+  (defalias 'ls 'buffer-menu)
+  (defalias 'koq (lambda () (interactive)
+                   (find-file "~/note/koq/koq.ss")))
+  (defalias 'pov (lambda () (interactive)
+                   (find-file "~/note/koq/pov.ss")))
+  (defalias 'pie (lambda () (interactive)
+                   (find-file "~/note/koq/pie.ss")))
+  (defalias 'main (lambda () (interactive)
+                    (find-file "~/note/koq/main.ss")))
+  (defalias 'config (lambda () (interactive)
+                      (find-file  "~/.emacs.d/init.el")))
+  (defalias 'thought (lambda () (interactive)
+                       (find-file  "~/note/thought.skm")))
+  (defalias 'lib (lambda () (interactive)
+                   (find-file  "~/note/lib.ss"))))
 
 (progn  ; Pro lisp movements
   (setq evil-move-beyond-eol t) ; The magic is here
@@ -405,29 +475,25 @@
   (evil-define-key 'normal 'global (kbd "M-k") 'backward-up-list)
   (evil-define-key 'normal 'global (kbd "M-j") 'down-list))
 
-;;; Proof General and Coq
-(setq proof-auto-raise-buffers nil)
-(setq proof-multiple-frames-enable nil)
-(setq proof-delete-empty-windows nil)
-(setq proof-three-window-mode t)
+;; (progn  ;;; Proof General and Coq
+;;   (setq proof-auto-raise-buffers nil)
+;;   (setq proof-multiple-frames-enable nil)
+;;   (setq proof-delete-empty-windows nil)
+;;   (setq proof-three-window-mode t)
 
 
-(setq proof-splash-enable nil)  ;; Disable welcome screen
-(add-hook 'coq-mode-hook
-          (lambda ()
-            (interactive)
-            (deactivate-input-method)
-            (kill-all-abbrevs)
-            (evil-define-key 'normal 'global (kbd "C-n")
-              (lambda () (interactive)
-                (proof-assert-next-command-interactive)))
-            (evil-define-key 'normal 'global (kbd "C-p")
-              (lambda () (interactive)
-                (proof-undo-last-successful-command)))))
-
-
-
-
+;;   (setq proof-splash-enable nil)  ;; Disable welcome screen
+;;   (add-hook 'coq-mode-hook
+;;             (lambda ()
+;;   (interactive)
+;;   (deactivate-input-method)
+;;   (kill-all-abbrevs)
+;;   (evil-define-key 'normal 'global (kbd "C-n")
+;;   (lambda () (interactive)
+;;   (proof-assert-next-command-interactive)))
+;;   (evil-define-key 'normal 'global (kbd "C-p")
+;;   (lambda () (interactive)
+;;   (proof-undo-last-successful-command))))))
 
 ;;; Automatic Settings (DON'T TOUCH BEYOND THIS POINT)
 (custom-set-variables
@@ -442,7 +508,7 @@
  '(custom-enabled-themes (quote (adwaita)))
  '(package-selected-packages
    (quote
-    (proof-general fold-this lisp disable-mouse math-symbol-lists rainbow-identifiers spaceline avy smex ido-vertical-mode beacon evil-numbers evil-lion evil-commentary rainbow-delimiters evil-surround evil use-package))))
+    (fold-this lisp disable-mouse math-symbol-lists rainbow-identifiers spaceline avy smex ido-vertical-mode beacon evil-numbers evil-lion evil-commentary rainbow-delimiters evil-surround evil use-package))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.

@@ -22,6 +22,7 @@ abbr pull        'cd ~/ ; git pull
 abbr sync        'cd ~; git commit -a -m \'sync\' ; git push ;
                   cd ~/note ; git commit -a -m \'sync\' ; git push'
 abbr tar        'tar -xzvf'
+abbr trans      'trans fi:en'
 
 # clean up stuff that were created less than 1 minute ago
 abbr clean 'find . -type f -cmin -1 -delete'
