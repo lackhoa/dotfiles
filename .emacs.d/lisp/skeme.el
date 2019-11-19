@@ -3,13 +3,6 @@
 ;;;###autoload
 (add-to-list 'auto-mode-alist '("\\.skm\\'" . skeme-mode))
 
-(defvar skeme-mode-syntax-table
-  (let ((st (make-syntax-table)))
-    (modify-syntax-entry ?, "w" st)
-    (modify-syntax-entry ?' "w" st)
-    (modify-syntax-entry ?# "w" st)
-    st))
-
 ;; (defun skeme-indent-line ()
 ;;   "Indent current line of Skeme code."
 ;;   (interactive)
@@ -32,6 +25,6 @@
   "Major mode for Skeme (not a real language)"
   (set (make-local-variable 'indent-line-function) 'lisp-indent-line)
   (set (make-local-variable 'lisp-indent-function) 'scheme-indent-function)
-  :syntax-table skeme-mode-syntax-table)
+  )
 
 (provide 'skeme-mode)
