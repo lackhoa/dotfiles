@@ -6,10 +6,10 @@
 (setq package-archives
       ;; All archives should be "http://..."
       (let ((proto "http://"))
-        '(("elpy"         . (concat proto "jorgenschaefer.github.io/packages/"))
-          ("melpa"        . (concat proto "http://melpa  .org/packages/"))
-          ("gnu"          . (concat proto "http://elpa   .gnu   .org/packages/"))
-          ("melpa-stable" . (concat proto "http://stable .melpa .org/packages/")))))
+        `(("elpy"         . ,(concat proto "jorgenschaefer.github.io/packages/"))
+          ("melpa"        . ,(concat proto "melpa.org/packages/"))
+          ("gnu"          . ,(concat proto "elpa.gnu.org/packages/"))
+          ("melpa-stable" . ,(concat proto "stable.melpa.org/packages/")))))
 
 (unless (package-installed-p 'use-package)
   (package-refresh-contents)
@@ -248,16 +248,16 @@
     '(;; math rules
       ("\\lam" ?λ)
       ("\\==" ?≡) ("\\=/" ?≠)
-      ("\\LRa" ?⇔) ("\\<=>" ?⇔) ("\\Ra" ?➾) ("\\=>" ?➾) ("\\ra" ?→) ("\\then" ?→) ("\\->" ?→) ("\\-->" ?⟶) ("\\la" ?←) ("\\<-" ?←) ("\\.<" ?⬸) ("\\.>" ?⤑) ("\\lra" ?↔) ("\\<->" ?↔) ("\\up" ?↑) ("\\down" ?↓) ("\\h->" ?↪) ("\\ul" ?↖) ("\\ur" ?↗) ("\\dl" ?↙) ("\\dr" ?↘) ("\\o<" ?⟲) ("\\refl" ?⟲) ("\\o>" ?⟳) ("\\lla" ?↞) ("\\<<-" ?↞) ("\\rra" ?↠) ("\\trans" ?↠) ("\\->>" ?↠) ("\\lr2" ?⇄) ("\\-><" ?⇄) ("\\symm" ?⇄) ("\\==>" ?⟹) ("\\idem" ?⊸) ("\\-o" ?⊸) ("\\<-|" ?↤) ("\\|->" ?↦)
+      ("\\LRa" ?⇔) ("\\<=>" ?⇔) ("\\Ra" ?➾) ("\\=>" ?➾) ("\\to" ?→) ("\\then" ?→) ("\\->" ?→) ("\\-->" ?⟶) ("\\la" ?←) ("\\<-" ?←) ("\\.<" ?⬸) ("\\.>" ?⤑) ("\\lra" ?↔) ("\\<->" ?↔) ("\\up" ?↑) ("\\down" ?↓) ("\\h->" ?↪) ("\\ul" ?↖) ("\\ur" ?↗) ("\\dl" ?↙) ("\\dr" ?↘) ("\\o<" ?⟲) ("\\refl" ?⟲) ("\\o>" ?⟳) ("\\lla" ?↞) ("\\<<-" ?↞) ("\\rra" ?↠) ("\\trans" ?↠) ("\\->>" ?↠) ("\\lr2" ?⇄) ("\\-><" ?⇄) ("\\symm" ?⇄) ("\\==>" ?⟹) ("\\idem" ?⊸) ("\\-o" ?⊸) ("\\<-|" ?↤) ("\\|->" ?↦)
       ("\\sub" ?⊆) ("\\sup" ?⊇) ("\\supset" ?⊃) ("\\union" ?∪) ("\\Union" ?⋃) ("\\inter" ?∩) ("\\Inter" ?⋂) ("\\void" ?∅)
       ("\\ex" ?∃) ("\\for" ?∀)
       ("\\<" "⟨⟩") ("\\lang" "⟨⟩")
       ("\\+-" ?±) ("\\<=" ?≤) ("\\>=" ?≥) ("\\=~" ?≅)
       ("\\nat" ?ℕ) ("\\Nat" ?ℕ) ("\\int" ?ℤ) ("\\Int" ?ℤ) ("\\real" ?ℝ) ("\\Real" ?ℝ) ("\\rat" ?ℚ) ("\\Rat" ?ℚ)
-      ("\\and" ?∧) ("\\meet" ?∧) ("\\or" ?∨) ("\\join" ?∨) ("\\false" ?⊥) ("\\|=" ?⊨) ("\\|-" ?⊢)
+      ("\\and" ?∧) ("\\meet" ?∧) ("\\Meet" ?⋀) ("\\or" ?∨) ("\\join" ?∨) ("\\Join" ?⋁) ("\\false" ?⊥) ("\\|=" ?⊨) ("\\|-" ?⊢)
       ("\\cancer" ?♋))
     '(;; Finnish rules
-      ("a.." ?ä) ("o.." ?ö))))
+      ("a''" ?ä) ("o''" ?ö) ("A''" ?Ä) ("O''" ?Ö))))
 
   (;; math-symbol-list rules
    mapc (lambda (x)
@@ -479,6 +479,14 @@
   (evil-define-key 'normal 'global (kbd "M-l") 'forward-sexp)
   (evil-define-key 'normal 'global (kbd "M-k") 'backward-up-list)
   (evil-define-key 'normal 'global (kbd "M-j") 'down-list))
+
+(use-package markdown-mode
+  :ensure t
+  :commands (markdown-mode gfm-mode)
+  :mode (("README\\.md\\'" . gfm-mode)
+         ("\\.md\\'" . markdown-mode)
+         ("\\.markdown\\'" . markdown-mode))
+  :init (setq markdown-command "multimarkdown"))
 
 ;; (progn  ;;; Proof General and Coq
 ;;   (setq proof-auto-raise-buffers nil)
