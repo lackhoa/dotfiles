@@ -177,7 +177,8 @@
   :config
   (add-hook 'prog-mode-hook #'aggressive-indent-mode)
   (add-hook 'text-mode-hook #'aggressive-indent-mode)
-  (add-hook 'skeme-mode-hook (lambda () (aggressive-indent-mode -1))))
+  (add-hook 'skeme-mode-hook (lambda () (aggressive-indent-mode -1)))
+  (add-hook 'markdown-mode-hook (lambda () (aggressive-indent-mode -1))))
 
 (column-number-mode 1)  ; Show columns
 
@@ -273,58 +274,15 @@
   (add-hook 'text-mode-hook (lambda () (set-input-method 'math))))
 
 (let ((sif 'scheme-indent-function))  ; Customize Scheme indent
-  (put 'f@             sif 1)
-  (put 'forall         sif 1)
-  (put '∀              sif 1)
-  (put 'exists         sif 1)
-  (put '∃              sif 1)
-  (put 'go-on          sif 1)
-  (put 'let@           sif 1)
-  (put 'formula@       sif 1)
-  (put 'term@          sif 1)
-  (put 'expr@          sif 1)
-  (put 'prove          sif 1)
-  (put 'lam            sif 1)
-  (put 'defun          sif 'defun)
-  (put 'set!           sif 1)
-  (put 'match          sif 1)
-  (put 'match*         sif 1)
-  (put 'send           sif 2)
-  (put 'let/cc         sif 1)
-  (put 'let/ec         sif 1)
-  (put 'trace-let      sif 2)
-  (put 'for/and        sif 1)
-  (put 'for/andb       sif 1)
-  (put 'for/orb        sif 1)
-  (put 'for>>          sif 2)
-  (put 'for/fold       sif 2)
-  (put 'for*/or        sif 1)
-  (put 'struct         sif 2)
-  (put 'apply          sif 1)
-  (put 'for*/and       sif 1)
-  (put 'generator      sif 1)
-  (put 'with-handlers  sif 1)
-  (put 'while          sif 1)
-  (put 'place          sif 1)
-  (put 'trace-lambda   sif 'defun)
-  (put 'trace-define   sif 1)
-  (put 'with-syntax    sif 1)
-  (put 'trace-define-syntax sif 1)
-  (put 'pmatch         sif 2)
-  (progn  ; miniKanren
-    (put 'run*    sif 1)
-    (put 'run     sif 2)
-    (put 'matche  sif 1)
-    (put 'project sif 1)
-    (put 'fresh   sif 1))
-  (progn  ; Everything else (e.g Skeme)
-    (put 'match     sif 1)
-    (put 'THE       sif 1)
-    (put 'assume    sif 1) (put 'Assume    sif 1)
-    (put 'induction sif 1) (put 'Induction sif 1)
-    (put 'since     sif 1) (put 'Since     sif 1)
-    (put 'theorem   sif 1) (put 'Theorem   sif 1)
-    (put 'destruct  sif 1) (put 'Destruct  sif 1)))
+  (put 'defun sif 'defun)
+  (mapc (lambda (x)
+          (if (listp x)
+              (put (car x) sif (cadr x))
+            (put x sif 1)))
+        '(f@ forall ∀ exists ∃ go-on let@ formula@ term@ expr@ lam set! match match* send let/cc let/ec (trace-let 2) struct apply generator with-handlers while place trace-lambda trace-define with-syntax trace-define-syntax (pmatch 2)  ; Scheme keywords
+             run* run matche project fresh  ; miniKanren
+             prove THE assume induction since theorem destruct class data type instance  ; Everything else (for my notes)
+             )))
 
 (load "skeme")  ; My note-taking mode (it inherits keywords from scheme)
 
@@ -471,7 +429,9 @@
   (defalias 'thought (lambda () (interactive)
                        (find-file  "~/note/thought.skm")))
   (defalias 'lib (lambda () (interactive)
-                   (find-file  "~/note/lib.ss"))))
+                   (find-file  "~/note/lib.ss")))
+  (defalias 'work (lambda () (interactive)
+                    (find-file  "~/note/work.md"))))
 
 (progn  ; Pro lisp movements
   (setq evil-move-beyond-eol t) ; The magic is here
