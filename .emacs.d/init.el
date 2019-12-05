@@ -349,28 +349,28 @@
   (sit-for 1)
   (shell-command "xviewer ~/note/graph.svg"))
 
-;; Binary search
-(defun line-number ()
-  (string-to-number (format-mode-line "%l")))
-(defun line-count ()  ;; count total line of buffer
-  (count-lines (point-min) (point-max)))
-(setq bin-lower 0)
-(setq bin-upper (line-count))
-(defun bingo ()
-  "Start/reset binary search"
-  (interactive)
+(progn  ;; Binary search
+  (defun line-number ()
+    (string-to-number (format-mode-line "%l")))
+  (defun line-count ()  ;; count total line of buffer
+    (count-lines (point-min) (point-max)))
   (setq bin-lower 0)
-  (setq bin-upper (line-count)))
-(defun binup ()
-  "Binary search up the file"
-  (interactive)
-  (setq bin-upper (line-number))
-  (evil-previous-line (/ (- bin-upper bin-lower) 2)))
-(defun bindown ()
-  "Binary search down the file"
-  (interactive)
-  (setq bin-lower (line-number))
-  (evil-next-line (/ (- bin-upper bin-lower) 2)))
+  (setq bin-upper (line-count))
+  (defun bingo ()
+    "Start/reset binary search"
+    (interactive)
+    (setq bin-lower 0)
+    (setq bin-upper (line-count)))
+  (defun binup ()
+    "Binary search up the file"
+    (interactive)
+    (setq bin-upper (line-number))
+    (evil-previous-line (/ (- bin-upper bin-lower) 2)))
+  (defun bindown ()
+    "Binary search down the file"
+    (interactive)
+    (setq bin-lower (line-number))
+    (evil-next-line (/ (- bin-upper bin-lower) 2))))
 
 (progn  ; Key bindings
   (;; No more M-x! Use smex instead of evil-ex
@@ -434,12 +434,23 @@
   (defalias 'work (lambda () (interactive)
                     (find-file  "~/note/work.md"))))
 
-(progn  ; Pro lisp movements
-  (setq evil-move-beyond-eol t) ; The magic is here
+(progn  ;; Pro lisp movements
+  ;; Note: in order for jumps to work, you have to use #' in "evil-define-key"
+  (setq evil-move-beyond-eol t)  ; The magic is here
   (evil-define-key 'normal 'global (kbd "M-h") 'backward-sexp)
   (evil-define-key 'normal 'global (kbd "M-l") 'forward-sexp)
-  (evil-define-key 'normal 'global (kbd "M-k") 'backward-up-list)
-  (evil-define-key 'normal 'global (kbd "M-j") 'down-list))
+  (evil-define-motion evil-backward-up-list ()
+    "Go up the list structure"
+    :type line
+    :jump t
+    (backward-up-list))
+  (evil-define-key 'normal 'global (kbd "M-k") #'evil-backward-up-list)
+  (evil-define-motion evil-down-list ()
+    "Go up the list structure"
+    :type exclusive
+    :jump t
+    (down-list))
+  (evil-define-key 'normal 'global (kbd "M-j") 'evil-down-list))
 
 (use-package markdown-mode
   :ensure t
