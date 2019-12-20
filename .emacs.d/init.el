@@ -102,6 +102,8 @@
   (dolist (i custom-enabled-themes)
     (disable-theme i)))
 
+(set-face-attribute 'region nil :background "#666")  ;; Highlight color
+
 (use-package fold-this  ; Just hide the region!
   ;; Unfold with "enter"
   :ensure t
@@ -247,7 +249,7 @@
      (quail-defrule (car x) (cadr x)))
    (append
     '(;; math rules
-      ("\\lam" ?λ) ("\\sig" ?σ)
+      ("\\lam" ?λ) ("\\sig" ?σ) ("\\vphi" ?φ)
       ("\\==" ?≡) ("\\=/" ?≠)
       ("\\LRa" ?⇔) ("\\Ra" ?➾) ("\\to" ?→) ("\\then" ?→) ("\\ra" ?→) ("\\-->" ?⟶) ("\\la" ?←) ("\\dla" ?⬸) ("\\dra" ?⤑) ("\\lra" ?↔) ("\\up" ?↑) ("\\down" ?↓) ("\\hra" ?↪) ("\\hla" ?↩) ("\\ul" ?↖) ("\\ur" ?↗) ("\\dl" ?↙) ("\\dr" ?↘) ("\\o<" ?⟲) ("\\refl" ?⟲) ("\\o>" ?⟳) ("\\lla" ?↞) ("\\<<-" ?↞) ("\\rra" ?↠) ("\\trans" ?↠) ("\\->>" ?↠) ("\\lr2" ?⇄) ("\\-><" ?⇄) ("\\symm" ?⇄) ("\\==>" ?⟹) ("\\idem" ?⊸) ("\\-o" ?⊸) ("\\<-|" ?↤) ("\\|->" ?↦)
       ("\\sub" ?⊆) ("\\sup" ?⊇) ("\\supset" ?⊃) ("\\union" ?∪) ("\\Union" ?⋃) ("\\inter" ?∩) ("\\Inter" ?⋂) ("\\void" ?∅) ("\\power" ?℘)
@@ -274,15 +276,15 @@
   (add-hook 'prog-mode-hook (lambda () (set-input-method 'math)))
   (add-hook 'text-mode-hook (lambda () (set-input-method 'math))))
 
-(let ((sif 'scheme-indent-function))  ; Customize Scheme indent
+(let ((sif 'scheme-indent-function))  ; Customize Scheme Indentation
   (put 'defun sif 'defun)
   (mapc (lambda (x)
           (if (listp x)
               (put (car x) sif (cadr x))
             (put x sif 1)))
-        '(f@ forall ∀ exists ∃ go-on let@ formula@ term@ expr@ lam set! match match* send let/cc let/ec (trace-let 2) struct apply generator with-handlers while place trace-lambda trace-define with-syntax trace-define-syntax (pmatch 2)  ; Scheme keywords
+        '(f@ forall ∀ exists ∃ go-on let@ formula@ term@ expr@ lam set! match match* send let/cc let/ec (trace-let 2) struct apply generator with-handlers while place trace-lambda trace-define with-syntax trace-define-syntax (pmatch 2) let-syntax ; Scheme keywords
              run* run matche project fresh  ; miniKanren
-             prove counter THE assume induction since theorem destruct class data type instance  ; Everything else (for my notes)
+             conjecture prove counter THE assume induction Induction since Since theorem destruct class data type instance  ; Everything else (for my notes)
              )))
 
 (load "skeme")  ; My note-taking mode (it inherits keywords from scheme)
