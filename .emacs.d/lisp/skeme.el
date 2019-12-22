@@ -1,5 +1,4 @@
 (defvar skeme-mode-hook nil)
-
 ;;;###autoload
 (add-to-list 'auto-mode-alist '("\\.skm\\'" . skeme-mode))
 
@@ -12,28 +11,64 @@
         synTable))
 
 (progn  ;; subscript/superscript highlighting
-  (load "font-latex.el")
-  (load "latex.el")
+  (load "font-latex.el")  ;; Stealing code from latex mode
 
   (defvar font-skeme-keywords nil
     "Keywords for skeme mode")
 
+  (defun skeme-find-balanced-grouping (&optional count depth limit)
+    "Return the position of a balanced grouping in a group.
+The function scans forward COUNT parenthetical groupings.
+Default is 1.  If COUNT is negative, it searches backwards.  With
+optional DEPTH>=1, find that outer level.  If LIMIT is non-nil,
+do not search further than this position in the buffer."
+    (let ((count (if count
+                     (if (= count 0) (error "COUNT has to be <> 0") count)
+                   1))
+          (depth (if depth
+                     (if (< depth 1) (error "DEPTH has to be > 0") depth)
+                   1)))
+      (save-restriction
+        (when limit
+          (if (> count 0)
+              (narrow-to-region (point-min) limit)
+            (narrow-to-region limit (point-max))))
+        (condition-case nil
+            (scan-lists (point) count depth)
+          (error nil)))))
+
+  (defun skeme-find-closing-grouping (&optional depth limit)
+    "Return the position of the closing brace in a TeX group.
+The function assumes that point is inside the group, i.e. after
+an opening brace.  With optional DEPTH>=1, find that outer level.
+If LIMIT is non-nil, do not search further down than this
+position in the buffer."
+    (skeme-find-balanced-grouping 1 depth limit))
+
   (defun font-skeme-match-script (limit)
-    "Match subscript and superscript patterns up to LIMIT."
-    (when (re-search-forward "[_^] *\\([^\n\\{}]\\|\
-\\\\\\([a-zA-Z@]+\\|[^ \t\n]\\)\\|\\({\\)\\)" limit t)
-      (when (match-end 3)
-        (let ((beg  (match-beginning 3))
-              (end  (TeX-find-closing-brace
-                     ;; Don't match groups spanning more than one line
-                     ;; to avoid visually wrong indentation in subsequent lines.
-                     nil (line-end-position))))
-          (store-match-data (if end
-                                (list (match-beginning 0) end beg end)
-                              (list beg beg beg beg)))))
-      t))
+    "Match subscript/superscript patterns up to LIMIT."
+    (let ((re  (rx
+                (any "^" "_")
+                (group
+                 (or (;; Single-character script
+                      not (any "\n" "(" "[" "{" ")" "]" "}"))
+                     (;; Grouped script
+                      group (syntax open-parenthesis)))))))
+      (when (re-search-forward re limit t)
+        (when (match-end 2)
+          ;; Grouped script
+          (let ((beg  (match-beginning 2))
+                (end  (skeme-find-closing-grouping
+                       ;; Don't match groups spanning more than one line
+                       ;; to avoid visually wrong indentation in subsequent lines.
+                       nil (line-end-position))))
+            (store-match-data (if end
+                                  (list (match-beginning 0) end beg end)
+                                (list beg beg beg beg)))))
+        t)))
 
   (defun font-skeme--get-script-props (pos script-type)
+    "Get script properties (helper for font-skeme-script)"
     (let* ((old-raise (or (plist-get (get-text-property pos 'display) 'raise) 0.0))
            (new-level (1+ (or (get-text-property pos 'script-level) 0)))
            (disp-props (copy-sequence (cl-case script-type
@@ -42,16 +77,9 @@
            (new-disp-props (let ((raise (plist-get disp-props 'raise))
                                  (nl new-level))
                              (if raise
-                                 ;; This polynom approximates that the factor
-                                 ;; which is multiplied with raise is 1 for nl=1,
-                                 ;; 0.8 for nl=2, 0.64 for nl=3, etc. (so always
-                                 ;; about 80% of the previous value).
                                  (plist-put disp-props 'raise
                                             (+ old-raise
-                                               (* raise
-                                                  (+ 1.1965254857142873
-                                                     (* nl -0.21841226666666758)
-                                                     (* nl nl 0.012018514285714385)))))
+                                               (* raise (expt 0.8 (- nl 1)))))
                                disp-props))))
       `(face ,(cl-case script-type
                 (:super 'font-latex-superscript-face)
@@ -60,7 +88,7 @@
              display ,new-disp-props)))
 
   (defun font-skeme-script (pos)
-    "Return face and display spec for subscript and superscript content."
+    "Return face and display spec for subscript/superscript content."
     (let ((extra-props-flag (boundp 'font-lock-extra-managed-props)))
       (if (eq (char-after pos) ?_)
           (if extra-props-flag
@@ -76,8 +104,7 @@
                  ;; 1 stands indexes sub-expression
                  font-skeme-match-script
                  (1 (font-skeme-script (match-beginning 0)) append))
-               t)
-  )
+               t))
 
 (load "scheme.el")  ; We use `scheme-indent-function'
 (define-derived-mode skeme-mode prog-mode "Skeme"
