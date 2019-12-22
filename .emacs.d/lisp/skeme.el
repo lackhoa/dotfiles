@@ -37,7 +37,7 @@ do not search further than this position in the buffer."
             (scan-lists (point) count depth)
           (error nil)))))
 
-  (defun skeme-find-closing-grouping (&optional depth limit)
+  (defun skeme-find-closing-parenthesis (&optional depth limit)
     "Return the position of the closing brace in a TeX group.
 The function assumes that point is inside the group, i.e. after
 an opening brace.  With optional DEPTH>=1, find that outer level.
@@ -48,23 +48,28 @@ position in the buffer."
   (defun font-skeme-match-script (limit)
     "Match subscript/superscript patterns up to LIMIT."
     (let ((re  (rx
-                (any "^" "_")
-                (group
-                 (or (;; Single-character script
-                      not (any "\n" "(" "[" "{" ")" "]" "}"))
-                     (;; Grouped script
-                      group (syntax open-parenthesis)))))))
+                (group-n 1 (any "^" "_"))
+                (group-n 2
+                         (or (;; Single-character script
+                              not (any "\n" "(" "[" "{" ")" "]" "}"))
+                             (;; Grouped script
+                              group-n 3 (syntax open-parenthesis)))))
+               ))
       (when (re-search-forward re limit t)
-        (when (match-end 2)
-          ;; Grouped script
-          (let ((beg  (match-beginning 2))
-                (end  (skeme-find-closing-grouping
+        (when (match-end 3)  ;; Grouped script
+          (let ((beg  (match-beginning 3))
+                (end  (skeme-find-closing-parenthesis
                        ;; Don't match groups spanning more than one line
                        ;; to avoid visually wrong indentation in subsequent lines.
                        nil (line-end-position))))
             (store-match-data (if end
-                                  (list (match-beginning 0) end beg end)
-                                (list beg beg beg beg)))))
+                                  (list (match-beginning 0) end  ;; Entire match
+                                        (match-beginning 1) (match-end 1)  ; Group-1
+                                        (match-beginning 2) end  ;; Group-2
+                                        (match-beginning 3) end  ;; Group-3
+                                        )
+                                (;; Null match: no fontification happens
+                                 list beg beg beg beg beg beg beg beg)))))
         t)))
 
   (defun font-skeme--get-script-props (pos script-type)
@@ -87,19 +92,27 @@ position in the buffer."
              script-level ,new-level
              display ,new-disp-props)))
 
+  (defun font-skeme-match-script-chars (limit)
+    "Match sub/superscript chars up to LIMIT."
+    (re-search-backward (rx (not (any ?_ ?^))
+                            (group (any ?_ ?^)))
+                        limit t))
+
   (defun font-skeme-script (pos)
     "Return face and display spec for subscript/superscript content."
-    (let ((extra-props-flag (boundp 'font-lock-extra-managed-props)))
-      (if (eq (char-after pos) ?_)
-          (font-skeme--get-script-props pos :sub)
-        (font-skeme--get-script-props pos :super))))
+    (if (eq (char-after pos) ?_)
+        (font-skeme--get-script-props pos :sub)
+      (font-skeme--get-script-props pos :super)))
 
   (add-to-list 'font-skeme-keywords
                '(;; Find script by calling function `font-skeme-match-script'
                  ;; The font is calculated by `font-skeme-script' (given the matching position stored inside of the match storage)
                  ;; The `1' indexes sub-expression
                  font-skeme-match-script
-                 (1 (font-skeme-script (match-beginning 0)) append))
+                 (;; First group: The script character
+                  1 'font-latex-script-char-face prepend)
+                 (;; Second group: The script content
+                  2 (font-skeme-script (match-beginning 0)) append))
                t)
 
   (defun font-skeme-unfontify-region (beg end &rest ignored)
