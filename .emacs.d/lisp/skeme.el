@@ -91,20 +91,30 @@ position in the buffer."
     "Return face and display spec for subscript/superscript content."
     (let ((extra-props-flag (boundp 'font-lock-extra-managed-props)))
       (if (eq (char-after pos) ?_)
-          (if extra-props-flag
-              (font-skeme--get-script-props pos :sub)
-            'font-latex-subscript-face)
-        (if extra-props-flag
-            (font-skeme--get-script-props pos :super)
-          'font-latex-superscript-face))))
+          (font-skeme--get-script-props pos :sub)
+        (font-skeme--get-script-props pos :super))))
 
   (add-to-list 'font-skeme-keywords
                '(;; Find script by calling function `font-skeme-match-script'
-                 ;; The font is calculated by `font-skeme-script'
-                 ;; 1 stands indexes sub-expression
+                 ;; The font is calculated by `font-skeme-script' (given the matching position stored inside of the match storage)
+                 ;; The `1' indexes sub-expression
                  font-skeme-match-script
                  (1 (font-skeme-script (match-beginning 0)) append))
-               t))
+               t)
+
+  (defun font-skeme-unfontify-region (beg end &rest ignored)
+    "Unfontify region from BEG to END.
+We need this since the raise level does not get reset automatically"
+    (font-lock-default-unfontify-region beg end)
+    (remove-text-properties beg end '(script-level))
+    (let ((start beg))
+      (while (< beg end)
+        (let ((next (next-single-property-change beg 'display nil end))
+              (prop (get-text-property beg 'display)))
+          (if (and (eq (car-safe prop) 'raise)
+                   (null (cddr prop)))
+              (put-text-property beg next 'display nil))
+          (setq beg next))))))
 
 (load "scheme.el")  ; We use `scheme-indent-function'
 (define-derived-mode skeme-mode prog-mode "Skeme"
@@ -113,6 +123,7 @@ position in the buffer."
   (set (make-local-variable 'lisp-indent-function) 'scheme-indent-function)
   (setq font-lock-multiline t)
   (setq font-lock-defaults '(font-skeme-keywords))
+  (setq font-lock-unfontify-region-function 'font-skeme-unfontify-region)
   )
 
 (provide 'skeme-mode)
