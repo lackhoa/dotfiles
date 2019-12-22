@@ -31,9 +31,10 @@
 
 (global-hl-line-mode)  ; Show where the cursor is
 
-(progn  ; Getting rid of really annoying buffers
+(progn  ; Getting rid of really annoying stuffs
   (setq-default message-log-max nil)
-  (kill-buffer "*Messages*")
+  (ignore-errors (kill-buffer "*Messages*"))
+  (ignore-errors (kill-buffer "*Quail Completions*"))
   (setq inhibit-startup-buffer-menu t)
   (setq inhibit-startup-screen t))
 
@@ -101,8 +102,6 @@
 (defun disable-all-themes ()
   (dolist (i custom-enabled-themes)
     (disable-theme i)))
-
-(set-face-attribute 'region nil :background "#666")  ;; Highlight color
 
 (use-package fold-this  ; Just hide the region!
   ;; Unfold with "enter"
@@ -251,7 +250,7 @@
     '(;; math rules
       ("\\lam" ?λ) ("\\sig" ?σ) ("\\vphi" ?φ)
       ("\\==" ?≡) ("\\=/" ?≠)
-      ("\\LRa" ?⇔) ("\\Ra" ?➾) ("\\to" ?→) ("\\then" ?→) ("\\ra" ?→) ("\\-->" ?⟶) ("\\la" ?←) ("\\dla" ?⬸) ("\\dra" ?⤑) ("\\lra" ?↔) ("\\up" ?↑) ("\\down" ?↓) ("\\hra" ?↪) ("\\hla" ?↩) ("\\ul" ?↖) ("\\ur" ?↗) ("\\dl" ?↙) ("\\dr" ?↘) ("\\o<" ?⟲) ("\\refl" ?⟲) ("\\o>" ?⟳) ("\\lla" ?↞) ("\\<<-" ?↞) ("\\rra" ?↠) ("\\trans" ?↠) ("\\->>" ?↠) ("\\lr2" ?⇄) ("\\-><" ?⇄) ("\\symm" ?⇄) ("\\==>" ?⟹) ("\\idem" ?⊸) ("\\-o" ?⊸) ("\\<-|" ?↤) ("\\|->" ?↦)
+      ("\\LRa" ?⇔) ("\\Lra" ?⇔) ("\\Ra" ?➾) ("\\to" ?→) ("\\then" ?→) ("\\ra" ?→) ("\\-->" ?⟶) ("\\la" ?←) ("\\dla" ?⬸) ("\\dra" ?⤑) ("\\lra" ?↔) ("\\up" ?↑) ("\\down" ?↓) ("\\hra" ?↪) ("\\hla" ?↩) ("\\ul" ?↖) ("\\ur" ?↗) ("\\dl" ?↙) ("\\dr" ?↘) ("\\o<" ?⟲) ("\\refl" ?⟲) ("\\o>" ?⟳) ("\\lla" ?↞) ("\\<<-" ?↞) ("\\rra" ?↠) ("\\trans" ?↠) ("\\->>" ?↠) ("\\lr2" ?⇄) ("\\-><" ?⇄) ("\\symm" ?⇄) ("\\==>" ?⟹) ("\\idem" ?⊸) ("\\-o" ?⊸) ("\\<-|" ?↤) ("\\|->" ?↦)
       ("\\sub" ?⊆) ("\\sup" ?⊇) ("\\supset" ?⊃) ("\\union" ?∪) ("\\Union" ?⋃) ("\\inter" ?∩) ("\\Inter" ?⋂) ("\\void" ?∅) ("\\power" ?℘)
       ("\\ex" ?∃) ("\\for" ?∀)
       ("\\<" "⟨⟩") ("\\lang" "⟨⟩")
@@ -492,10 +491,10 @@
    [default default default italic underline success warning error])
  '(ansi-color-names-vector
    ["black" "#d55e00" "#009e73" "#f8ec59" "#0072b2" "#cc79a7" "#56b4e9" "white"])
- '(custom-enabled-themes (quote (adwaita)))
+ '(custom-enabled-themes (quote (wheatgrass)))
  '(package-selected-packages
    (quote
-    (fold-this lisp disable-mouse math-symbol-lists rainbow-identifiers spaceline avy smex ido-vertical-mode beacon evil-numbers evil-lion evil-commentary rainbow-delimiters evil-surround evil use-package))))
+    (texfrag fold-this lisp disable-mouse math-symbol-lists rainbow-identifiers spaceline avy smex ido-vertical-mode beacon evil-numbers evil-lion evil-commentary rainbow-delimiters evil-surround evil use-package))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -515,4 +514,5 @@
  '(rainbow-delimiters-depth-8-face ((t (:inherit rainbow-delimiters-base-face :foreground "orange"))))
  '(rainbow-delimiters-depth-9-face ((t (:inherit rainbow-delimiters-base-face :foreground "purple"))))
  '(rainbow-delimiters-unmatched-face ((t (:inherit rainbow-delimiters-base-face :foreground "dark green"))))
+ '(region ((t (:background "#666"))))
  '(show-paren-match ((t (:underline "cyan" :weight extra-bold)))))
