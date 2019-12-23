@@ -250,7 +250,7 @@
     '(;; math rules
       ("\\lam" ?λ) ("\\sig" ?σ) ("\\vphi" ?φ)
       ("\\==" ?≡) ("\\=/" ?≠)
-      ("\\LRa" ?⇔) ("\\Lra" ?⇔) ("\\Ra" ?➾) ("\\to" ?→) ("\\then" ?→) ("\\ra" ?→) ("\\-->" ?⟶) ("\\la" ?←) ("\\dla" ?⬸) ("\\dra" ?⤑) ("\\lra" ?↔) ("\\up" ?↑) ("\\down" ?↓) ("\\hra" ?↪) ("\\hla" ?↩) ("\\ul" ?↖) ("\\ur" ?↗) ("\\dl" ?↙) ("\\dr" ?↘) ("\\o<" ?⟲) ("\\refl" ?⟲) ("\\o>" ?⟳) ("\\lla" ?↞) ("\\<<-" ?↞) ("\\rra" ?↠) ("\\trans" ?↠) ("\\->>" ?↠) ("\\lr2" ?⇄) ("\\-><" ?⇄) ("\\symm" ?⇄) ("\\==>" ?⟹) ("\\idem" ?⊸) ("\\-o" ?⊸) ("\\<-|" ?↤) ("\\|->" ?↦)
+      ("\\LRa" ?⇔) ("\\Lra" ?⇔) ("\\=>" ?➾) ("\\Ra" ?➾) ("\\->" ?→) ("\\to" ?→) ("\\then" ?→) ("\\ra" ?→) ("\\-->" ?⟶) ("\\<-" ?←) ("\\la" ?←) ("\\.<-" ?⬸) ("\\dla" ?⬸) ("\\.->" ?⤑) ("\\dra" ?⤑) ("\\<->" ?↔) ("\\lra" ?↔) ("\\up" ?↑) ("\\down" ?↓) ("\\hra" ?↪) ("\\hla" ?↩) ("\\ul" ?↖) ("\\ur" ?↗) ("\\dl" ?↙) ("\\dr" ?↘) ("\\o<" ?⟲) ("\\refl" ?⟲) ("\\o>" ?⟳) ("\\lla" ?↞) ("\\<<-" ?↞) ("\\rra" ?↠) ("\\trans" ?↠) ("\\->>" ?↠) ("\\lr2" ?⇄) ("\\-><" ?⇄) ("\\symm" ?⇄) ("\\==>" ?⟹) ("\\idem" ?⊸) ("\\-o" ?⊸) ("\\<-|" ?↤) ("\\|->" ?↦)
       ("\\sub" ?⊆) ("\\sup" ?⊇) ("\\supset" ?⊃) ("\\union" ?∪) ("\\Union" ?⋃) ("\\inter" ?∩) ("\\Inter" ?⋂) ("\\void" ?∅) ("\\power" ?℘)
       ("\\ex" ?∃) ("\\for" ?∀)
       ("\\<" "⟨⟩") ("\\lang" "⟨⟩")
@@ -327,28 +327,20 @@
   (interactive "r")
   (buffer-substring start end))
 
-(defun dot ()
-  (interactive)
-  (if (use-region-p)
-      (let ((selected-text (call-interactively 'get-selected-text)))
-        (write-region selected-text nil "~/note/graph.dot" nil)
-        (call-interactively 'view-graph))
-    (message "Select something first!")))
+(progn  ;; Graph
+  (defun dot ()
+    (interactive)
+    (if (use-region-p)
+        (let ((selected-text (call-interactively 'get-selected-text)))
+          (write-region selected-text nil "~/note/graph.dot" nil)
+          (call-interactively 'view-graph))
+      (message "Select something first!")))
 
-(defun scot ()
-  (interactive)
-  (if (use-region-p)
-      (let ((selected-text (call-interactively 'get-selected-text)))
-        (write-region selected-text nil "~/note/graph.scm" nil)
-        (shell-command "scheme ~/note/scheme-graph.scm")
-        (call-interactively 'view-graph))
-    (message "Select something first!")))
-
-(defun view-graph ()
-  (interactive)
-  (shell-command "dot -Tsvg ~/note/graph.dot -o ~/note/graph.svg")
-  (sit-for 1)
-  (shell-command "xviewer ~/note/graph.svg"))
+  (defun view-graph ()
+    (interactive)
+    (shell-command "dot -Tsvg ~/note/graph.dot -o ~/note/graph.svg")
+    (sit-for 1)
+    (start-process-shell-command "my-process" nil "xviewer ~/note/graph.svg")))
 
 (progn  ;; Binary search
   (defun line-number ()
@@ -444,7 +436,8 @@
     "Go up the list structure"
     :type line
     :jump t
-    (backward-up-list))
+    (backward-up-list 1 t t)  ; By default, it doesn't handle string correctly
+    )
   (evil-define-key 'normal 'global (kbd "M-k") #'evil-backward-up-list)
   (evil-define-motion evil-down-list ()
     "Go up the list structure"

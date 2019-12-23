@@ -10,7 +10,7 @@
         (modify-syntax-entry ?\n "> b" synTable)
         synTable))
 
-(progn  ;; subscript/superscript highlighting
+(progn  ;; Subscript/Superscript Highlighting
   (load "font-latex.el")  ;; Stealing code from latex mode
 
   (defvar font-skeme-keywords nil
@@ -53,8 +53,7 @@ position in the buffer."
                          (or (;; Single-character script
                               not (any "\n" "(" "[" "{" ")" "]" "}"))
                              (;; Grouped script
-                              group-n 3 (syntax open-parenthesis)))))
-               ))
+                              group-n 3 (syntax open-parenthesis)))))))
       (when (re-search-forward re limit t)
         (when (match-end 3)  ;; Grouped script
           (let ((beg  (match-beginning 3))
