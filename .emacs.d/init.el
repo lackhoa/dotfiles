@@ -250,11 +250,11 @@
     '(;; math rules
       ("\\lam" ?λ) ("\\sig" ?σ) ("\\vphi" ?φ)
       ("\\==" ?≡) ("\\=/" ?≠)
-      ("\\LRa" ?⇔) ("\\Lra" ?⇔) ("\\=>" ?➾) ("\\Ra" ?➾) ("\\->" ?→) ("\\to" ?→) ("\\then" ?→) ("\\ra" ?→) ("\\-->" ?⟶) ("\\<-" ?←) ("\\la" ?←) ("\\.<-" ?⬸) ("\\dla" ?⬸) ("\\.->" ?⤑) ("\\dra" ?⤑) ("\\<->" ?↔) ("\\lra" ?↔) ("\\up" ?↑) ("\\down" ?↓) ("\\hra" ?↪) ("\\hla" ?↩) ("\\ul" ?↖) ("\\ur" ?↗) ("\\dl" ?↙) ("\\dr" ?↘) ("\\o<" ?⟲) ("\\refl" ?⟲) ("\\o>" ?⟳) ("\\lla" ?↞) ("\\<<-" ?↞) ("\\rra" ?↠) ("\\trans" ?↠) ("\\->>" ?↠) ("\\lr2" ?⇄) ("\\-><" ?⇄) ("\\symm" ?⇄) ("\\==>" ?⟹) ("\\idem" ?⊸) ("\\-o" ?⊸) ("\\<-|" ?↤) ("\\|->" ?↦)
+      ("\\LRa" ?⇔) ("\\Lra" ?⇔) ("\\=>" ?➾) ("\\Ra" ?➾) ("\\->" ?→) ("\\to" ?→) ("\\then" ?→) ("\\ra" ?→) ("\\-->" ?⟶) ("\\<-" ?←) ("\\la" ?←) ("\\.<-" ?⬸) ("\\dla" ?⬸) ("\\.->" ?⤑) ("\\dra" ?⤑) ("\\<->" ?↔) ("\\lra" ?↔) ("\\up" ?↑) ("\\ua" ?↑) ("\\da" ?↓) ("\\hra" ?↪) ("\\hla" ?↩) ("\\ul" ?↖) ("\\ur" ?↗) ("\\dl" ?↙) ("\\dr" ?↘) ("\\o<" ?⟲) ("\\refl" ?⟲) ("\\o>" ?⟳) ("\\lla" ?↞) ("\\<<-" ?↞) ("\\rra" ?↠) ("\\trans" ?↠) ("\\->>" ?↠) ("\\lr2" ?⇄) ("\\-><" ?⇄) ("\\symm" ?⇄) ("\\==>" ?⟹) ("\\idem" ?⊸) ("\\-o" ?⊸) ("\\<-|" ?↤) ("\\|->" ?↦)
       ("\\sub" ?⊆) ("\\sup" ?⊇) ("\\supset" ?⊃) ("\\union" ?∪) ("\\Union" ?⋃) ("\\inter" ?∩) ("\\Inter" ?⋂) ("\\void" ?∅) ("\\power" ?℘)
       ("\\ex" ?∃) ("\\for" ?∀)
       ("\\<" "⟨⟩") ("\\lang" "⟨⟩")
-      ("\\+-" ?±) ("\\<=" ?≤) ("\\>=" ?≥) ("\\=~" ?≅) ("\\iso" ?≅)
+      ("\\+-" ?±) ("\\<=" ?≤) ("\\>=" ?≥) ("\\=~" ?≅) ("\\iso" ?≅) ("\\~~" ?≈)
       ("\\nat" ?ℕ) ("\\Nat" ?ℕ) ("\\int" ?ℤ) ("\\Int" ?ℤ) ("\\real" ?ℝ) ("\\Real" ?ℝ) ("\\rat" ?ℚ) ("\\Rat" ?ℚ)
       ("\\and" ?∧) ("\\meet" ?∧) ("\\Meet" ?⋀) ("\\or" ?∨) ("\\join" ?∨) ("\\Join" ?⋁) ("\\false" ?⊥) ("\\|=" ?⊨) ("\\|-" ?⊢)
       ("\\cancer" ?♋)
@@ -283,7 +283,7 @@
             (put x sif 1)))
         '(f@ forall ∀ exists ∃ go-on let@ formula@ term@ expr@ lam set! match match* send let/cc let/ec (trace-let 2) struct apply generator with-handlers while place trace-lambda trace-define with-syntax trace-define-syntax (pmatch 2) let-syntax ; Scheme keywords
              run* run matche project fresh  ; miniKanren
-             conjecture prove counter THE assume induction Induction since Since theorem destruct class data type instance  ; Everything else (for my notes)
+             conjecture prove counter THE assume induction Induction since Since theorem destruct class data type instance subgraph ; Everything else (for my notes)
              )))
 
 (load "skeme")  ; My note-taking mode (it inherits keywords from scheme)
@@ -331,8 +331,17 @@
   (defun dot ()
     (interactive)
     (if (use-region-p)
-        (let ((selected-text (call-interactively 'get-selected-text)))
+        (let ((selected-text  (call-interactively 'get-selected-text)))
           (write-region selected-text nil "~/note/graph.dot" nil)
+          (call-interactively 'view-graph))
+      (message "Select something first!")))
+
+  (defun sdot ()
+    (interactive)
+    (if (use-region-p)
+        (let ((selected-text  (call-interactively 'get-selected-text)))
+          (write-region selected-text nil "~/note/graph.scm" nil)
+          (shell-command "scheme --script ~/note/scheme-to-dot.scm")
           (call-interactively 'view-graph))
       (message "Select something first!")))
 
