@@ -18,7 +18,6 @@
 (eval-when-compile
   (require 'use-package))
 
-
 (setq completion-ignore-case t ; Ignore case in minibuffer's tab completion
       read-file-name-completion-ignore-case t
       read-buffer-completion-ignore-case t)
@@ -144,6 +143,17 @@
       (when region
         (fold-this (car region) (cdr region) header)))))
 
+(use-package evil-lion
+  :ensure t
+  :config
+  (defalias 'tab (lambda () (interactive)
+                   (if (use-region-p)
+                       (let ((beg  (region-beginning))
+                             (end  (region-end)))
+                         (evil-lion-left 0 beg end ?|)
+                         (indent-region beg end))
+                     (message "Please select a table!")))))
+
 (use-package avy  ; The dopest snipe package ever
   :ensure t
   :config
@@ -250,7 +260,7 @@
     '(;; math rules
       ("\\lam" ?λ) ("\\sig" ?σ) ("\\vphi" ?φ)
       ("\\==" ?≡) ("\\=/" ?≠)
-      ("\\LRa" ?⇔) ("\\Lra" ?⇔) ("\\=>" ?➾) ("\\Ra" ?➾) ("\\->" ?→) ("\\to" ?→) ("\\then" ?→) ("\\ra" ?→) ("\\-->" ?⟶) ("\\<-" ?←) ("\\la" ?←) ("\\.<-" ?⬸) ("\\dla" ?⬸) ("\\.->" ?⤑) ("\\dra" ?⤑) ("\\<->" ?↔) ("\\lra" ?↔) ("\\up" ?↑) ("\\ua" ?↑) ("\\da" ?↓) ("\\hra" ?↪) ("\\hla" ?↩) ("\\ul" ?↖) ("\\ur" ?↗) ("\\dl" ?↙) ("\\dr" ?↘) ("\\o<" ?⟲) ("\\refl" ?⟲) ("\\o>" ?⟳) ("\\lla" ?↞) ("\\<<-" ?↞) ("\\rra" ?↠) ("\\trans" ?↠) ("\\->>" ?↠) ("\\lr2" ?⇄) ("\\-><" ?⇄) ("\\symm" ?⇄) ("\\==>" ?⟹) ("\\idem" ?⊸) ("\\-o" ?⊸) ("\\<-|" ?↤) ("\\|->" ?↦)
+      ("\\<=>" ?⇔) ("\\LRa" ?⇔) ("\\Lra" ?⇔) ("\\=>" ?➾) ("\\Ra" ?➾) ("\\->" ?→) ("\\to" ?→) ("\\then" ?→) ("\\ra" ?→) ("\\-->" ?⟶) ("\\<-" ?←) ("\\la" ?←) ("\\.<-" ?⬸) ("\\dla" ?⬸) ("\\.->" ?⤑) ("\\dra" ?⤑) ("\\<->" ?↔) ("\\lra" ?↔) ("\\up" ?↑) ("\\ua" ?↑) ("\\da" ?↓) ("\\hra" ?↪) ("\\hla" ?↩) ("\\ul" ?↖) ("\\ur" ?↗) ("\\dl" ?↙) ("\\dr" ?↘) ("\\o<" ?⟲) ("\\refl" ?⟲) ("\\o>" ?⟳) ("\\lla" ?↞) ("\\<<-" ?↞) ("\\rra" ?↠) ("\\trans" ?↠) ("\\->>" ?↠) ("\\lr2" ?⇄) ("\\-><" ?⇄) ("\\symm" ?⇄) ("\\==>" ?⟹) ("\\idem" ?⊸) ("\\-o" ?⊸) ("\\<-|" ?↤) ("\\|->" ?↦)
       ("\\sub" ?⊆) ("\\sup" ?⊇) ("\\supset" ?⊃) ("\\union" ?∪) ("\\Union" ?⋃) ("\\inter" ?∩) ("\\Inter" ?⋂) ("\\void" ?∅) ("\\power" ?℘)
       ("\\ex" ?∃) ("\\for" ?∀)
       ("\\<" "⟨⟩") ("\\lang" "⟨⟩")
