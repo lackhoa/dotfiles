@@ -147,12 +147,13 @@
   :ensure t
   :config
   (defalias 'tab (lambda () (interactive)
-                   (if (use-region-p)
-                       (let ((beg  (region-beginning))
-                             (end  (region-end)))
-                         (evil-lion-left 0 beg end ?|)
-                         (indent-region beg end))
-                     (message "Please select a table!")))))
+                   (save-excursion
+                     (unless (use-region-p)
+                       (er/expand-region 3))
+                     (let ((beg  (region-beginning))
+                           (end  (region-end)))
+                       (evil-lion-left 0 beg end ?|)
+                       (indent-region beg end))))))
 
 (use-package avy  ; The dopest snipe package ever
   :ensure t
@@ -415,7 +416,9 @@
   (evil-define-key 'normal 'global (kbd "C-.") 'next-buffer)
   (evil-define-key 'normal 'global (kbd "C-,") 'previous-buffer)
   (evil-define-key 'normal 'global (kbd "\\")  (lambda () (interactive) (message "Want Enter?")))
-  (evil-define-key 'normal 'global (kbd "TAB") 'evil-indent-line)
+  (evil-define-key 'normal 'global (kbd "TAB") (lambda () (interactive)
+                                                 (save-excursion
+                                                   (evil-indent-line (line-beginning-position) (line-end-position)))))
 
   (evil-define-key 'insert 'global (kbd "C-.") 'next-buffer)
   (evil-define-key 'insert 'global (kbd "C-,") 'previous-buffer)
@@ -446,7 +449,7 @@
   (defalias 'work (lambda () (interactive)
                     (find-file  "~/note/work.md"))))
 
-(progn  ;; Pro lisp movements
+(progn  ;; Pro lisp Movements
   ;; Note: in order for jumps to work, you have to use #' in "evil-define-key"
   (setq evil-move-beyond-eol t)  ; The magic is here
   (evil-define-key 'normal 'global (kbd "M-h") 'backward-sexp)
@@ -463,7 +466,8 @@
     :type exclusive
     :jump t
     (down-list))
-  (evil-define-key 'normal 'global (kbd "M-j") 'evil-down-list))
+  (evil-define-key 'normal 'global (kbd "M-j") 'evil-down-list)
+  (evil-define-key 'normal 'global (kbd "M-t") 'transpose-sexps))
 
 (use-package markdown-mode
   :ensure t
