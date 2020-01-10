@@ -51,7 +51,7 @@ position in the buffer."
                 (group-n 1 (any "^" "_"))
                 (group-n 2
                          (or (;; Single-character script
-                              not (any "\n" "(" "[" "{" ")" "]" "}"))
+                              not (any "\n" " " "(" "[" "{" ")" "]" "}"))
                              (;; Grouped script
                               group-n 3 (syntax open-parenthesis)))))))
       (when (re-search-forward re limit t)
@@ -76,14 +76,16 @@ position in the buffer."
     (let* ((old-raise (or (plist-get (get-text-property pos 'display) 'raise) 0.0))
            (new-level (1+ (or (get-text-property pos 'script-level) 0)))
            (disp-props (copy-sequence (cl-case script-type
-                                        (:super (cdr font-latex-script-display))
+                                        (:super (;; How much is raised from the beginning
+                                                 cdr font-latex-script-display))
                                         (:sub   (car font-latex-script-display)))))
            (new-disp-props (let ((raise (plist-get disp-props 'raise))
                                  (nl new-level))
                              (if raise
                                  (plist-put disp-props 'raise
                                             (+ old-raise
-                                               (* raise (expt 0.8 (- nl 1)))))
+                                               (;; raising decrease by level
+                                                * raise (expt 0.8 (- nl 1)))))
                                disp-props))))
       `(face ,(cl-case script-type
                 (:super 'font-latex-superscript-face)
@@ -109,7 +111,7 @@ position in the buffer."
                  ;; The `1' indexes sub-expression
                  font-skeme-match-script
                  (;; First group: The script character
-                  1 'font-latex-script-char-face prepend)
+                  1 `(face font-latex-script-char-face invisible t) prepend)
                  (;; Second group: The script content
                   2 (font-skeme-script (match-beginning 0)) append))
                t)
@@ -128,11 +130,30 @@ We need this since the raise level does not get reset automatically"
               (put-text-property beg next 'display nil))
           (setq beg next))))))
 
-(load "scheme.el")  ; We use `scheme-indent-function'
+(progn ;; Indentation
+  (defun skeme-indent-line ()
+    "Indent current line of Skeme code."
+    (interactive)
+    (let ((savep (> (current-column) (current-indentation)))
+          (indent (condition-case nil (max (skeme-calculate-indentation) 0)
+                    (error 0))))
+      (if savep
+          (save-excursion (indent-line-to indent))
+        (indent-line-to indent))))
+
+  (defun skeme-calculate-indentation ()
+    "Return the column to which the current line should be indented."
+    (save-excursion
+      (back-to-indentation)
+      (backward-up-list)
+      (+ (current-column) 1))))
+
+;; (load "scheme.el")  ; Load if you use `scheme-indent-function'
 (define-derived-mode skeme-mode prog-mode "Skeme"
   "Major mode for Skeme"
-  (set (make-local-variable 'indent-line-function) 'lisp-indent-line)
-  (set (make-local-variable 'lisp-indent-function) 'scheme-indent-function)
+  (set (make-local-variable 'indent-line-function) 'skeme-indent-line)
+  ;; Uncomment if you want `lisp-indent-line'
+  ;; (set (make-local-variable 'lisp-indent-function) 'scheme-indent-function)
   (setq font-lock-multiline t)
   (setq font-lock-defaults '(font-skeme-keywords))
   (setq font-lock-unfontify-region-function 'font-skeme-unfontify-region)

@@ -60,8 +60,8 @@
   :init
   (evil-mode 1)
   :config
-  (;; Do not regexp search when type "/"
-   setq evil-regexp-search nil)
+  ;; (;; Do not regexp search when type "/"
+  ;;  setq evil-regexp-search nil)
 
   ;; Switch line highlighting off when in insert mode.
   (add-hook 'evil-insert-state-entry-hook
@@ -108,7 +108,7 @@
   :config
   (fold-this-mode 1)
   (evil-define-key 'normal 'global (kbd "H") #'fold-this-sexp)
-  (evil-define-key 'visual 'global (kbd "H") #'fold-this-sexp)
+  (evil-define-key 'visual 'global (kbd "H") #'fold-this)
   (defun fold-this-sexp ()
     "Fold sexp around point.
 
@@ -292,7 +292,7 @@
           (if (listp x)
               (put (car x) sif (cadr x))
             (put x sif 1)))
-        '(f@ forall ∀ exists ∃ go-on let@ formula@ term@ expr@ lam set! match match* send let/cc let/ec (trace-let 2) struct apply generator with-handlers while place trace-lambda trace-define with-syntax trace-define-syntax (pmatch 2) let-syntax ; Scheme keywords
+        '(f@ rec forall ∀ exists ∃ go-on let@ formula@ term@ expr@ lam set! match match* send let/cc let/ec (trace-let 2) struct apply generator with-handlers while place trace-lambda trace-define with-syntax trace-define-syntax (pmatch 2) let-syntax test ; Scheme keywords
              run* run matche project fresh  ; miniKanren
              conjecture prove counter THE assume induction Induction since Since theorem destruct class data type instance subgraph ; Everything else (for my notes)
              )))
@@ -329,6 +329,13 @@
     (replace-string "Γ" "Gamma") (funcall egfl)
     (replace-string "ρ" "rho") (funcall egfl)))
 
+(evil-define-key 'visual 'global (kbd "C-f" )
+  ;; Translating from finnish to english
+  (lambda (start end)
+    (interactive "r")
+    (shell-command
+     (concat "trans fi:en '" (buffer-substring start end) "'"))))
+
 (defun revert-buffer-no-confirm ()
   "Revert buffer without confirmation."
   (interactive)
@@ -343,7 +350,7 @@
     (interactive)
     (if (use-region-p)
         (let ((selected-text  (call-interactively 'get-selected-text)))
-          (write-region selected-text nil "~/note/graph.dot" nil)
+          (write-region selected-text nil "~/note/data/graph.dot" nil)
           (call-interactively 'view-graph))
       (message "Select something first!")))
 
@@ -351,16 +358,18 @@
     (interactive)
     (if (use-region-p)
         (let ((selected-text  (call-interactively 'get-selected-text)))
-          (write-region selected-text nil "~/note/graph.scm" nil)
-          (shell-command "scheme --script ~/note/scheme-to-dot.scm")
-          (call-interactively 'view-graph))
+          (write-region selected-text nil "~/note/data/graph.scm" nil)
+          (if (= (shell-command "scheme --script ~/note/scheme-to-dot.scm") 0)
+              (call-interactively 'view-graph)
+            (message "That doesn't work!")))
       (message "Select something first!")))
 
   (defun view-graph ()
     (interactive)
-    (shell-command "dot -Tsvg ~/note/graph.dot -o ~/note/graph.svg")
-    (sit-for 1)
-    (start-process-shell-command "my-process" nil "xviewer ~/note/graph.svg")))
+    (;; Compile the dot file to svg
+     shell-command "dot -Tsvg ~/note/data/graph.dot -o ~/note/data/graph.svg")
+    (;; View the svg file
+     start-process-shell-command "my-process" nil "xviewer ~/note/data/graph.svg")))
 
 (progn  ;; Binary search
   (defun line-number ()
@@ -387,19 +396,19 @@
 
 (progn  ; Key bindings
   (;; No more M-x! Use smex instead of evil-ex
-   evil-define-key 'normal 'global ";" 'smex)
-  (evil-define-key 'normal 'global "a" 'evil-append-line)
-  (evil-define-key 'normal 'global "A" 'evil-append)
-  (evil-define-key 'normal 'global "p" 'evil-paste-before)
-  (evil-define-key 'normal 'global "P" 'evil-paste-after)
-  (evil-define-key 'normal 'global "W" 'forward-sexp)
-  (evil-define-key 'normal 'global "B" 'backward-sexp)
-  (evil-define-key 'normal 'global (kbd "<up>") 'evil-scroll-line-up)
-  (evil-define-key 'normal 'global (kbd "<down>") 'evil-scroll-line-down)
-  (evil-define-key 'normal 'global (kbd "<left>") 'previous-buffer)
-  (evil-define-key 'normal 'global (kbd "<right>") 'next-buffer)
-  (evil-define-key 'normal 'global (kbd "RET") 'evil-write-all)
-  (evil-define-key 'normal 'global (kbd "K") 'open-line)
+   evil-define-key 'normal 'global ";" #'smex)
+  (evil-define-key 'normal 'global "a" #'evil-append-line)
+  (evil-define-key 'normal 'global "A" #'evil-append)
+  (evil-define-key 'normal 'global "p" #'evil-paste-before)
+  (evil-define-key 'normal 'global "P" #'evil-paste-after)
+  (evil-define-key 'normal 'global "W" #'forward-sexp)
+  (evil-define-key 'normal 'global "B" #'backward-sexp)
+  (evil-define-key 'normal 'global (kbd "<up>") #'evil-scroll-line-up)
+  (evil-define-key 'normal 'global (kbd "<down>") #'evil-scroll-line-down)
+  (evil-define-key 'normal 'global (kbd "<left>") #'previous-buffer)
+  (evil-define-key 'normal 'global (kbd "<right>") #'next-buffer)
+  (evil-define-key 'normal 'global (kbd "RET") #'evil-write-all)
+  (evil-define-key 'normal 'global (kbd "K") #'open-line)
   (evil-define-key 'normal 'global (kbd "SPC") (lambda () (interactive)
                                                  (insert-char ?\s)
                                                  (evil-backward-char)))
@@ -411,37 +420,29 @@
                                                  (save-excursion
                                                    (end-of-line 0)
                                                    (open-line 1))))
-  (evil-define-key 'normal 'global (kbd "C-a") 'mark-whole-buffer)
-  (evil-define-key 'normal 'global (kbd "DEL") 'backward-delete-char-untabify)
-  (evil-define-key 'normal 'global (kbd "C-.") 'next-buffer)
-  (evil-define-key 'normal 'global (kbd "C-,") 'previous-buffer)
+  (evil-define-key 'normal 'global (kbd "C-a") #'mark-whole-buffer)
+  (evil-define-key 'normal 'global (kbd "DEL") #'backward-delete-char-untabify)
+  (evil-define-key 'normal 'global (kbd "C-.") #'next-buffer)
+  (evil-define-key 'normal 'global (kbd "C-,") #'previous-buffer)
   (evil-define-key 'normal 'global (kbd "\\")  (lambda () (interactive) (message "Want Enter?")))
   (evil-define-key 'normal 'global (kbd "TAB") (lambda () (interactive)
                                                  (save-excursion
                                                    (evil-indent-line (line-beginning-position) (line-end-position)))))
 
-  (evil-define-key 'insert 'global (kbd "C-.") 'next-buffer)
-  (evil-define-key 'insert 'global (kbd "C-,") 'previous-buffer)
-  (evil-define-key 'insert 'global (kbd "C-v") 'evil-paste-before)
+  (evil-define-key 'insert 'global (kbd "C-.") #'next-buffer)
+  (evil-define-key 'insert 'global (kbd "C-,") #'previous-buffer)
+  (evil-define-key 'insert 'global (kbd "C-v") #'evil-paste-before)
 
-  (evil-define-key 'visual 'global (kbd "TAB") 'indent-region)
-  (evil-define-key 'visual 'global (kbd ";")   'smex))
+  (evil-define-key 'visual 'global (kbd "TAB") #'indent-region)
+  (evil-define-key 'visual 'global ";" #'smex))
 
 (progn  ; Command alias
   (defalias 'k 'kill-buffer-and-window)
   (defalias 'f 'ido-find-file)
   (defalias 'b 'ido-switch-buffer)
   (defalias 'ls 'buffer-menu)
-  (defalias 'koq (lambda () (interactive)
-                   (find-file "~/note/koq/koq.ss")))
-  (defalias 'pov (lambda () (interactive)
-                   (find-file "~/note/koq/pov.ss")))
-  (defalias 'pie (lambda () (interactive)
-                   (find-file "~/note/koq/pie.ss")))
-  (defalias 'main (lambda () (interactive)
-                    (find-file "~/note/koq/main.ss")))
-  (defalias 'config (lambda () (interactive)
-                      (find-file  "~/.emacs.d/init.el")))
+  (defalias 'init (lambda () (interactive)
+                    (find-file  "~/.emacs.d/init.el")))
   (defalias 'thought (lambda () (interactive)
                        (find-file  "~/note/thought.skm")))
   (defalias 'lib (lambda () (interactive)
@@ -452,22 +453,29 @@
 (progn  ;; Pro lisp Movements
   ;; Note: in order for jumps to work, you have to use #' in "evil-define-key"
   (setq evil-move-beyond-eol t)  ; The magic is here
-  (evil-define-key 'normal 'global (kbd "M-h") 'backward-sexp)
-  (evil-define-key 'normal 'global (kbd "M-l") 'forward-sexp)
   (evil-define-motion evil-backward-up-list ()
     "Go up the list structure"
     :type line
     :jump t
     (backward-up-list 1 t t)  ; By default, it doesn't handle string correctly
     )
-  (evil-define-key 'normal 'global (kbd "M-k") #'evil-backward-up-list)
   (evil-define-motion evil-down-list ()
-    "Go up the list structure"
+    "Go down the list structure"
     :type exclusive
     :jump t
     (down-list))
-  (evil-define-key 'normal 'global (kbd "M-j") 'evil-down-list)
-  (evil-define-key 'normal 'global (kbd "M-t") 'transpose-sexps))
+  (evil-define-motion evil-end-of-list ()
+    "Go to the end of list"
+    :type exclusive
+    :jump t
+    (up-list 1 t t) (left-char 2))
+  (evil-define-key 'normal 'global (kbd "M-h") #'backward-sexp)
+  (evil-define-key 'normal 'global (kbd "M-l") #'forward-sexp)
+  (evil-define-key 'normal 'global (kbd "M-l") #'forward-sexp)
+  (evil-define-key 'normal 'global (kbd "M-;") #'evil-end-of-list)
+  (evil-define-key 'normal 'global (kbd "M-k") #'evil-backward-up-list)
+  (evil-define-key 'normal 'global (kbd "M-j") #'evil-down-list)
+  (evil-define-key 'normal 'global (kbd "M-t") #'transpose-sexps))
 
 (use-package markdown-mode
   :ensure t
@@ -508,15 +516,17 @@
  '(ansi-color-names-vector
    ["black" "#d55e00" "#009e73" "#f8ec59" "#0072b2" "#cc79a7" "#56b4e9" "white"])
  '(custom-enabled-themes (quote (wheatgrass)))
+ '(font-latex-script-display (quote ((raise -0.2) raise 0.2)))
  '(package-selected-packages
    (quote
-    (xr texfrag fold-this lisp disable-mouse math-symbol-lists rainbow-identifiers spaceline avy smex ido-vertical-mode beacon evil-numbers evil-lion evil-commentary rainbow-delimiters evil-surround evil use-package))))
+    (text-translator paredit xr texfrag fold-this lisp disable-mouse math-symbol-lists rainbow-identifiers spaceline avy smex ido-vertical-mode beacon evil-numbers evil-lion evil-commentary rainbow-delimiters evil-surround evil use-package))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(default ((t (:family "DejaVu Sans Mono" :foundry "PfEd" :slant normal :weight normal :height 203 :width normal))))
+ '(font-latex-subscript-face ((t (:height 0.7))))
  '(hl-line ((t (:box (:line-width 2 :color "yellow green" :style released-button)))))
  '(linum ((t (:inherit (shadow default) :height 100))))
  '(match ((t (:background "RoyalBlue3" :underline nil))))
