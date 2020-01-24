@@ -345,19 +345,19 @@
   (interactive "r")
   (buffer-substring start end))
 
-(progn ;; p5.js
+(progn  ;; p5.js
   (defun p5 ()
+    ;; Guess a file name, then copy that file to "sketch.js"
+    ;; Then open the webpage that renders "sketch.js"
     (interactive)
-    (if (use-region-p)
-        (let ((selected-text  (call-interactively 'get-selected-text)))
-          (write-region selected-text nil "~/note/p5/sketch.js" nil)
-          (call-interactively 'view-p5))
-      (message "Select something first!")))
+    (let ((file-name  (ffap-guess-file-name-at-point)))
+      (shell-command (format "cp %s ~/note/p5/sketch.js" file-name))
+      (call-interactively 'view-p5)))
 
   (defun view-p5 ()
     (interactive)
     (;; View the html file in a new browser window (not a new tab)
-     start-process-shell-command "my-process" nil "chromium-browser --new-window ~/note/p5/index.html")))
+     start-process-shell-command "my-process" nil "chromium-browser --app --new-window ~/note/p5/index.html")))
 
 (progn  ;; Graph
   (defun dot ()
