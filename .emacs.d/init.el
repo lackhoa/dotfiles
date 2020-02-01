@@ -32,8 +32,6 @@
 
 (progn  ; Getting rid of really annoying stuffs
   (setq-default message-log-max nil)
-  (ignore-errors (kill-buffer "*Messages*"))
-  (ignore-errors (kill-buffer "*Quail Completions*"))
   (setq inhibit-startup-buffer-menu t)
   (setq inhibit-startup-screen t))
 
@@ -168,8 +166,7 @@
   (setq ido-enable-flex-matching nil
         ido-create-new-buffer 'always
         ido-everywhere t
-        ido-use-filename-at-point 'guess
-        ido-create-new-buffer 'always)
+        ido-use-filename-at-point 'guess)
   :config
   (ido-vertical-mode 1)
   (setq ido-vertical-define-keys 'C-n-C-p-up-down-left-right))
@@ -193,11 +190,6 @@
   (add-hook 'markdown-mode-hook (lambda () (aggressive-indent-mode -1))))
 
 (column-number-mode 1)  ; Show columns
-
-(progn  ; List of buffers to not open in a new window
-  (add-to-list 'same-window-buffer-names "*Buffer List*")
-  (add-to-list 'same-window-buffer-names "*Help*")
-  (add-to-list 'same-window-buffer-names "*Quail Completions*"))
 
 (use-package rainbow-delimiters  ; Color those parentheses
   :ensure t
@@ -234,12 +226,6 @@
   :config
   (evil-define-key 'normal 'global "P" #'popup-kill-ring))
 
-(add-hook  ; Remove completion buffer when done
- 'minibuffer-exit-hook
- '(lambda ()
-    (let ((buffer "*Completions*"))
-      (and (get-buffer buffer) (kill-buffer buffer)))))
-
 (desktop-save-mode 1)  ; Save current desktop configs on exit
 
 (add-hook 'comint-exec-hook  ; Please don't ask whether to kill running processes
@@ -261,7 +247,7 @@
     '(;; math rules
       ("\\lam" ?λ) ("\\sig" ?σ) ("\\vphi" ?φ)
       ("\\==" ?≡) ("\\=/" ?≠)
-      ("\\<=>" ?⇔) ("\\LRa" ?⇔) ("\\Lra" ?⇔) ("\\=>" ?➾) ("\\Ra" ?➾) ("\\->" ?→) ("\\to" ?→) ("\\then" ?→) ("\\ra" ?→) ("\\-->" ?⟶) ("\\<-" ?←) ("\\la" ?←) ("\\.<-" ?⬸) ("\\dla" ?⬸) ("\\.->" ?⤑) ("\\dra" ?⤑) ("\\<->" ?↔) ("\\lra" ?↔) ("\\up" ?↑) ("\\ua" ?↑) ("\\da" ?↓) ("\\hra" ?↪) ("\\hla" ?↩) ("\\ul" ?↖) ("\\ur" ?↗) ("\\dl" ?↙) ("\\dr" ?↘) ("\\o<" ?⟲) ("\\refl" ?⟲) ("\\o>" ?⟳) ("\\lla" ?↞) ("\\<<-" ?↞) ("\\rra" ?↠) ("\\trans" ?↠) ("\\->>" ?↠) ("\\lr2" ?⇄) ("\\-><" ?⇄) ("\\symm" ?⇄) ("\\==>" ?⟹) ("\\idem" ?⊸) ("\\-o" ?⊸) ("\\<-|" ?↤) ("\\|->" ?↦)
+      ("\\<=>" ?⇔) ("\\LRa" ?⇔) ("\\Lra" ?⇔) ("\\=>" ?➾) ("\\Ra" ?➾) ("\\La" ?⇐) ("\\->" ?→) ("\\to" ?→) ("\\then" ?→) ("\\ra" ?→) ("\\-->" ?⟶) ("\\<-" ?←) ("\\la" ?←) ("\\.<-" ?⬸) ("\\dla" ?⬸) ("\\.->" ?⤑) ("\\dra" ?⤑) ("\\<->" ?↔) ("\\lra" ?↔) ("\\up" ?↑) ("\\ua" ?↑) ("\\da" ?↓) ("\\hra" ?↪) ("\\hla" ?↩) ("\\ul" ?↖) ("\\ur" ?↗) ("\\dl" ?↙) ("\\dr" ?↘) ("\\o<" ?⟲) ("\\refl" ?⟲) ("\\o>" ?⟳) ("\\lla" ?↞) ("\\<<-" ?↞) ("\\rra" ?↠) ("\\trans" ?↠) ("\\->>" ?↠) ("\\lr2" ?⇄) ("\\-><" ?⇄) ("\\symm" ?⇄) ("\\==>" ?⟹) ("\\idem" ?⊸) ("\\-o" ?⊸) ("\\<-|" ?↤) ("\\|->" ?↦)
       ("\\sub" ?⊆) ("\\sup" ?⊇) ("\\supset" ?⊃) ("\\union" ?∪) ("\\Union" ?⋃) ("\\inter" ?∩) ("\\Inter" ?⋂) ("\\void" ?∅) ("\\power" ?℘)
       ("\\ex" ?∃) ("\\for" ?∀)
       ("\\<" "⟨⟩") ("\\lang" "⟨⟩")
@@ -269,9 +255,7 @@
       ("\\nat" ?ℕ) ("\\Nat" ?ℕ) ("\\int" ?ℤ) ("\\Int" ?ℤ) ("\\real" ?ℝ) ("\\Real" ?ℝ) ("\\rat" ?ℚ) ("\\Rat" ?ℚ)
       ("\\and" ?∧) ("\\meet" ?∧) ("\\Meet" ?⋀) ("\\or" ?∨) ("\\join" ?∨) ("\\Join" ?⋁) ("\\false" ?⊥) ("\\|=" ?⊨) ("\\|-" ?⊢)
       ("\\cancer" ?♋)
-      ("\\middot" ?ᐧ))
-    '(;; Finnish rules
-      ("a''" ?ä) ("o''" ?ö) ("A''" ?Ä) ("O''" ?Ö))))
+      ("\\middot" ?ᐧ))))
 
   (;; math-symbol-list rules
    mapc (lambda (x)
@@ -285,6 +269,41 @@
   ;; The fonts are: mscr (script), mbfscr (bold script), mfrak (frankfurt), mbf (boldface), Bbb (Double stroke)
   (add-hook 'prog-mode-hook (lambda () (set-input-method 'math)))
   (add-hook 'text-mode-hook (lambda () (set-input-method 'math))))
+
+(progn  ;; Buffer Business: display, eliminate, ignore
+  (add-hook  ; Remove completion buffer when done
+   'minibuffer-exit-hook
+   '(lambda ()
+      (let ((buffer "*Completions*"))
+        (and (get-buffer buffer) (kill-buffer buffer)))))
+
+  (defvar my-skippable-buffers  ;; Regexp to skip *XYZ* buffers
+    (rx "*" (zero-or-more anything) "*"))
+
+  (add-to-list 'ido-ignore-buffers  ;; Tell ido to ignore the weird asterisk buffers
+               my-skippable-buffers)
+
+  (defun my-change-buffer (change-buffer)
+    "Call CHANGE-BUFFER until current buffer is not in `my-skippable-buffers'."
+    (let ((initial (current-buffer)))
+      (funcall change-buffer)
+      (let ((first-change (current-buffer)))
+        (catch 'loop
+          (while (string-match my-skippable-buffers (buffer-name))
+            (funcall change-buffer)
+            (when (eq (current-buffer) first-change)
+              (switch-to-buffer initial)
+              (throw 'loop t)))))))
+
+  (defun my-next-buffer ()
+    "Variant of `next-buffer' that skips `my-skippable-buffers'."
+    (interactive)
+    (my-change-buffer 'next-buffer))
+
+  (defun my-previous-buffer ()
+    "Variant of `previous-buffer' that skips `my-skippable-buffers'."
+    (interactive)
+    (my-change-buffer 'previous-buffer)))
 
 (let ((sif 'scheme-indent-function))  ; Customize Scheme Indentation
   (put 'defun sif 'defun)
@@ -419,8 +438,8 @@
   (evil-define-key 'normal 'global "B" #'backward-sexp)
   (evil-define-key 'normal 'global (kbd "<up>") #'evil-scroll-line-up)
   (evil-define-key 'normal 'global (kbd "<down>") #'evil-scroll-line-down)
-  (evil-define-key 'normal 'global (kbd "<left>") #'previous-buffer)
-  (evil-define-key 'normal 'global (kbd "<right>") #'next-buffer)
+  (evil-define-key 'normal 'global (kbd "<left>") #'my-previous-buffer)
+  (evil-define-key 'normal 'global (kbd "<right>") #'my-next-buffer)
   (evil-define-key 'normal 'global (kbd "RET") #'evil-write-all)
   (evil-define-key 'normal 'global (kbd "K") #'open-line)
   (evil-define-key 'normal 'global (kbd "SPC") (lambda () (interactive)
@@ -436,15 +455,15 @@
                                                    (open-line 1))))
   (evil-define-key 'normal 'global (kbd "C-a") #'mark-whole-buffer)
   (evil-define-key 'normal 'global (kbd "DEL") #'backward-delete-char-untabify)
-  (evil-define-key 'normal 'global (kbd "C-.") #'next-buffer)
-  (evil-define-key 'normal 'global (kbd "C-,") #'previous-buffer)
+  (evil-define-key 'normal 'global (kbd "C-.") #'my-next-buffer)
+  (evil-define-key 'normal 'global (kbd "C-,") #'my-previous-buffer)
   (evil-define-key 'normal 'global (kbd "\\")  (lambda () (interactive) (message "Want Enter?")))
   (evil-define-key 'normal 'global (kbd "TAB") (lambda () (interactive)
                                                  (save-excursion
                                                    (evil-indent-line (line-beginning-position) (line-end-position)))))
 
-  (evil-define-key 'insert 'global (kbd "C-.") #'next-buffer)
-  (evil-define-key 'insert 'global (kbd "C-,") #'previous-buffer)
+  (evil-define-key 'insert 'global (kbd "C-.") #'my-next-buffer)
+  (evil-define-key 'insert 'global (kbd "C-,") #'my-previous-buffer)
   (evil-define-key 'insert 'global (kbd "C-v") #'evil-paste-before)
 
   (evil-define-key 'visual 'global (kbd "TAB") #'indent-region)
@@ -468,21 +487,21 @@
   ;; Note: in order for jumps to work, you have to use #' in "evil-define-key"
   (setq evil-move-beyond-eol t)  ; The magic is here
   (evil-define-motion evil-backward-up-list ()
-    "Go up the list structure"
-    :type line
-    :jump t
-    (backward-up-list 1 t t)  ; By default, it doesn't handle string correctly
-    )
+  "Go up the list structure"
+  :type line
+  :jump t
+  (backward-up-list 1 t t)  ; By default, it doesn't handle string correctly
+  )
   (evil-define-motion evil-down-list ()
-    "Go down the list structure"
-    :type exclusive
-    :jump t
-    (down-list))
+  "Go down the list structure"
+  :type exclusive
+  :jump t
+  (down-list))
   (evil-define-motion evil-end-of-list ()
-    "Go to the end of list"
-    :type exclusive
-    :jump t
-    (up-list 1 t t) (left-char 2))
+  "Go to the end of list"
+  :type exclusive
+  :jump t
+  (up-list 1 t t) (left-char 2))
   (evil-define-key 'normal 'global (kbd "M-h") #'backward-sexp)
   (evil-define-key 'normal 'global (kbd "M-l") #'forward-sexp)
   (evil-define-key 'normal 'global (kbd "M-l") #'forward-sexp)
@@ -491,33 +510,17 @@
   (evil-define-key 'normal 'global (kbd "M-j") #'evil-down-list)
   (evil-define-key 'normal 'global (kbd "M-t") #'transpose-sexps))
 
-(use-package markdown-mode
-  :ensure t
-  :commands (markdown-mode gfm-mode)
-  :mode (("README\\.md\\'" . gfm-mode)
-         ("\\.md\\'" . markdown-mode)
-         ("\\.markdown\\'" . markdown-mode))
-  :init (setq markdown-command "multimarkdown"))
+(progn  ;; Language support
+  (use-package markdown-mode
+    :ensure t
+    :commands (markdown-mode gfm-mode)
+    :mode (("README\\.md\\'" . gfm-mode)
+           ("\\.md\\'" . markdown-mode)
+           ("\\.markdown\\'" . markdown-mode))
+    :init (setq markdown-command "multimarkdown"))
 
-;; (progn  ;;; Proof General and Coq
-;;   (setq proof-auto-raise-buffers nil)
-;;   (setq proof-multiple-frames-enable nil)
-;;   (setq proof-delete-empty-windows nil)
-;;   (setq proof-three-window-mode t)
-
-
-;;   (setq proof-splash-enable nil)  ;; Disable welcome screen
-;;   (add-hook 'coq-mode-hook
-;;             (lambda ()
-;;   (interactive)
-;;   (deactivate-input-method)
-;;   (kill-all-abbrevs)
-;;   (evil-define-key 'normal 'global (kbd "C-n")
-;;   (lambda () (interactive)
-;;   (proof-assert-next-command-interactive)))
-;;   (evil-define-key 'normal 'global (kbd "C-p")
-;;   (lambda () (interactive)
-;;   (proof-undo-last-successful-command))))))
+  (use-package clojure-mode
+    :ensure t))
 
 ;;; Automatic Settings (DON'T TOUCH BEYOND THIS POINT)
 (custom-set-variables
@@ -530,10 +533,15 @@
  '(ansi-color-names-vector
    ["black" "#d55e00" "#009e73" "#f8ec59" "#0072b2" "#cc79a7" "#56b4e9" "white"])
  '(custom-enabled-themes (quote (wheatgrass)))
+ '(display-buffer-alist
+   (quote
+    (("\\*shell\\*" display-buffer-same-window)
+     ("*Buffer List*" display-buffer-same-window)
+     ("*Help*" display-buffer-same-window))))
  '(font-latex-script-display (quote ((raise -0.2) raise 0.2)))
  '(package-selected-packages
    (quote
-    (text-translator paredit xr texfrag fold-this lisp disable-mouse math-symbol-lists rainbow-identifiers spaceline avy smex ido-vertical-mode beacon evil-numbers evil-lion evil-commentary rainbow-delimiters evil-surround evil use-package))))
+    (cider clojure-mode text-translator paredit xr texfrag fold-this lisp disable-mouse math-symbol-lists rainbow-identifiers spaceline avy smex ido-vertical-mode beacon evil-numbers evil-lion evil-commentary rainbow-delimiters evil-surround evil use-package))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
