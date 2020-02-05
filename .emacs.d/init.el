@@ -278,7 +278,7 @@
         (and (get-buffer buffer) (kill-buffer buffer)))))
 
   (defvar my-skippable-buffers  ;; Regexp to skip *XYZ* buffers
-    (rx "*" (zero-or-more anything) "*"))
+    (rx (or "*Messages*" "*scratch*" "*Quail Completions*")))
 
   (add-to-list 'ido-ignore-buffers  ;; Tell ido to ignore the weird asterisk buffers
                my-skippable-buffers)
