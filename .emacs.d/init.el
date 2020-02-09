@@ -441,7 +441,7 @@
   (evil-define-key 'normal 'global (kbd "<left>") #'my-previous-buffer)
   (evil-define-key 'normal 'global (kbd "<right>") #'my-next-buffer)
   (evil-define-key 'normal 'global (kbd "RET") #'evil-write-all)
-  (evil-define-key 'normal 'global (kbd "K") #'open-line)
+  (evil-define-key 'normal 'global (kbd "K") #'newline)
   (evil-define-key 'normal 'global (kbd "SPC") (lambda () (interactive)
                                                  (insert-char ?\s)
                                                  (evil-backward-char)))
@@ -509,6 +509,23 @@
   (evil-define-key 'normal 'global (kbd "M-k") #'evil-backward-up-list)
   (evil-define-key 'normal 'global (kbd "M-j") #'evil-down-list)
   (evil-define-key 'normal 'global (kbd "M-t") #'transpose-sexps))
+
+(defun csv-to-lines (separator)
+  "Converts the current region line, as a csv string,
+to a set of independent lines,
+splitting the string based on the provided separator.
+Still kinda sucks because it can't parse lists"
+  (interactive "sEnter separator character: ")  ;; It will become "separator"
+  (unless (use-region-p)  ;; Usually I'll keep the cursor on the list
+    (er/expand-region 1))
+  (let ((text  (call-interactively 'get-selected-text)))
+    (call-interactively 'evil-delete)  ;; Delete the selected text
+    (;; We don't want to select it
+     evil-normal-state)
+    (let (_)
+      (dolist (element (split-string text separator) _)
+        (insert element)
+        (call-interactively 'newline)))))
 
 (progn  ;; Language support
   (use-package markdown-mode
