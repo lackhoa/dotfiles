@@ -270,6 +270,22 @@
   (add-hook 'prog-mode-hook (lambda () (set-input-method 'math)))
   (add-hook 'text-mode-hook (lambda () (set-input-method 'math))))
 
+(progn
+  (quail-define-package "fin" "UTF-8" "Fi" t)
+  (mapc
+   (lambda (x)
+     (quail-defrule (car x) (cadr x)))
+   '(("Ae"  "Ä")
+     (;; This is the way to translate to a string (with multiple chars)
+      "Aee" ["Ae"])
+     ("ae"  "ä")
+     ("aee" ["ae"])
+     ("Oe" "Ö")
+     ("Oee" ["Oe"])
+     ("oe" "ö")
+     ("oee" ["oe"]))))
+
+
 (progn  ;; Buffer Business: display, eliminate, ignore
   (add-hook  ; Remove completion buffer when done
    'minibuffer-exit-hook
