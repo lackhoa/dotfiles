@@ -366,10 +366,13 @@
 
 (evil-define-key 'visual 'global (kbd "C-f" )
   ;; Translating from finnish to english
-  (lambda (start end)
+  (lambda (beg end)
     (interactive "r")
+    (evil-yank beg end)
     (shell-command
-     (concat "trans fi:en '" (buffer-substring start end) "'"))))
+     (concat "trans fi:en '"
+             (buffer-substring beg end)
+             "'"))))
 
 (defun revert-buffer-no-confirm ()
   "Revert buffer without confirmation."
