@@ -57,9 +57,22 @@
   :ensure t
   :init
   (evil-mode 1)
+
   :config
-  ;; (;; Do not regexp search when type "/"
-  ;;  setq evil-regexp-search nil)
+  (progn
+    ;; evil-emacs-state is annoying, the following function and hook automatically
+    ;; switch back to evil-normal-state whenever the evil-emacs-state is entered.
+    ;; It allows a more consistent navigation experience among all mode maps.
+    ;; To enter special commands of custom mode maps, just enter the insert mode :-)
+    (defun emacs-state->normal-state ()
+      (evil-normal-state)
+      (remove-hook 'post-command-hook 'emacs-state->normal-state))
+    (add-hook 'evil-emacs-state-entry-hook
+              (lambda ()
+                (add-hook 'post-command-hook 'emacs-state->normal-state))))
+
+  (;; Do not regexp search when type "/"
+   setq evil-regexp-search nil)
 
   ;; Switch line highlighting off when in insert mode.
   (add-hook 'evil-insert-state-entry-hook
