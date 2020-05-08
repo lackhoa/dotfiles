@@ -45,3 +45,6 @@ end
 if test "$TERM" = "eterm-color"
   function fish_title; end
 end
+
+# PATH
+set PATH /home/khoa/.local/bin $PATH

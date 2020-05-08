@@ -459,6 +459,14 @@
     (setq bin-lower (line-number))
     (evil-next-line (/ (- bin-upper bin-lower) 2))))
 
+(defun show-file-name ()
+  "Show the full path file name in the minibuffer (also copy it).
+From here: stackoverflow.com/q/3669511/4279260
+"
+  (interactive)
+  (message (buffer-file-name))
+  (kill-new (file-truename buffer-file-name)))
+
 (progn  ; Key bindings
   (;; No more M-x! Use smex instead of evil-ex
    evil-define-key 'normal 'global ";" #'smex)
