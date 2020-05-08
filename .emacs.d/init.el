@@ -462,6 +462,7 @@
 (progn  ; Key bindings
   (;; No more M-x! Use smex instead of evil-ex
    evil-define-key 'normal 'global ";" #'smex)
+  (evil-define-key 'normal 'global "I" #'evil-first-non-blank)
   (evil-define-key 'normal 'global "a" #'evil-append-line)
   (evil-define-key 'normal 'global "A" #'evil-append)
   (evil-define-key 'normal 'global "p" #'evil-paste-before)
