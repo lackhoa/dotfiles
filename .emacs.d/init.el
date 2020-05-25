@@ -621,5 +621,8 @@ Still kinda sucks because it can't parse lists"
  '(rainbow-delimiters-depth-8-face ((t (:inherit rainbow-delimiters-base-face :foreground "orange"))))
  '(rainbow-delimiters-depth-9-face ((t (:inherit rainbow-delimiters-base-face :foreground "purple"))))
  '(rainbow-delimiters-unmatched-face ((t (:inherit rainbow-delimiters-base-face :foreground "dark green"))))
- '(region ((t (:background "#666"))))
  '(show-paren-match ((t (:underline "cyan" :weight extra-bold)))))
+
+(set-face-attribute 'region nil
+                    :background "#111"
+                    :foreground 'unspecified)
