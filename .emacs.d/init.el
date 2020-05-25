@@ -82,8 +82,7 @@
 
   (use-package evil-surround
     :ensure t
-    :config (global-evil-surround-mode)
-    (evil-define-key 'visual 'global (kbd "s") #'evil-surround-region))
+    :config (global-evil-surround-mode))
 
   ;; Auto-center search result
   (defadvice evil-search-next
@@ -189,10 +188,10 @@
   :init (smex-initialize)
   :bind ("M-x" . smex))
 
-(use-package beacon
-  ;; Highlight the cursor a bit when switching buffer
-  :ensure t
-  :init (beacon-mode 1))
+;; (use-package beacon
+;;   ;; Highlight the cursor a bit when switching buffer
+;;   :ensure t
+;;   :init (beacon-mode 1))
 
 (use-package aggressive-indent  ; Resource-inatensive: Use with caution!
   :ensure t
@@ -200,7 +199,8 @@
   (add-hook 'prog-mode-hook #'aggressive-indent-mode)
   (add-hook 'text-mode-hook #'aggressive-indent-mode)
   (add-hook 'skeme-mode-hook (lambda () (aggressive-indent-mode -1)))
-  (add-hook 'markdown-mode-hook (lambda () (aggressive-indent-mode -1))))
+  (add-hook 'markdown-mode-hook (lambda () (aggressive-indent-mode -1)))
+  (add-hook 'clojure-mode-hook (lambda () (aggressive-indent-mode -1))))
 
 (column-number-mode 1)  ; Show columns
 
@@ -280,8 +280,7 @@
     math-symbol-list-subscripts
     math-symbol-list-superscripts))
   ;; The fonts are: mscr (script), mbfscr (bold script), mfrak (frankfurt), mbf (boldface), Bbb (Double stroke)
-  (add-hook 'prog-mode-hook (lambda () (set-input-method 'math)))
-  (add-hook 'text-mode-hook (lambda () (set-input-method 'math))))
+  )
 
 (progn
   (quail-define-package "fin" "UTF-8" "Fi" t)

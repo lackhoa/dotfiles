@@ -48,3 +48,4 @@ end
 
 # PATH
 set PATH /home/khoa/.local/bin $PATH
+set PATH /snap/bin $PATH
