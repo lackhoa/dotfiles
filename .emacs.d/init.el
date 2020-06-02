@@ -80,10 +80,6 @@
   (add-hook 'evil-normal-state-entry-hook
             '(lambda () (global-hl-line-mode 1)))
 
-  (use-package evil-surround
-    :ensure t
-    :config (global-evil-surround-mode))
-
   ;; Auto-center search result
   (defadvice evil-search-next
       (after advice-for-evil-search-next activate)
@@ -97,6 +93,14 @@
   (use-package evil-commentary
     :ensure t
     :config (evil-commentary-mode)))
+
+(progn
+  (unless (fboundp 'eldoc-beginning-of-sexp)  ;; Hacking to get extempore-mode
+    (defalias 'eldoc-beginning-of-sexp 'elisp--beginning-of-sexp))
+
+  (use-package extempore-mode
+    :ensure t
+    :config (setq extempore-path "~/extempore/")))
 
 (use-package disable-mouse
   :ensure t
@@ -165,11 +169,19 @@
                        (evil-lion-left 0 beg end ?|)
                        (indent-region beg end))))))
 
+(use-package evil-surround
+  :ensure t
+  :config
+  (global-evil-surround-mode)
+  (evil-define-key 'visual 'global (kbd "s") #'evil-surround-region))
+
 (use-package avy  ; The dopest snipe package ever
   :ensure t
   :config
-  ;; (evil-define-key 'normal 'global (kbd "f") #'avy-goto-char)
-  (evil-define-key 'normal 'global (kbd "s") #'avy-goto-char-2))
+  (evil-define-key 'normal 'global (kbd "f") #'evil-avy-goto-char)
+  (evil-define-key 'normal 'global (kbd "s") #'evil-avy-goto-char-2)
+  (evil-define-key  ;; Binding to `S' would conflict with `evil-surround' hackery
+    'visual 'global (kbd "f") #'evil-avy-goto-char-2))
 
 (use-package ido-vertical-mode ; Ido-mode: a regexp smart search framework
   :ensure t
@@ -470,8 +482,8 @@ From here: stackoverflow.com/q/3669511/4279260
   (;; No more M-x! Use smex instead of evil-ex
    evil-define-key 'normal 'global ";" #'smex)
   (evil-define-key 'normal 'global "I" #'evil-first-non-blank)
+  (evil-define-key 'normal 'global "A" #'evil-end-of-line)
   (evil-define-key 'normal 'global "a" #'evil-append-line)
-  (evil-define-key 'normal 'global "A" #'evil-append)
   (evil-define-key 'normal 'global "p" #'evil-paste-before)
   (evil-define-key 'normal 'global "P" #'evil-paste-after)
   (evil-define-key 'normal 'global "W" #'forward-sexp)
@@ -624,5 +636,5 @@ Still kinda sucks because it can't parse lists"
  '(show-paren-match ((t (:underline "cyan" :weight extra-bold)))))
 
 (set-face-attribute 'region nil
-                    :background "#111"
+                    :background "#333"
                     :foreground 'unspecified)
