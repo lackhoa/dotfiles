@@ -187,13 +187,16 @@
   :ensure t
   :init
   (ido-mode 1)
-  (setq ido-enable-flex-matching nil
+  (setq ido-enable-flex-matching t
         ido-create-new-buffer 'always
         ido-everywhere t
         ido-use-filename-at-point 'guess)
   :config
   (ido-vertical-mode 1)
-  (setq ido-vertical-define-keys 'C-n-C-p-up-down-left-right))
+  (setq ido-vertical-define-keys 'C-n-C-p-up-down-left-right)
+  ;; I wanted it to be "C-w" but somehow it doesn't work
+  (define-key ido-common-completion-map (kbd "C-e") 'backward-kill-word)
+  )
 
 (use-package smex  ; Command completion, using Ido above
   :ensure t
@@ -591,7 +594,9 @@ Still kinda sucks because it can't parse lists"
     :init (setq markdown-command "multimarkdown"))
 
   (use-package clojure-mode
-    :ensure t))
+    :ensure t)
+
+  (setq js-indent-level 2))
 
 ;;; Automatic Settings (DON'T TOUCH BEYOND THIS POINT)
 (custom-set-variables
