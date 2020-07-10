@@ -4,7 +4,8 @@
   (package-initialize))
 
 (setq package-archives
-      ;; All archives should be "http://..."
+      ;; All archives should be "http://...", but somehow melpa is using tls wtf?
+      ;; Anywa, install "gnutls-bin" and it'll be good
       (let ((proto "http://"))
         `(("elpy"         . ,(concat proto "jorgenschaefer.github.io/packages/"))
           ("melpa"        . ,(concat proto "melpa.org/packages/"))
@@ -31,7 +32,7 @@
 (global-hl-line-mode)  ; Show where the cursor is
 
 (progn  ; Getting rid of really annoying stuffs
-  (setq-default message-log-max nil)
+  (setq-default message-log-max 10)
   (setq inhibit-startup-buffer-menu t)
   (setq inhibit-startup-screen t))
 
@@ -475,8 +476,7 @@
 
 (defun show-file-name ()
   "Show the full path file name in the minibuffer (also copy it).
-From here: stackoverflow.com/q/3669511/4279260
-"
+   From here: stackoverflow.com/q/3669511/4279260"
   (interactive)
   (message (buffer-file-name))
   (kill-new (file-truename buffer-file-name)))
@@ -598,7 +598,10 @@ Still kinda sucks because it can't parse lists"
 
   (setq js-indent-level 2))
 
-;;; Automatic Settings (DON'T TOUCH BEYOND THIS POINT)
+(define-abbrev-table 'html-mode-abbrev-table
+  '(("anchor" "<a target=\"blank\" href=\"\">")
+    ("addstyle" "<link rel=\"stylesheet\" href=\"\">")))
+
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
