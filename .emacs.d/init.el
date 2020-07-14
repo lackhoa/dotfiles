@@ -557,7 +557,16 @@
 
   ;; Modified movement for mhtml mode
   (evil-define-key 'normal html-mode-map (kbd "M-h") #'sgml-skip-tag-backward)
-  (evil-define-key 'normal html-mode-map (kbd "M-l") #'sgml-skip-tag-forward))
+  ;; Yo, this doesn't handle last element correctly!
+  (evil-define-key 'normal html-mode-map (kbd "M-l") #'sgml-skip-tag-forward)
+  (evil-define-motion my-down-html ()
+    "Hacking"
+    :type exclusive
+    (re-search-forward (rx "<"
+                           (not (any "/"))
+                           (zero-or-more (not (any ">")))
+                           ">")))
+  (evil-define-key 'normal html-mode-map (kbd "M-j") #'my-down-html))
 
 (defun csv-to-lines (separator)
   "Converts the current region line, as a csv string,
