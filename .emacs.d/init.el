@@ -38,10 +38,6 @@
 
 (fset 'yes-or-no-p 'y-or-n-p)  ; No more typing the whole yes or no
 
-(setq auto-mode-alist  ; Bind file extension to modes
-      (append '(("\\.rkt\\'" . scheme-mode)
-                ("\\.pl$"    . prolog-mode))
-              auto-mode-alist))
 (add-to-list 'load-path "~/.emacs.d/lisp/")
 
 (progn  ; Get rid of UI elements
@@ -250,9 +246,10 @@
   (evil-define-key 'normal 'global "q" #'er/expand-region)
   (evil-define-key 'normal 'global "Q" #'er/contract-region))
 
-(use-package popup-kill-ring ; Use this to yank multiple things.
+(use-package popup-kill-ring ; help yanking multiple things.
   :ensure t
   :config
+  ;; @Fix: WTF, why is this not executed on startup?
   (evil-define-key 'normal 'global "P" #'popup-kill-ring))
 
 (desktop-save-mode 1)  ; Save current desktop configs on exit
@@ -411,20 +408,6 @@
   (interactive "r")
   (buffer-substring start end))
 
-(progn  ;; p5.js
-  (defun p5 ()
-    ;; Guess a file name, then copy that file to "sketch.js"
-    ;; Then open the webpage that renders "sketch.js"
-    (interactive)
-    (let ((file-name  (ffap-guess-file-name-at-point)))
-      (shell-command (format "cp %s ~/note/p5/sketch.js" file-name))
-      (call-interactively 'view-p5)))
-
-  (defun view-p5 ()
-    (interactive)
-    (;; View the html file in a new browser window (not a new tab)
-     start-process-shell-command "my-process" nil "chromium-browser --app --new-window ~/note/p5/index.html")))
-
 (progn  ;; Graph
   (defun dot ()
     (interactive)
@@ -543,29 +526,38 @@
 (progn  ;; Pro lisp Movements
   ;; Note: in order for jumps to work, you have to use #' in "evil-define-key"
   (setq evil-move-beyond-eol t)  ; The magic is here
-  (evil-define-motion evil-backward-up-list ()
-  "Go up the list structure"
-  :type line
-  :jump t
-  (backward-up-list 1 t t)  ; By default, it doesn't handle string correctly
-  )
-  (evil-define-motion evil-down-list ()
-  "Go down the list structure"
-  :type exclusive
-  :jump t
-  (down-list))
-  (evil-define-motion evil-end-of-list ()
-  "Go to the end of list"
-  :type exclusive
-  :jump t
-  (up-list 1 t t) (left-char 2))
+  (evil-define-motion my-backward-up-list ()
+    "Go up the list structure"
+    :type line
+    :jump t
+    (backward-up-list 1 t t)  ; By default, it doesn't handle string correctly
+    )
+  (evil-define-motion my-down-list ()
+    "Go down the list structure"
+    :type exclusive
+    :jump t
+    (down-list)  ;; Annoying that it doesn't have the same params as up-list
+    )
+  (evil-define-motion my-end-of-list ()
+    "Go to the end of list"
+    :type exclusive
+    (up-list 1 t t) (left-char 2))
+  (evil-define-motion my-forward-sexp ()
+    "inverse of backward-sexp, it will get to the end of the list if we're at the last item (not that I don't like it)"
+    :type exclusive
+    (condition-case err
+        (progn (forward-sexp) (forward-sexp) (backward-sexp))
+      (message "%s" (error-message-string err))))
   (evil-define-key 'normal 'global (kbd "M-h") #'backward-sexp)
-  (evil-define-key 'normal 'global (kbd "M-l") #'forward-sexp)
-  (evil-define-key 'normal 'global (kbd "M-l") #'forward-sexp)
-  (evil-define-key 'normal 'global (kbd "M-;") #'evil-end-of-list)
-  (evil-define-key 'normal 'global (kbd "M-k") #'evil-backward-up-list)
-  (evil-define-key 'normal 'global (kbd "M-j") #'evil-down-list)
-  (evil-define-key 'normal 'global (kbd "M-t") #'transpose-sexps))
+  (evil-define-key 'normal 'global (kbd "M-l") #'my-forward-sexp)
+  (evil-define-key 'normal 'global (kbd "M-k") #'my-backward-up-list)
+  (evil-define-key 'normal 'global (kbd "M-j") #'my-down-list)
+  (evil-define-key 'normal 'global (kbd "M-;") #'my-end-of-list)
+  (evil-define-key 'normal 'global (kbd "M-t") #'transpose-sexps)
+
+  ;; Modified movement for mhtml mode
+  (evil-define-key 'normal html-mode-map (kbd "M-h") #'sgml-skip-tag-backward)
+  (evil-define-key 'normal html-mode-map (kbd "M-l") #'sgml-skip-tag-forward))
 
 (defun csv-to-lines (separator)
   "Converts the current region line, as a csv string,
@@ -599,8 +591,9 @@ Still kinda sucks because it can't parse lists"
   (setq js-indent-level 2))
 
 (define-abbrev-table 'html-mode-abbrev-table
-  '(("anchor" "<a target=\"blank\" href=\"\">")
-    ("addstyle" "<link rel=\"stylesheet\" href=\"\">")))
+  '(("anchor" "<a target=\"blank\" href=\"\"></a>")
+    ("atag" "<a target=\"_blank\" href=\"\"></a>")
+    ("csstag" "<link rel=\"stylesheet\" href=\"\">")))
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
