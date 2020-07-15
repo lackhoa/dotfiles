@@ -56,20 +56,7 @@
   (evil-mode 1)
 
   :config
-  (progn
-    ;; evil-emacs-state is annoying, the following function and hook automatically
-    ;; switch back to evil-normal-state whenever the evil-emacs-state is entered.
-    ;; It allows a more consistent navigation experience among all mode maps.
-    ;; To enter special commands of custom mode maps, just enter the insert mode :-)
-    (defun emacs-state->normal-state ()
-      (evil-normal-state)
-      (remove-hook 'post-command-hook 'emacs-state->normal-state))
-    (add-hook 'evil-emacs-state-entry-hook
-              (lambda ()
-                (add-hook 'post-command-hook 'emacs-state->normal-state))))
-
-  (;; Do not regexp search when type "/"
-   setq evil-regexp-search nil)
+  (setq evil-regexp-search nil)
 
   ;; Switch line highlighting off when in insert mode.
   (add-hook 'evil-insert-state-entry-hook
@@ -362,32 +349,23 @@
 ;;; Custom functions
 
 (progn  ; Region Search
-  (defun region-search-forward ()
-    (interactive)
-    (let ((selected (call-interactively 'get-selected-text)))
-      (evil-normal-state)
-      (evil-search selected t)))
-  (evil-define-key 'visual 'global "*" 'region-search-forward)
+  (defun search-marked-forward (beg end)
+    "Just search the marked region, that's all"
+    (interactive "r")
+    (evil-normal-state)
+    (evil-search (buffer-substring beg end) t))
+  (evil-define-key 'visual 'global "*" 'search-marked-forward)
 
-  (defun region-search-backward ()
-    (interactive)
-    (let ((selected (call-interactively 'get-selected-text)))
-      (evil-normal-state)
-      (evil-search selected nil)))
-  (evil-define-key 'visual 'global "#" 'region-search-backward))
+  (defun search-marked-backward (beg end)
+    "Just search backward the marked region, that's all"
+    (interactive "r")
+    (evil-normal-state)
+    (evil-search (buffer-substring beg end) nil))
+  (evil-define-key 'visual 'global "#" 'search-marked-backward))
 
 (defun ranline ()
   (interactive)
   (goto-line (+ 1 (random (line-count)))))
-
-(defun deGreek ()
-  ;; deGreek: at least I know how to Emacs Lisp!. You can start with either, and the other one will finish the job.
-  (interactive)
-  (let ((egfl #'evil-goto-first-line))
-    (replace-string "λ" "lambda") (funcall egfl)
-    (replace-string "→" "->") (funcall egfl)
-    (replace-string "Γ" "Gamma") (funcall egfl)
-    (replace-string "ρ" "rho") (funcall egfl)))
 
 (evil-define-key 'visual 'global (kbd "C-f" )
   ;; Translating from finnish to english
@@ -404,28 +382,18 @@
   (interactive)
   (revert-buffer :ignore-auto :noconfirm))
 
-(defun get-selected-text (start end)
-  (interactive "r")
-  (buffer-substring start end))
-
 (progn  ;; Graph
-  (defun dot ()
-    (interactive)
-    (if (use-region-p)
-        (let ((selected-text  (call-interactively 'get-selected-text)))
-          (write-region selected-text nil "~/note/data/graph.dot" nil)
-          (call-interactively 'view-graph))
-      (message "Select something first!")))
+  (defun dot (beg end)
+    (interactive "r")
+    (write-region (buffer-substring beg end) nil "~/note/data/graph.dot" nil)
+    (call-interactively 'view-graph))
 
-  (defun sdot ()
-    (interactive)
-    (if (use-region-p)
-        (let ((selected-text  (call-interactively 'get-selected-text)))
-          (write-region selected-text nil "~/note/data/graph.scm" nil)
-          (if (= (shell-command "scheme --script ~/note/scheme-to-dot.scm") 0)
-              (call-interactively 'view-graph)
-            (message "That doesn't work!")))
-      (message "Select something first!")))
+  (defun sdot (beg end)
+    (interactive "r")
+    (write-region (buffer-substring beg end) nil "~/note/data/graph.scm" nil)
+    (if (= (shell-command "scheme --script ~/note/scheme-to-dot.scm") 0)
+        (call-interactively 'view-graph)
+      (message "That doesn't work!")))
 
   (defun view-graph ()
     (interactive)
@@ -471,9 +439,6 @@
   (evil-define-key 'normal 'global "A" #'evil-end-of-line)
   (evil-define-key 'normal 'global "a" #'evil-append-line)
   (evil-define-key 'normal 'global "p" #'evil-paste-before)
-  (evil-define-key 'normal 'global "P" #'evil-paste-after)
-  (evil-define-key 'normal 'global "W" #'forward-sexp)
-  (evil-define-key 'normal 'global "B" #'backward-sexp)
   (evil-define-key 'normal 'global (kbd "<up>") #'evil-scroll-line-up)
   (evil-define-key 'normal 'global (kbd "<down>") #'evil-scroll-line-down)
   (evil-define-key 'normal 'global (kbd "<left>") #'my-previous-buffer)
@@ -556,17 +521,59 @@
   (evil-define-key 'normal 'global (kbd "M-t") #'transpose-sexps)
 
   ;; Modified movement for mhtml mode
-  (evil-define-key 'normal html-mode-map (kbd "M-h") #'sgml-skip-tag-backward)
-  ;; Yo, this doesn't handle last element correctly!
-  (evil-define-key 'normal html-mode-map (kbd "M-l") #'sgml-skip-tag-forward)
+  (evil-define-motion my-skip-tag-backward ()
+    "Won't move if to the right of one-handed tag, but what'cha gonna do?"
+    :type exclusive
+    (let ((skip-point
+           (save-excursion
+             (call-interactively 'sgml-skip-tag-backward)
+             (point))))
+      (let ((has-end-tag?
+             (save-excursion
+               (search-backward "</" skip-point t))))
+        (if has-end-tag?
+            (goto-char skip-point)
+          (message "Did not skip over balanced exp")))))
+  (evil-define-key 'normal html-mode-map (kbd "M-h") #'my-skip-tag-backward)
+
+  (evil-define-motion my-skip-tag-forward ()
+    :type exclusive
+    (let ((skip-point
+           (save-excursion
+             (call-interactively 'sgml-skip-tag-forward)
+             (point))))
+      (let ((has-start-tag?
+             (save-excursion
+               (re-search-forward sgml-start-tag-regex skip-point t))))
+        (if has-start-tag?
+            (goto-char skip-point)
+          (message "Did not skip over balanced exp")))))
+  (evil-define-key 'normal html-mode-map (kbd "M-l") #'my-skip-tag-forward)
+
   (evil-define-motion my-down-html ()
     "Hacking"
     :type exclusive
-    (re-search-forward (rx "<"
-                           (not (any "/"))
-                           (zero-or-more (not (any ">")))
-                           ">")))
-  (evil-define-key 'normal html-mode-map (kbd "M-j") #'my-down-html))
+    (let ((after-start-tag
+           (save-excursion
+             (re-search-forward sgml-start-tag-regex nil t))))
+      (let ((has-end-tag?
+             (save-excursion
+               (search-forward "</" after-start-tag t))))
+        (if has-end-tag?
+            (message "Encountered an end tag")
+          (goto-char after-start-tag)
+          (evil-forward-char)))))
+  (evil-define-key 'normal html-mode-map (kbd "M-j") #'my-down-html)
+
+  (evil-define-motion my-up-html ()
+    "Hacking, using expand-region"
+    :jump t
+    :type exclusive
+    (when (looking-at sgml-start-tag-regex)
+      (er/mark-outer-tag))
+    (er/mark-outer-tag)
+    (deactivate-mark))
+  (evil-define-key 'normal html-mode-map (kbd "M-k") #'my-up-html))
 
 (defun csv-to-lines (separator)
   "Converts the current region line, as a csv string,
@@ -622,7 +629,8 @@ Still kinda sucks because it can't parse lists"
  '(font-latex-script-display (quote ((raise -0.2) raise 0.2)))
  '(package-selected-packages
    (quote
-    (cider clojure-mode text-translator paredit xr texfrag fold-this lisp disable-mouse math-symbol-lists rainbow-identifiers spaceline avy smex ido-vertical-mode beacon evil-numbers evil-lion evil-commentary rainbow-delimiters evil-surround evil use-package))))
+    (cider clojure-mode text-translator paredit xr texfrag fold-this lisp disable-mouse math-symbol-lists rainbow-identifiers spaceline avy smex ido-vertical-mode beacon evil-numbers evil-lion evil-commentary rainbow-delimiters evil-surround evil use-package)))
+ '(sgml-xml-mode t))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
