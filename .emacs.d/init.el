@@ -179,8 +179,7 @@
   (ido-vertical-mode 1)
   (setq ido-vertical-define-keys 'C-n-C-p-up-down-left-right)
   ;; I wanted it to be "C-w" but somehow it doesn't work
-  (define-key ido-common-completion-map (kbd "C-e") 'backward-kill-word)
-  )
+  (define-key ido-common-completion-map (kbd "C-e") 'backward-kill-word))
 
 (use-package smex  ; Command completion, using Ido above
   :ensure t
@@ -237,7 +236,9 @@
   :ensure t
   :config
   ;; @Fix: WTF, why is this not executed on startup?
-  (evil-define-key 'normal 'global "P" #'popup-kill-ring))
+  (evil-define-key 'normal 'global "P" #'popup-kill-ring)
+  (define-key popup-kill-ring-keymap (kbd "M-.") 'popup-kill-ring-next)
+  (define-key popup-kill-ring-keymap (kbd "M-,") 'popup-kill-ring-previous))
 
 (desktop-save-mode 1)  ; Save current desktop configs on exit
 
@@ -367,20 +368,36 @@
   (interactive)
   (goto-line (+ 1 (random (line-count)))))
 
-(evil-define-key 'visual 'global (kbd "C-f" )
-  ;; Translating from finnish to english
-  (lambda (beg end)
-    (interactive "r")
-    (evil-yank beg end)
-    (shell-command
-     (concat "trans fi:en '"
-             (buffer-substring beg end)
-             "'"))))
+(progn  ; Finnish stuff
+  (evil-define-key 'visual 'global (kbd "C-f" )
+    ;; Translating from finnish to english
+    (lambda (beg end)
+      (interactive "r")
+      (evil-yank beg end)
+      (shell-command
+       (concat "trans fi:en '"
+               (buffer-substring beg end)
+               "'"))))
+  (add-hook  ; Enter Finnish mode when opening Finnish file
+   'find-file-hook
+   '(lambda ()
+      (if (string-match (buffer-name) "fin.skm")
+          (set-input-method 'fin)))))
+
+(add-hook  ; Enter Finnish mode when opening Finnish file
+ 'find-file-hook
+ '(lambda ()
+    (if (string-match (buffer-name) "thought.skm")
+        (set-input-method 'math))))
 
 (defun revert-buffer-no-confirm ()
   "Revert buffer without confirmation."
   (interactive)
   (revert-buffer :ignore-auto :noconfirm))
+
+(use-package auto-complete
+  :ensure t
+  :config (global-auto-complete-mode t))
 
 (progn  ;; Graph
   (defun dot (beg end)
@@ -437,6 +454,7 @@
    evil-define-key 'normal 'global ";" #'smex)
   (evil-define-key 'normal 'global "I" #'evil-first-non-blank)
   (evil-define-key 'normal 'global "A" #'evil-end-of-line)
+  (evil-define-key 'visual 'global "A" #'evil-end-of-line)
   (evil-define-key 'normal 'global "a" #'evil-append-line)
   (evil-define-key 'normal 'global "p" #'evil-paste-before)
   (evil-define-key 'normal 'global (kbd "<up>") #'evil-scroll-line-up)
@@ -460,15 +478,15 @@
                                                    (open-line 1))))
   (evil-define-key 'normal 'global (kbd "C-a") #'mark-whole-buffer)
   (evil-define-key 'normal 'global (kbd "DEL") #'backward-delete-char-untabify)
-  (evil-define-key 'normal 'global (kbd "C-.") #'my-next-buffer)
-  (evil-define-key 'normal 'global (kbd "C-,") #'my-previous-buffer)
+  (evil-define-key 'normal 'global (kbd "M-.") #'my-next-buffer)
+  (evil-define-key 'normal 'global (kbd "M-,") #'my-previous-buffer)
   (evil-define-key 'normal 'global (kbd "\\")  (lambda () (interactive) (message "Want Enter?")))
   (evil-define-key 'normal 'global (kbd "TAB") (lambda () (interactive)
                                                  (save-excursion
                                                    (evil-indent-line (line-beginning-position) (line-end-position)))))
 
-  (evil-define-key 'insert 'global (kbd "C-.") #'my-next-buffer)
-  (evil-define-key 'insert 'global (kbd "C-,") #'my-previous-buffer)
+  (evil-define-key 'insert 'global (kbd "M-.") #'my-next-buffer)
+  (evil-define-key 'insert 'global (kbd "M-,") #'my-previous-buffer)
   (evil-define-key 'insert 'global (kbd "C-v") #'evil-paste-before)
 
   (evil-define-key 'visual 'global (kbd "TAB") #'indent-region)
@@ -629,7 +647,7 @@ Still kinda sucks because it can't parse lists"
  '(font-latex-script-display (quote ((raise -0.2) raise 0.2)))
  '(package-selected-packages
    (quote
-    (cider clojure-mode text-translator paredit xr texfrag fold-this lisp disable-mouse math-symbol-lists rainbow-identifiers spaceline avy smex ido-vertical-mode beacon evil-numbers evil-lion evil-commentary rainbow-delimiters evil-surround evil use-package)))
+    (auto-complete cider clojure-mode text-translator paredit xr texfrag fold-this lisp disable-mouse math-symbol-lists rainbow-identifiers spaceline avy smex ido-vertical-mode beacon evil-numbers evil-lion evil-commentary rainbow-delimiters evil-surround evil use-package)))
  '(sgml-xml-mode t))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
