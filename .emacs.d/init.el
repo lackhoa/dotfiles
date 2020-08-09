@@ -19,6 +19,9 @@
 (eval-when-compile
   (require 'use-package))
 
+(require 'use-package-ensure)
+(setq use-package-always-ensure t)
+
 (setq completion-ignore-case t ; Ignore case in minibuffer's tab completion
       read-file-name-completion-ignore-case t
       read-buffer-completion-ignore-case t)
@@ -51,43 +54,49 @@
 ;;; Packages
 ;; This is why I'm here
 (use-package evil
-  :ensure t
   :init
-  (evil-mode 1)
-
-  :config
   (setq evil-regexp-search nil)
 
+  :config
+  (evil-mode 1)
   ;; Switch line highlighting off when in insert mode.
   (add-hook 'evil-insert-state-entry-hook
             '(lambda () (global-hl-line-mode -1)))
   (add-hook 'evil-normal-state-entry-hook
             '(lambda () (global-hl-line-mode 1)))
-
   ;; Auto-center search result
   (defadvice evil-search-next
-      (after advice-for-evil-search-next activate)
-    ;; (evil-scroll-line-to-center (line-number-at-pos))
-    )
+      (after advice-for-evil-search-next activate))
   (defadvice evil-search-previous
-      (after advice-for-evil-search-previous activate)
-    ;; (evil-scroll-line-to-center (line-number-at-pos))
-    )
+      (after advice-for-evil-search-previous activate)))
 
-  (use-package evil-commentary
-    :ensure t
-    :config (evil-commentary-mode)))
+(use-package evil-commentary
+  :config (evil-commentary-mode))
 
-(progn
+(progn  ;; Extempore
   (unless (fboundp 'eldoc-beginning-of-sexp)  ;; Hacking to get extempore-mode
     (defalias 'eldoc-beginning-of-sexp 'elisp--beginning-of-sexp))
 
   (use-package extempore-mode
-    :ensure t
-    :config (setq extempore-path "~/extempore/")))
+    :config
+    (setq extempore-path "~/extempore/")
+    (evil-define-key 'normal extempore-mode-map (kbd "X")
+      (lambda ()
+        (interactive)
+        (if (use-region-p)
+            (extempore-send-region (region-beginning) (region-end))
+          (extempore-send-definition))))))
+
+(progn  ;; Emacs Lisp
+  (evil-define-key 'normal emacs-lisp-mode-map (kbd "X")
+    (lambda ()
+      (interactive)
+      (save-excursion
+        (let ((beg (point))
+              (end (progn (forward-sexp) (point))))
+          (eval-region beg end))))))
 
 (use-package disable-mouse
-  :ensure t
   :config
   (global-disable-mouse-mode)
   (mapc #'disable-mouse-in-keymap
@@ -102,7 +111,6 @@
 
 (use-package fold-this  ; Just hide the region!
   ;; Unfold with "enter"
-  :ensure t
   :config
   (fold-this-mode 1)
   (evil-define-key 'normal 'global (kbd "H") #'fold-this-sexp)
@@ -142,7 +150,6 @@
         (fold-this (car region) (cdr region) header)))))
 
 (use-package evil-lion
-  :ensure t
   :config
   (defalias 'tab (lambda () (interactive)
                    (save-excursion
@@ -154,13 +161,11 @@
                        (indent-region beg end))))))
 
 (use-package evil-surround
-  :ensure t
   :config
   (global-evil-surround-mode)
   (evil-define-key 'visual 'global (kbd "s") #'evil-surround-region))
 
 (use-package avy  ; The dopest snipe package ever
-  :ensure t
   :config
   (evil-define-key 'normal 'global (kbd "f") #'evil-avy-goto-char)
   (evil-define-key 'normal 'global (kbd "s") #'evil-avy-goto-char-2)
@@ -168,7 +173,6 @@
     'visual 'global (kbd "f") #'evil-avy-goto-char-2))
 
 (use-package ido-vertical-mode ; Ido-mode: a regexp smart search framework
-  :ensure t
   :init
   (ido-mode 1)
   (setq ido-enable-flex-matching t
@@ -182,17 +186,10 @@
   (define-key ido-common-completion-map (kbd "C-e") 'backward-kill-word))
 
 (use-package smex  ; Command completion, using Ido above
-  :ensure t
   :init (smex-initialize)
   :bind ("M-x" . smex))
 
-;; (use-package beacon
-;;   ;; Highlight the cursor a bit when switching buffer
-;;   :ensure t
-;;   :init (beacon-mode 1))
-
 (use-package aggressive-indent  ; Resource-inatensive: Use with caution!
-  :ensure t
   :config
   (add-hook 'prog-mode-hook #'aggressive-indent-mode)
   (add-hook 'text-mode-hook #'aggressive-indent-mode)
@@ -203,11 +200,9 @@
 (column-number-mode 1)  ; Show columns
 
 (use-package rainbow-delimiters  ; Color those parentheses
-  :ensure t
   :hook ((prog-mode text-mode) . rainbow-delimiters-mode))
 
 (use-package rainbow-identifiers  ; Color those identifiers
-  :ensure t
   :hook ((prog-mode text-mode) . rainbow-identifiers-mode))
 
 (setq-default indent-tabs-mode nil)  ; No tabs!
@@ -223,22 +218,18 @@
   (set-face-foreground 'show-paren-match "#def")
   (set-face-attribute 'show-paren-match nil :weight 'extra-bold))
 
-(use-package magit ; Git package
-  :ensure t)
+(use-package magit)
 
-(use-package expand-region ; Magic that I saw once.
-  :ensure t
+(use-package expand-region
   :config
   (evil-define-key 'normal 'global "q" #'er/expand-region)
   (evil-define-key 'normal 'global "Q" #'er/contract-region))
 
-(use-package popup-kill-ring ; help yanking multiple things.
-  :ensure t
+(use-package popup-kill-ring
   :config
-  ;; @Fix: WTF, why is this not executed on startup?
   (evil-define-key 'normal 'global "P" #'popup-kill-ring)
-  (define-key popup-kill-ring-keymap (kbd "M-.") 'popup-kill-ring-next)
-  (define-key popup-kill-ring-keymap (kbd "M-,") 'popup-kill-ring-previous))
+  (define-key popup-kill-ring-keymap (kbd "C-.") 'popup-kill-ring-next)
+  (define-key popup-kill-ring-keymap (kbd "C-,") 'popup-kill-ring-previous))
 
 (desktop-save-mode 1)  ; Save current desktop configs on exit
 
@@ -251,7 +242,6 @@
  auto-save-default nil)
 
 (use-package math-symbol-lists  ; Unicode and (math symbols)/(math notations)
-  :ensure t
   :config
   (quail-define-package "math" "UTF-8" "Ω" t)
   (mapc  ;; My rules
@@ -298,7 +288,6 @@
      ("oe" "ö")
      ("oee" ["oe"]))))
 
-
 (progn  ;; Buffer Business: display, eliminate, ignore
   (add-hook  ; Remove completion buffer when done
    'minibuffer-exit-hook
@@ -329,7 +318,7 @@
     (interactive)
     (my-change-buffer 'next-buffer))
 
-  (defun my-previous-buffer ()
+  (defun my-prev-buffer ()
     "Variant of `previous-buffer' that skips `my-skippable-buffers'."
     (interactive)
     (my-change-buffer 'previous-buffer)))
@@ -395,9 +384,17 @@
   (interactive)
   (revert-buffer :ignore-auto :noconfirm))
 
-(use-package auto-complete
-  :ensure t
-  :config (global-auto-complete-mode t))
+(use-package company
+  :init
+  (setq company-show-numbers t)
+  :config
+  (add-hook 'after-init-hook 'global-company-mode)
+  (add-hook 'skeme-mode-hook
+            (lambda () (company-mode -1)))
+  (define-key company-active-map (kbd "C-.") 'company-select-next)
+  (define-key company-search-map (kbd "C-.") 'company-select-next)
+  (define-key company-active-map (kbd "C-,") 'company-select-previous)
+  (define-key company-search-map (kbd "C-,") 'company-select-previous))
 
 (progn  ;; Graph
   (defun dot (beg end)
@@ -450,17 +447,17 @@
   (kill-new (file-truename buffer-file-name)))
 
 (progn  ; Key bindings
+  (evil-define-key 'normal 'global (kbd "<right>") #'my-next-buffer)
+  (evil-define-key 'normal 'global (kbd "<left>") #'my-prev-buffer)
+  (evil-define-key 'normal 'global (kbd "<up>") #'evil-scroll-line-up)
+  (evil-define-key 'normal 'global (kbd "<down>") #'evil-scroll-line-down)
   (;; No more M-x! Use smex instead of evil-ex
    evil-define-key 'normal 'global ";" #'smex)
   (evil-define-key 'normal 'global "I" #'evil-first-non-blank)
-  (evil-define-key 'normal 'global "A" #'evil-end-of-line)
-  (evil-define-key 'visual 'global "A" #'evil-end-of-line)
+  (evil-define-key 'normal 'global "A" #'evil-end-of-visual-line)
+  (evil-define-key 'visual 'global "A" #'evil-end-of-visual-line)
   (evil-define-key 'normal 'global "a" #'evil-append-line)
   (evil-define-key 'normal 'global "p" #'evil-paste-before)
-  (evil-define-key 'normal 'global (kbd "<up>") #'evil-scroll-line-up)
-  (evil-define-key 'normal 'global (kbd "<down>") #'evil-scroll-line-down)
-  (evil-define-key 'normal 'global (kbd "<left>") #'my-previous-buffer)
-  (evil-define-key 'normal 'global (kbd "<right>") #'my-next-buffer)
   (evil-define-key 'normal 'global (kbd "RET") #'evil-write-all)
   (evil-define-key 'normal 'global (kbd "K")
     (lambda () (interactive)
@@ -478,15 +475,14 @@
                                                    (open-line 1))))
   (evil-define-key 'normal 'global (kbd "C-a") #'mark-whole-buffer)
   (evil-define-key 'normal 'global (kbd "DEL") #'backward-delete-char-untabify)
-  (evil-define-key 'normal 'global (kbd "M-.") #'my-next-buffer)
-  (evil-define-key 'normal 'global (kbd "M-,") #'my-previous-buffer)
-  (evil-define-key 'normal 'global (kbd "\\")  (lambda () (interactive) (message "Want Enter?")))
+  (evil-define-key 'normal 'global (kbd "C-.") #'my-next-buffer)
+  (evil-define-key 'normal 'global (kbd "C-,") #'my-prev-buffer)
+  (evil-define-key 'normal 'global (kbd "\\")  (lambda () (interactive)
+                                                 (message "Want Enter?")))
   (evil-define-key 'normal 'global (kbd "TAB") (lambda () (interactive)
                                                  (save-excursion
                                                    (evil-indent-line (line-beginning-position) (line-end-position)))))
 
-  (evil-define-key 'insert 'global (kbd "M-.") #'my-next-buffer)
-  (evil-define-key 'insert 'global (kbd "M-,") #'my-previous-buffer)
   (evil-define-key 'insert 'global (kbd "C-v") #'evil-paste-before)
 
   (evil-define-key 'visual 'global (kbd "TAB") #'indent-region)
@@ -501,10 +497,8 @@
                     (find-file  "~/.emacs.d/init.el")))
   (defalias 'thought (lambda () (interactive)
                        (find-file  "~/note/thought.skm")))
-  (defalias 'lib (lambda () (interactive)
-                   (find-file  "~/note/lib.ss")))
-  (defalias 'work (lambda () (interactive)
-                    (find-file  "~/note/work.md"))))
+  (defalias 'main (lambda () (interactive)
+                    (find-file  "~/fractal-sky/main.js"))))
 
 (progn  ;; Pro lisp Movements
   ;; Note: in order for jumps to work, you have to use #' in "evil-define-key"
@@ -612,15 +606,13 @@ Still kinda sucks because it can't parse lists"
 
 (progn  ;; Language support
   (use-package markdown-mode
-    :ensure t
     :commands (markdown-mode gfm-mode)
     :mode (("README\\.md\\'" . gfm-mode)
            ("\\.md\\'" . markdown-mode)
            ("\\.markdown\\'" . markdown-mode))
     :init (setq markdown-command "multimarkdown"))
 
-  (use-package clojure-mode
-    :ensure t)
+  (use-package clojure-mode)
 
   (setq js-indent-level 2))
 
@@ -628,6 +620,16 @@ Still kinda sucks because it can't parse lists"
   '(("anchor" "<a target=\"blank\" href=\"\"></a>")
     ("atag" "<a target=\"_blank\" href=\"\"></a>")
     ("csstag" "<link rel=\"stylesheet\" href=\"\">")))
+
+(if (functionp 'global-hi-lock-mode)
+    (global-hi-lock-mode 1)
+  (hi-lock-mode 1))
+(add-hook 'prog-mode-hook
+          '(lambda ()
+             (highlight-regexp "@Todo")
+             (highlight-regexp "@Test")
+             (highlight-regexp "@Note")
+             (highlight-regexp "@Fix")))
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
@@ -647,7 +649,7 @@ Still kinda sucks because it can't parse lists"
  '(font-latex-script-display (quote ((raise -0.2) raise 0.2)))
  '(package-selected-packages
    (quote
-    (auto-complete cider clojure-mode text-translator paredit xr texfrag fold-this lisp disable-mouse math-symbol-lists rainbow-identifiers spaceline avy smex ido-vertical-mode beacon evil-numbers evil-lion evil-commentary rainbow-delimiters evil-surround evil use-package)))
+    (cider clojure-mode text-translator paredit xr texfrag fold-this lisp disable-mouse math-symbol-lists rainbow-identifiers spaceline avy smex ido-vertical-mode evil-numbers evil-lion evil-commentary rainbow-delimiters evil-surround evil use-package)))
  '(sgml-xml-mode t))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
@@ -671,6 +673,6 @@ Still kinda sucks because it can't parse lists"
  '(rainbow-delimiters-unmatched-face ((t (:inherit rainbow-delimiters-base-face :foreground "dark green"))))
  '(show-paren-match ((t (:underline "cyan" :weight extra-bold)))))
 
-(set-face-attribute 'region nil
+(set-face-attribute 'region nil  ;; This has to be here, otw will be overrided by wheatgrass
                     :background "#333"
                     :foreground 'unspecified)

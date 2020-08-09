@@ -24,6 +24,9 @@ abbr sync        'cd ~; git commit -a -m \'sync\' ; git push ;
 abbr tar        'tar -xzvf'
 abbr tranf      'trans fi:en'
 abbr tranj      'trans ja:en'
+abbr apt        'sudo apt'
+abbr docker     'sudo docker'
+abbr dockerd    'sudo dockerd & disown'
 
 # clean up stuff that were created less than 1 minute ago
 abbr clean 'find . -type f -cmin -1 -delete'
