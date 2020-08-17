@@ -357,6 +357,8 @@
   (interactive)
   (goto-line (+ 1 (random (line-count)))))
 
+(setq ffap-url-regexp nil)           ; disable URL features in ffap
+
 (progn  ; Finnish stuff
   (evil-define-key 'visual 'global (kbd "C-f" )
     ;; Translating from finnish to english
@@ -454,6 +456,7 @@
   (;; No more M-x! Use smex instead of evil-ex
    evil-define-key 'normal 'global ";" #'smex)
   (evil-define-key 'normal 'global "I" #'evil-first-non-blank)
+  (evil-define-key 'visual 'global "I" #'evil-first-non-blank)
   (evil-define-key 'normal 'global "A" #'evil-end-of-visual-line)
   (evil-define-key 'visual 'global "A" #'evil-end-of-visual-line)
   (evil-define-key 'normal 'global "a" #'evil-append-line)
@@ -604,7 +607,7 @@ Still kinda sucks because it can't parse lists"
         (insert element)
         (call-interactively 'newline)))))
 
-(progn  ;; Language support
+(progn  ;; Language modes & tweaks
   (use-package markdown-mode
     :commands (markdown-mode gfm-mode)
     :mode (("README\\.md\\'" . gfm-mode)
@@ -614,12 +617,23 @@ Still kinda sucks because it can't parse lists"
 
   (use-package clojure-mode)
 
-  (setq js-indent-level 2))
+  (setq js-indent-level 2)
 
-(define-abbrev-table 'html-mode-abbrev-table
-  '(("anchor" "<a target=\"blank\" href=\"\"></a>")
-    ("atag" "<a target=\"_blank\" href=\"\"></a>")
-    ("csstag" "<link rel=\"stylesheet\" href=\"\">")))
+  (use-package racket-mode
+    :mode (("\\.rkt\\'" . racket-mode)))
+
+  (define-abbrev-table 'html-mode-abbrev-table
+    '(("anchor" "<a target=\"blank\" href=\"\"></a>")
+      ("atag" "<a target=\"_blank\" href=\"\"></a>")
+      ("csstag" "<link rel=\"stylesheet\" href=\"\">")))
+
+  (defun my-insert-tag (arg)
+    (interactive "sTag: ")
+    (insert (format "<%s></%s>" arg arg)))
+  (evil-define-key 'normal html-mode-map (kbd "C-t")
+    #'my-insert-tag)
+  (evil-define-key 'insert html-mode-map (kbd "C-t")
+    #'my-insert-tag))
 
 (if (functionp 'global-hi-lock-mode)
     (global-hi-lock-mode 1)
@@ -630,6 +644,8 @@ Still kinda sucks because it can't parse lists"
              (highlight-regexp "@Test")
              (highlight-regexp "@Note")
              (highlight-regexp "@Fix")))
+
+
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
@@ -649,7 +665,7 @@ Still kinda sucks because it can't parse lists"
  '(font-latex-script-display (quote ((raise -0.2) raise 0.2)))
  '(package-selected-packages
    (quote
-    (cider clojure-mode text-translator paredit xr texfrag fold-this lisp disable-mouse math-symbol-lists rainbow-identifiers spaceline avy smex ido-vertical-mode evil-numbers evil-lion evil-commentary rainbow-delimiters evil-surround evil use-package)))
+    (racket-mode cider clojure-mode text-translator paredit xr texfrag fold-this lisp disable-mouse math-symbol-lists rainbow-identifiers spaceline avy smex ido-vertical-mode evil-numbers evil-lion evil-commentary rainbow-delimiters evil-surround evil use-package)))
  '(sgml-xml-mode t))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
