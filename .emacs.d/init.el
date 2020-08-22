@@ -218,7 +218,15 @@
   (set-face-foreground 'show-paren-match "#def")
   (set-face-attribute 'show-paren-match nil :weight 'extra-bold))
 
-(use-package magit)
+(use-package magit
+  :config
+  (progn  ;; https://www.manueluberti.eu/emacs/2018/02/17/magit-bury-buffer/
+    (defun mu-magit-kill-buffers (param)
+      "Restore window configuration and kill all Magit buffers."
+      (let ((buffers (magit-mode-get-buffers)))
+        (magit-restore-window-configuration)
+        (mapc #'kill-buffer buffers)))
+    (setq magit-bury-buffer-function #'mu-magit-kill-buffers)))
 
 (use-package expand-region
   :config
@@ -296,7 +304,10 @@
         (and (get-buffer buffer) (kill-buffer buffer)))))
 
   (defvar my-skippable-buffers  ;; Regexp to skip *XYZ* buffers
-    (rx (or "*Messages*" "*scratch*" "*Quail Completions*")))
+    ;; Note: not all *XYZ* buffers are bad
+    (rx (or "*Messages*"
+            "*scratch*"
+            "*Quail Completions*")))
 
   (add-to-list 'ido-ignore-buffers  ;; Tell ido to ignore the weird asterisk buffers
                my-skippable-buffers)
@@ -633,18 +644,24 @@ Still kinda sucks because it can't parse lists"
   (evil-define-key 'normal html-mode-map (kbd "C-t")
     #'my-insert-tag)
   (evil-define-key 'insert html-mode-map (kbd "C-t")
-    #'my-insert-tag))
+    #'my-insert-tag)
 
-(if (functionp 'global-hi-lock-mode)
-    (global-hi-lock-mode 1)
-  (hi-lock-mode 1))
-(add-hook 'prog-mode-hook
-          '(lambda ()
-             (highlight-regexp "@Todo")
-             (highlight-regexp "@Test")
-             (highlight-regexp "@Note")
-             (highlight-regexp "@Fix")))
+  (add-hook 'python-mode-hook
+            '(lambda ()
+               (aggressive-indent-mode -1)
+               (electric-indent-mode -1))))
 
+(progn  ;; Highlight business
+  (if (functionp 'global-hi-lock-mode)
+      (global-hi-lock-mode 1)
+    (hi-lock-mode 1))
+  (defun my-highlight ()
+    (interactive)
+    (message "Hello")
+    (highlight-regexp (rx (or "#" "@")
+                          (or "todo" "test" "note" "fix"))))
+  (add-hook 'prog-mode-hook  #'my-highlight)
+  (add-hook 'skeme-mode-hook #'my-highlight))
 
 
 (custom-set-variables
