@@ -151,14 +151,15 @@
 
 (use-package evil-lion
   :config
-  (defalias 'tab (lambda () (interactive)
-                   (save-excursion
-                     (unless (use-region-p)
-                       (er/expand-region 3))
-                     (let ((beg  (region-beginning))
-                           (end  (region-end)))
-                       (evil-lion-left 0 beg end ?|)
-                       (indent-region beg end))))))
+  (evil-lion-mode)
+  (setq evil-lion-squeeze-spaces nil)  ;; "t" will break indentation
+  (defalias 'tab  ;; Formatting a table, by "space"
+    (lambda (beg end) (interactive "r")
+      (evil-lion--align-region
+       'left  ;; "right" doesn't work
+       nil  ;; "count = nil" means that we align all
+       beg end
+       (rx (1+ (not (syntax whitespace))))))))
 
 (use-package evil-surround
   :config
@@ -256,14 +257,14 @@
    (lambda (x)
      (quail-defrule (car x) (cadr x)))
    (append
-    '(;; math rules
+    `(;; math rules
       ("\\lam" ?λ) ("\\sig" ?σ) ("\\vphi" ?φ)
       ("\\==" ?≡) ("\\=/" ?≠)
       ("\\<=>" ?⇔) ("\\LRa" ?⇔) ("\\Lra" ?⇔) ("\\=>" ?➾) ("\\Ra" ?➾) ("\\La" ?⇐) ("\\->" ?→) ("\\to" ?→) ("\\then" ?→) ("\\ra" ?→) ("\\-->" ?⟶) ("\\<-" ?←) ("\\la" ?←) ("\\.<-" ?⬸) ("\\dla" ?⬸) ("\\.->" ?⤑) ("\\dra" ?⤑) ("\\<->" ?↔) ("\\lra" ?↔) ("\\up" ?↑) ("\\ua" ?↑) ("\\da" ?↓) ("\\hra" ?↪) ("\\hla" ?↩) ("\\ul" ?↖) ("\\ur" ?↗) ("\\dl" ?↙) ("\\dr" ?↘) ("\\o<" ?⟲) ("\\refl" ?⟲) ("\\o>" ?⟳) ("\\lla" ?↞) ("\\<<-" ?↞) ("\\rra" ?↠) ("\\trans" ?↠) ("\\->>" ?↠) ("\\lr2" ?⇄) ("\\-><" ?⇄) ("\\symm" ?⇄) ("\\==>" ?⟹) ("\\idem" ?⊸) ("\\-o" ?⊸) ("\\<-|" ?↤) ("\\|->" ?↦)
       ("\\sub" ?⊆) ("\\sup" ?⊇) ("\\supset" ?⊃) ("\\union" ?∪) ("\\Union" ?⋃) ("\\inter" ?∩) ("\\Inter" ?⋂) ("\\void" ?∅) ("\\power" ?℘)
       ("\\ex" ?∃) ("\\for" ?∀)
       ("\\<" "⟨⟩") ("\\lang" "⟨⟩")
-      ("\\+-" ?±) ("\\<=" ?≤) ("\\>=" ?≥) ("\\=~" ?≅) ("\\iso" ?≅) ("\\~~" ?≈)
+      ("\\+-" ?±) ("\\by" ?×) ("\\||" ?∥) ("\\<=" ?≤) ("\\>=" ?≥) ("\\=~" ?≅) ("\\iso" ?≅) ("\\~~" ?≈)
       ("\\nat" ?ℕ) ("\\Nat" ?ℕ) ("\\int" ?ℤ) ("\\Int" ?ℤ) ("\\real" ?ℝ) ("\\Real" ?ℝ) ("\\rat" ?ℚ) ("\\Rat" ?ℚ)
       ("\\and" ?∧) ("\\meet" ?∧) ("\\Meet" ?⋀) ("\\or" ?∨) ("\\join" ?∨) ("\\Join" ?⋁) ("\\false" ?⊥) ("\\|=" ?⊨) ("\\|-" ?⊢)
       ("\\cancer" ?♋)
@@ -533,14 +534,16 @@
     "Go to the end of list"
     :type exclusive
     (up-list 1 t t) (left-char 2))
+
   (evil-define-motion my-forward-sexp ()
     "inverse of backward-sexp, it will get to the end of the list if we're at the last item (not that I don't like it)"
     :type exclusive
     (condition-case err
         (progn (forward-sexp) (forward-sexp) (backward-sexp))
       (message "%s" (error-message-string err))))
+
   (evil-define-key 'normal 'global (kbd "M-h") #'backward-sexp)
-  (evil-define-key 'normal 'global (kbd "M-l") #'my-forward-sexp)
+  (evil-define-key 'normal 'global (kbd "M-l") #'forward-sexp)
   (evil-define-key 'normal 'global (kbd "M-k") #'my-backward-up-list)
   (evil-define-key 'normal 'global (kbd "M-j") #'my-down-list)
   (evil-define-key 'normal 'global (kbd "M-;") #'my-end-of-list)
@@ -657,9 +660,8 @@ Still kinda sucks because it can't parse lists"
     (hi-lock-mode 1))
   (defun my-highlight ()
     (interactive)
-    (message "Hello")
     (highlight-regexp (rx (or "#" "@")
-                          (or "todo" "test" "note" "fix"))))
+                          (or "todo" "test" "note" "fix" "url" "important" "theorem" "fail"))))
   (add-hook 'prog-mode-hook  #'my-highlight)
   (add-hook 'skeme-mode-hook #'my-highlight))
 
