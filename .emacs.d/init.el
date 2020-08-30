@@ -154,6 +154,9 @@
   (evil-lion-mode)
   (setq evil-lion-squeeze-spaces nil)  ;; "t" will break indentation
   (defalias 'tab  ;; Formatting a table, by "space"
+    ;; You have to select whole lines, otherwise lion wouldn't know about the space before the first line, and it'll do some goofy things
+    ;; Btw, it wouldn't work if there's something on the left
+    ;; Yeah, I think I'll have to write my own function...
     (lambda (beg end) (interactive "r")
       (evil-lion--align-region
        'left  ;; "right" doesn't work
@@ -264,8 +267,8 @@
       ("\\sub" ?⊆) ("\\sup" ?⊇) ("\\supset" ?⊃) ("\\union" ?∪) ("\\Union" ?⋃) ("\\inter" ?∩) ("\\Inter" ?⋂) ("\\void" ?∅) ("\\power" ?℘)
       ("\\ex" ?∃) ("\\for" ?∀)
       ("\\<" "⟨⟩") ("\\lang" "⟨⟩")
-      ("\\+-" ?±) ("\\by" ?×) ("\\||" ?∥) ("\\<=" ?≤) ("\\>=" ?≥) ("\\=~" ?≅) ("\\iso" ?≅) ("\\~~" ?≈)
-      ("\\nat" ?ℕ) ("\\Nat" ?ℕ) ("\\int" ?ℤ) ("\\Int" ?ℤ) ("\\real" ?ℝ) ("\\Real" ?ℝ) ("\\rat" ?ℚ) ("\\Rat" ?ℚ)
+      ("\\+-" ?±) ("\\by" ?×) ("\\||" ?∥) ("\\<=" ?≤) ("\\>=" ?≥) ("\\=~" ?≅) ("\\iso" ?≅) ("\\~~" ?≈) ("\\deg" ?°)
+      ("\\nat" ?ℕ) ("\\Nat" ?ℕ) ("\\int" ?ℤ) ("\\Int" ?ℤ) ("\\real" ?ℝ) ("\\Real" ?ℝ) ("\\rat" ?ℚ) ("\\Rat" ?ℚ) ("\\Complex" ?ℂ) ("\\complex" ?ℂ) ("\\com" ?ℂ)
       ("\\and" ?∧) ("\\meet" ?∧) ("\\Meet" ?⋀) ("\\or" ?∨) ("\\join" ?∨) ("\\Join" ?⋁) ("\\false" ?⊥) ("\\|=" ?⊨) ("\\|-" ?⊢)
       ("\\cancer" ?♋)
       ("\\middot" ?ᐧ))))
@@ -661,10 +664,9 @@ Still kinda sucks because it can't parse lists"
   (defun my-highlight ()
     (interactive)
     (highlight-regexp (rx (or "#" "@")
-                          (or "todo" "test" "note" "fix" "url" "important" "theorem" "fail"))))
+                          (or "todo" "alt" "weak" "fail" "problem" "lemma" "definition" "test" "note" "fix" "url" "important" "theorem" "fail"))))
   (add-hook 'prog-mode-hook  #'my-highlight)
   (add-hook 'skeme-mode-hook #'my-highlight))
-
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
