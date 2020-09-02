@@ -155,14 +155,15 @@
   (setq evil-lion-squeeze-spaces nil)  ;; "t" will break indentation
   (defalias 'tab  ;; Formatting a table, by "space"
     ;; You have to select whole lines, otherwise lion wouldn't know about the space before the first line, and it'll do some goofy things
-    ;; Btw, it wouldn't work if there's something on the left
+    ;; Btw, it only works when the matrix is on its own line
     ;; Yeah, I think I'll have to write my own function...
     (lambda (beg end) (interactive "r")
       (evil-lion--align-region
        'left  ;; "right" doesn't work
        nil  ;; "count = nil" means that we align all
        beg end
-       (rx (1+ (not (syntax whitespace))))))))
+       (rx (1+ (or alnum "+" "-" "|" "(" ")" "/" "*"))
+           (or blank eol "]"))))))
 
 (use-package evil-surround
   :config
@@ -261,7 +262,7 @@
      (quail-defrule (car x) (cadr x)))
    (append
     `(;; math rules
-      ("\\lam" ?λ) ("\\sig" ?σ) ("\\vphi" ?φ)
+      ("\\lam" ?λ) ("\\sig" ?σ) ("\\vphi" ?φ) ("\\eps" ?ϵ)
       ("\\==" ?≡) ("\\=/" ?≠)
       ("\\<=>" ?⇔) ("\\LRa" ?⇔) ("\\Lra" ?⇔) ("\\=>" ?➾) ("\\Ra" ?➾) ("\\La" ?⇐) ("\\->" ?→) ("\\to" ?→) ("\\then" ?→) ("\\ra" ?→) ("\\-->" ?⟶) ("\\<-" ?←) ("\\la" ?←) ("\\.<-" ?⬸) ("\\dla" ?⬸) ("\\.->" ?⤑) ("\\dra" ?⤑) ("\\<->" ?↔) ("\\lra" ?↔) ("\\up" ?↑) ("\\ua" ?↑) ("\\da" ?↓) ("\\hra" ?↪) ("\\hla" ?↩) ("\\ul" ?↖) ("\\ur" ?↗) ("\\dl" ?↙) ("\\dr" ?↘) ("\\o<" ?⟲) ("\\refl" ?⟲) ("\\o>" ?⟳) ("\\lla" ?↞) ("\\<<-" ?↞) ("\\rra" ?↠) ("\\trans" ?↠) ("\\->>" ?↠) ("\\lr2" ?⇄) ("\\-><" ?⇄) ("\\symm" ?⇄) ("\\==>" ?⟹) ("\\idem" ?⊸) ("\\-o" ?⊸) ("\\<-|" ?↤) ("\\|->" ?↦)
       ("\\sub" ?⊆) ("\\sup" ?⊇) ("\\supset" ?⊃) ("\\union" ?∪) ("\\Union" ?⋃) ("\\inter" ?∩) ("\\Inter" ?⋂) ("\\void" ?∅) ("\\power" ?℘)
@@ -663,8 +664,7 @@ Still kinda sucks because it can't parse lists"
     (hi-lock-mode 1))
   (defun my-highlight ()
     (interactive)
-    (highlight-regexp (rx (or "#" "@")
-                          (or "todo" "alt" "weak" "fail" "problem" "lemma" "definition" "test" "note" "fix" "url" "important" "theorem" "fail"))))
+    (highlight-regexp (rx (or "#" "@") (1+ alnum) word-boundary)))
   (add-hook 'prog-mode-hook  #'my-highlight)
   (add-hook 'skeme-mode-hook #'my-highlight))
 
