@@ -100,54 +100,19 @@
   :config
   (global-disable-mouse-mode)
   (mapc #'disable-mouse-in-keymap
-        (list evil-motion-state-map
+        (list evil-insert-state-map
+              ;; evil-emacs-state-map
               evil-normal-state-map
               evil-visual-state-map
-              evil-insert-state-map)))
+              evil-motion-state-map
+              evil-operator-state-map
+              evil-outer-text-objects-map
+              evil-inner-text-objects-map
+              evil-replace-state-map)))
 
 (defun disable-all-themes ()
   (dolist (i custom-enabled-themes)
     (disable-theme i)))
-
-(use-package fold-this  ; Just hide the region!
-  ;; Unfold with "enter"
-  :config
-  (fold-this-mode 1)
-  (evil-define-key 'normal 'global (kbd "H") #'fold-this-sexp)
-  (evil-define-key 'visual 'global (kbd "H") #'fold-this)
-  (defun fold-this-sexp ()
-    "Fold sexp around point.
-
-  If the point is at a symbol, fold the parent sexp.  If the point
-  is in front of a sexp, fold the following sexp."
-    (interactive)
-    (let* ((region
-            (cond
-             ((symbol-at-point)
-              (save-excursion
-                (when (nth 3 (syntax-ppss))
-                  (goto-char (nth 8 (syntax-ppss))))
-                (backward-up-list)
-                (cons (point)
-                      (progn
-                        (forward-sexp)
-                        (point)))))
-             ((or (looking-at-p (rx (* blank) "("))
-                  (looking-at-p (rx (* blank) "["))
-                  (looking-at-p (rx (* blank) "{")))
-              (save-excursion
-                (skip-syntax-forward " ")
-                (cons (point)
-                      (progn
-                        (forward-sexp)
-                        (point)))))
-             (t nil)))
-           (header (when region
-                     (save-excursion
-                       (goto-char (car region))
-                       (buffer-substring (point) (line-end-position))))))
-      (when region
-        (fold-this (car region) (cdr region) header)))))
 
 (use-package evil-lion
   :config
@@ -172,10 +137,11 @@
 
 (use-package avy  ; The dopest snipe package ever
   :config
-  (evil-define-key 'normal 'global (kbd "f") #'evil-avy-goto-char)
-  (evil-define-key 'normal 'global (kbd "s") #'evil-avy-goto-char-2)
+  (evil-define-key 'normal 'global
+    (kbd "f") #'evil-avy-goto-char
+    (kbd "s") #'evil-avy-goto-char-2)
   (evil-define-key  ;; Binding to `S' would conflict with `evil-surround' hackery
-    'visual 'global (kbd "f") #'evil-avy-goto-char-2))
+    'visual 'global (kbd "f") #'evil-avy-goto-char))
 
 (use-package ido-vertical-mode ; Ido-mode: a regexp smart search framework
   :init
@@ -192,7 +158,12 @@
 
 (use-package smex  ; Command completion, using Ido above
   :init (smex-initialize)
-  :bind ("M-x" . smex))
+  :config
+  (global-set-key (kbd "M-x") #'smex)
+  ;; Somehow evil is in motion state when opening help buffers?
+  (evil-define-key 'motion Buffer-menu-mode-map ";" #'smex)
+  (evil-define-key 'motion help-mode-map ";" #'smex)
+  (evil-define-key '(normal visual) 'global ";" #'smex))
 
 (use-package aggressive-indent  ; Resource-inatensive: Use with caution!
   :config
@@ -215,7 +186,7 @@
 
 (global-auto-revert-mode 1)  ; Automatically update changed buffer
 
-(add-hook 'before-save-hook 'delete-trailing-whitespace)
+;; (add-hook 'before-save-hook 'delete-trailing-whitespace)
 
 (progn  ; Highlight matching brackets
   (show-paren-mode)
@@ -235,12 +206,14 @@
 
 (use-package expand-region
   :config
-  (evil-define-key 'normal 'global "q" #'er/expand-region)
-  (evil-define-key 'normal 'global "Q" #'er/contract-region))
+  (evil-define-key 'normal 'global
+    "q" #'er/expand-region
+    "Q" #'er/contract-region))
 
 (use-package popup-kill-ring
   :config
   (evil-define-key 'normal 'global "P" #'popup-kill-ring)
+  ;; For some reason, evil-define-key doesn't work here
   (define-key popup-kill-ring-keymap (kbd "C-.") 'popup-kill-ring-next)
   (define-key popup-kill-ring-keymap (kbd "C-,") 'popup-kill-ring-previous))
 
@@ -259,20 +232,28 @@
   (quail-define-package "math" "UTF-8" "Ω" t)
   (mapc  ;; My rules
    (lambda (x)
-     (quail-defrule (car x) (cadr x)))
+     (let ((a (car x)) (translation (cadr x)))
+       (if (vectorp a)
+           (mapc (lambda (key) (quail-defrule key translation)) a)
+         (quail-defrule a translation))))
    (append
-    `(;; math rules
+    '(;; math rules
+      ;; Greek letters
       ("\\lam" ?λ) ("\\sig" ?σ) ("\\vphi" ?φ) ("\\eps" ?ϵ)
-      ("\\==" ?≡) ("\\=/" ?≠)
-      ("\\<=>" ?⇔) ("\\LRa" ?⇔) ("\\Lra" ?⇔) ("\\=>" ?➾) ("\\Ra" ?➾) ("\\La" ?⇐) ("\\->" ?→) ("\\to" ?→) ("\\then" ?→) ("\\ra" ?→) ("\\-->" ?⟶) ("\\<-" ?←) ("\\la" ?←) ("\\.<-" ?⬸) ("\\dla" ?⬸) ("\\.->" ?⤑) ("\\dra" ?⤑) ("\\<->" ?↔) ("\\lra" ?↔) ("\\up" ?↑) ("\\ua" ?↑) ("\\da" ?↓) ("\\hra" ?↪) ("\\hla" ?↩) ("\\ul" ?↖) ("\\ur" ?↗) ("\\dl" ?↙) ("\\dr" ?↘) ("\\o<" ?⟲) ("\\refl" ?⟲) ("\\o>" ?⟳) ("\\lla" ?↞) ("\\<<-" ?↞) ("\\rra" ?↠) ("\\trans" ?↠) ("\\->>" ?↠) ("\\lr2" ?⇄) ("\\-><" ?⇄) ("\\symm" ?⇄) ("\\==>" ?⟹) ("\\idem" ?⊸) ("\\-o" ?⊸) ("\\<-|" ?↤) ("\\|->" ?↦)
-      ("\\sub" ?⊆) ("\\sup" ?⊇) ("\\supset" ?⊃) ("\\union" ?∪) ("\\Union" ?⋃) ("\\inter" ?∩) ("\\Inter" ?⋂) ("\\void" ?∅) ("\\power" ?℘)
-      ("\\ex" ?∃) ("\\for" ?∀)
-      ("\\<" "⟨⟩") ("\\lang" "⟨⟩")
-      ("\\+-" ?±) ("\\by" ?×) ("\\||" ?∥) ("\\<=" ?≤) ("\\>=" ?≥) ("\\=~" ?≅) ("\\iso" ?≅) ("\\~~" ?≈) ("\\deg" ?°)
+      ;; Arrows
+      (["\\<=>" "\\LRa" "\\Lra" "\\meaning"] ?⇔) (["\\=>" "\\Ra"] ?➾) ("\\La" ?⇐)
+      (["\\->" "\\to" "\\then" "\\ra"] ?→) (["\\<-" "\\la"] ?←) ("\\-->" ?⟶) ("\\.<-" ?⬸) ("\\dla" ?⬸) ("\\.->" ?⤑) ("\\dra" ?⤑) ("\\<->" ?↔) ("\\lra" ?↔) ("\\up" ?↑) ("\\ua" ?↑) ("\\da" ?↓) ("\\hra" ?↪) ("\\hla" ?↩) ("\\ul" ?↖) ("\\ur" ?↗) ("\\dl" ?↙) ("\\dr" ?↘) ("\\o<" ?⟲) ("\\refl" ?⟲) ("\\o>" ?⟳) ("\\lla" ?↞) ("\\<<-" ?↞) ("\\rra" ?↠) ("\\trans" ?↠) ("\\->>" ?↠) ("\\lr2" ?⇄) ("\\-><" ?⇄) ("\\symm" ?⇄) ("\\==>" ?⟹) ("\\idem" ?⊸) ("\\-o" ?⊸) ("\\<-|" ?↤) ("\\|->" ?↦)
+      ;; Set
+      ("\\sub" ?⊆) ("\\sup" ?⊇) ("\\supset" ?⊃) ("\\union" ?∪) ("\\Union" ?⋃) ("\\inter" ?∩) ("\\Inter" ?⋂) ("\\void" ?∅) ("\\power" ?℘) ("\\\\" ?⧵)
+      ;; Logic
+      ("\\ex" ?∃) ("\\for" ?∀) ("\\and" ?∧) ("\\meet" ?∧) ("\\Meet" ?⋀) ("\\or" ?∨) ("\\join" ?∨) ("\\Join" ?⋁) ("\\false" ?⊥) ("\\|=" ?⊨) ("\\|-" ?⊢)
+      ;; Brackets
+      (["\\<" "\\lang"] "⟨⟩")
+      ;; Script Letters
       ("\\nat" ?ℕ) ("\\Nat" ?ℕ) ("\\int" ?ℤ) ("\\Int" ?ℤ) ("\\real" ?ℝ) ("\\Real" ?ℝ) ("\\rat" ?ℚ) ("\\Rat" ?ℚ) ("\\Complex" ?ℂ) ("\\complex" ?ℂ) ("\\com" ?ℂ)
-      ("\\and" ?∧) ("\\meet" ?∧) ("\\Meet" ?⋀) ("\\or" ?∨) ("\\join" ?∨) ("\\Join" ?⋁) ("\\false" ?⊥) ("\\|=" ?⊨) ("\\|-" ?⊢)
-      ("\\cancer" ?♋)
-      ("\\middot" ?ᐧ))))
+      ;; Others
+      ("\\middot" ?ᐧ) ("\\+-" ?±) ("\\by" ?×) ("\\||" ?∥) ("\\<=" ?≤) ("\\>=" ?≥) ("\\=~" ?≅) ("\\iso" ?≅) ("\\~~" ?≈) ("\\deg" ?°) ("\\inv" ?̅) ("\\==" ?≡) ("\\=/" ?≠)
+      )))
 
   (;; math-symbol-list rules
    mapc (lambda (x)
@@ -391,7 +372,7 @@
       (if (string-match (buffer-name) "fin.skm")
           (set-input-method 'fin)))))
 
-(add-hook  ; Enter Finnish mode when opening Finnish file
+(add-hook  ; Enter math mode when opening Finnish file
  'find-file-hook
  '(lambda ()
     (if (string-match (buffer-name) "thought.skm")
@@ -464,51 +445,54 @@
   (message (buffer-file-name))
   (kill-new (file-truename buffer-file-name)))
 
-(progn  ; Key bindings
-  (evil-define-key 'normal 'global (kbd "<right>") #'my-next-buffer)
-  (evil-define-key 'normal 'global (kbd "<left>") #'my-prev-buffer)
-  (evil-define-key 'normal 'global (kbd "<up>") #'evil-scroll-line-up)
-  (evil-define-key 'normal 'global (kbd "<down>") #'evil-scroll-line-down)
-  (;; No more M-x! Use smex instead of evil-ex
-   evil-define-key 'normal 'global ";" #'smex)
-  (evil-define-key 'normal 'global "I" #'evil-first-non-blank)
-  (evil-define-key 'visual 'global "I" #'evil-first-non-blank)
-  (evil-define-key 'normal 'global "A" #'evil-end-of-visual-line)
-  (evil-define-key 'visual 'global "A" #'evil-end-of-visual-line)
-  (evil-define-key 'normal 'global "a" #'evil-append-line)
-  (evil-define-key 'normal 'global "p" #'evil-paste-before)
-  (evil-define-key 'normal 'global (kbd "RET") #'evil-write-all)
-  (evil-define-key 'normal 'global (kbd "K")
-    (lambda () (interactive)
-      (save-excursion (call-interactively 'newline))))
-  (evil-define-key 'normal 'global (kbd "SPC") (lambda () (interactive)
-                                                 (insert-char ?\s)
-                                                 (evil-backward-char)))
-  (evil-define-key 'normal 'global (kbd "C-j") (lambda () (interactive)
-                                                 (save-excursion
-                                                   (end-of-line)
-                                                   (open-line 1))))
-  (evil-define-key 'normal 'global (kbd "C-k") (lambda () (interactive)
-                                                 (save-excursion
-                                                   (end-of-line 0)
-                                                   (open-line 1))))
-  (evil-define-key 'normal 'global (kbd "C-a") #'mark-whole-buffer)
-  (evil-define-key 'normal 'global (kbd "DEL") #'backward-delete-char-untabify)
-  (evil-define-key 'normal 'global (kbd "C-.") #'my-next-buffer)
-  (evil-define-key 'normal 'global (kbd "C-,") #'my-prev-buffer)
-  (evil-define-key 'normal 'global (kbd "\\")  (lambda () (interactive)
-                                                 (message "Want Enter?")))
-  (evil-define-key 'normal 'global (kbd "TAB") (lambda () (interactive)
-                                                 (save-excursion
-                                                   (evil-indent-line (line-beginning-position) (line-end-position)))))
+(progn  ; Miscellaneous key bindings
+  (defun null-function ()
+    (interactive)
+    (message "This function does nothing"))
 
+  (global-set-key (kbd "C-,") #'my-prev-buffer)
+  (global-set-key (kbd "C-.") #'my-next-buffer)
+  (evil-define-key '(normal visual) 'global
+    "I" #'evil-first-non-blank)
+  (evil-define-key 'normal 'global
+    "A" (lambda () (interactive)
+          (evil-end-of-visual-line))
+    (kbd "<right>") #'my-next-buffer
+    (kbd "<left>") #'my-prev-buffer
+    (kbd "<up>") #'evil-scroll-line-up
+    (kbd "<down>") #'evil-scroll-line-down
+    "a" #'evil-append-line
+    "p" #'evil-paste-before
+    (kbd "RET") #'evil-write-all
+    (kbd "K") (lambda () (interactive)
+                (save-excursion (call-interactively 'newline)))
+    (kbd "SPC") (lambda () (interactive)
+                  (insert-char ?\s)
+                  (evil-backward-char))
+    (kbd "C-j") (lambda () (interactive)
+                  (save-excursion (end-of-line)
+                                  (open-line 1)))
+    (kbd "C-k") (lambda () (interactive)
+                  (save-excursion
+                    (end-of-line 0)
+                    (open-line 1)))
+    (kbd "C-a") #'mark-whole-buffer
+    (kbd "DEL") #'backward-delete-char-untabify
+    (kbd "C-,") #'my-prev-buffer
+    (kbd "C-.") #'my-next-buffer
+    (kbd "\\")  #'null-function
+    (kbd "TAB") (lambda () (interactive)
+                  (save-excursion
+                    (evil-indent-line (line-beginning-position) (line-end-position)))))
+  (evil-define-key 'visual 'global
+    (kbd "TAB") #'indent-region
+    "A" (lambda () (interactive) (evil-end-of-visual-line)))
   (evil-define-key 'insert 'global (kbd "C-v") #'evil-paste-before)
-
-  (evil-define-key 'visual 'global (kbd "TAB") #'indent-region)
-  (evil-define-key 'visual 'global ";" #'smex))
+  (evil-define-key 'insert 'global (kbd "M-k") #'null-function))
 
 (progn  ; Command alias
   (defalias 'k 'kill-buffer-and-window)
+  (defalias '\; 'null-function)
   (defalias 'f 'ido-find-file)
   (defalias 'b 'ido-switch-buffer)
   (defalias 'ls 'buffer-menu)
@@ -546,12 +530,13 @@
         (progn (forward-sexp) (forward-sexp) (backward-sexp))
       (message "%s" (error-message-string err))))
 
-  (evil-define-key 'normal 'global (kbd "M-h") #'backward-sexp)
-  (evil-define-key 'normal 'global (kbd "M-l") #'forward-sexp)
-  (evil-define-key 'normal 'global (kbd "M-k") #'my-backward-up-list)
-  (evil-define-key 'normal 'global (kbd "M-j") #'my-down-list)
-  (evil-define-key 'normal 'global (kbd "M-;") #'my-end-of-list)
-  (evil-define-key 'normal 'global (kbd "M-t") #'transpose-sexps)
+  (evil-define-key 'normal 'global
+    (kbd "M-h") #'backward-sexp
+    (kbd "M-l") #'forward-sexp
+    (kbd "M-k") #'my-backward-up-list
+    (kbd "M-j") #'my-down-list
+    (kbd "M-;") #'my-end-of-list
+    (kbd "M-t") #'transpose-sexps)
 
   ;; Modified movement for mhtml mode
   (evil-define-motion my-skip-tag-backward ()
@@ -648,23 +633,21 @@ Still kinda sucks because it can't parse lists"
   (defun my-insert-tag (arg)
     (interactive "sTag: ")
     (insert (format "<%s></%s>" arg arg)))
-  (evil-define-key 'normal html-mode-map (kbd "C-t")
-    #'my-insert-tag)
-  (evil-define-key 'insert html-mode-map (kbd "C-t")
-    #'my-insert-tag)
+  (evil-define-key '(normal insert) html-mode-map (kbd "C-t") #'my-insert-tag)
 
   (add-hook 'python-mode-hook
             '(lambda ()
                (aggressive-indent-mode -1)
                (electric-indent-mode -1))))
 
-(progn  ;; Highlight business
+(progn  ;; Highlighting notes and tags
   (if (functionp 'global-hi-lock-mode)
       (global-hi-lock-mode 1)
     (hi-lock-mode 1))
   (defun my-highlight ()
     (interactive)
-    (highlight-regexp (rx (or "#" "@") (1+ alnum) word-boundary)))
+    (highlight-regexp (rx (or "#" "@") (1+ (not (any blank "\"" "\n" "(" ")"))))
+                      'underline))
   (add-hook 'prog-mode-hook  #'my-highlight)
   (add-hook 'skeme-mode-hook #'my-highlight))
 
@@ -686,7 +669,7 @@ Still kinda sucks because it can't parse lists"
  '(font-latex-script-display (quote ((raise -0.2) raise 0.2)))
  '(package-selected-packages
    (quote
-    (racket-mode cider clojure-mode text-translator paredit xr texfrag fold-this lisp disable-mouse math-symbol-lists rainbow-identifiers spaceline avy smex ido-vertical-mode evil-numbers evil-lion evil-commentary rainbow-delimiters evil-surround evil use-package)))
+    (racket-mode cider clojure-mode text-translator paredit xr texfrag lisp disable-mouse math-symbol-lists rainbow-identifiers spaceline avy smex ido-vertical-mode evil-numbers evil-lion evil-commentary rainbow-delimiters evil-surround evil use-package)))
  '(sgml-xml-mode t))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
