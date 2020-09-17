@@ -35,7 +35,6 @@
 (global-hl-line-mode)  ; Show where the cursor is
 
 (progn  ; Getting rid of really annoying stuffs
-  (setq-default message-log-max 10)
   (setq inhibit-startup-buffer-menu t)
   (setq inhibit-startup-screen t))
 
@@ -247,8 +246,8 @@
       ("\\sub" ?⊆) ("\\sup" ?⊇) ("\\supset" ?⊃) ("\\union" ?∪) ("\\Union" ?⋃) ("\\inter" ?∩) ("\\Inter" ?⋂) ("\\void" ?∅) ("\\power" ?℘) ("\\\\" ?⧵)
       ;; Logic
       ("\\ex" ?∃) ("\\for" ?∀) ("\\and" ?∧) ("\\meet" ?∧) ("\\Meet" ?⋀) ("\\or" ?∨) ("\\join" ?∨) ("\\Join" ?⋁) ("\\false" ?⊥) ("\\|=" ?⊨) ("\\|-" ?⊢)
-      ;; Brackets
-      (["\\<" "\\lang"] "⟨⟩")
+      ;; Brackets & Pairs
+      (["\\<" "\\lang"] ["⟨⟩"]) ("\\ceil" ["⌈⌉"]) ("\\floor" ["⌊⌋"])
       ;; Script Letters
       ("\\nat" ?ℕ) ("\\Nat" ?ℕ) ("\\int" ?ℤ) ("\\Int" ?ℤ) ("\\real" ?ℝ) ("\\Real" ?ℝ) ("\\rat" ?ℚ) ("\\Rat" ?ℚ) ("\\Complex" ?ℂ) ("\\complex" ?ℂ) ("\\com" ?ℂ)
       ;; Others
@@ -331,8 +330,6 @@
              conjecture prove counter THE assume induction Induction since Since theorem destruct class data type instance subgraph ; Everything else (for my notes)
              )))
 
-(load "skeme")  ; My note-taking mode (it inherits keywords from scheme)
-
 ;;; Custom functions
 
 (progn  ; Region Search
@@ -388,8 +385,7 @@
   (setq company-show-numbers t)
   :config
   (add-hook 'after-init-hook 'global-company-mode)
-  (add-hook 'skeme-mode-hook
-            (lambda () (company-mode -1)))
+  (add-hook 'skeme-mode-hook (lambda () (company-mode -1)))
   (define-key company-active-map (kbd "C-.") 'company-select-next)
   (define-key company-search-map (kbd "C-.") 'company-select-next)
   (define-key company-active-map (kbd "C-,") 'company-select-previous)
@@ -498,10 +494,12 @@
   (defalias 'ls 'buffer-menu)
   (defalias 'init (lambda () (interactive)
                     (find-file  "~/.emacs.d/init.el")))
+  (defalias 'fin (lambda () (interactive)
+                   (find-file  "~/note/fin.skm")))
   (defalias 'thought (lambda () (interactive)
                        (find-file  "~/note/thought.skm")))
-  (defalias 'main (lambda () (interactive)
-                    (find-file  "~/fractal-sky/main.js"))))
+  (defalias 'medals (lambda () (interactive)
+                      (find-file  "~/note/medals.txt"))))
 
 (progn  ;; Pro lisp Movements
   ;; Note: in order for jumps to work, you have to use #' in "evil-define-key"
@@ -610,7 +608,10 @@ Still kinda sucks because it can't parse lists"
         (insert element)
         (call-interactively 'newline)))))
 
-(progn  ;; Language modes & tweaks
+(progn  ;; Language modes & tweaks, language support
+  (progn  ;;Skeme, my own mode for note-taking
+    (load "skeme"))
+
   (use-package markdown-mode
     :commands (markdown-mode gfm-mode)
     :mode (("README\\.md\\'" . gfm-mode)
@@ -625,6 +626,9 @@ Still kinda sucks because it can't parse lists"
   (use-package racket-mode
     :mode (("\\.rkt\\'" . racket-mode)))
 
+  (use-package sql-indent
+    :config (add-hook 'sql-mode-hook #'sqlind-minor-mode))
+
   (define-abbrev-table 'html-mode-abbrev-table
     '(("anchor" "<a target=\"blank\" href=\"\"></a>")
       ("atag" "<a target=\"_blank\" href=\"\"></a>")
@@ -638,7 +642,10 @@ Still kinda sucks because it can't parse lists"
   (add-hook 'python-mode-hook
             '(lambda ()
                (aggressive-indent-mode -1)
-               (electric-indent-mode -1))))
+               (electric-indent-mode -1)))
+
+  (use-package dockerfile-mode
+    :config (add-to-list 'auto-mode-alist '("Dockerfile\\'" . dockerfile-mode))))
 
 (progn  ;; Highlighting notes and tags
   (if (functionp 'global-hi-lock-mode)
@@ -646,10 +653,14 @@ Still kinda sucks because it can't parse lists"
     (hi-lock-mode 1))
   (defun my-highlight ()
     (interactive)
-    (highlight-regexp (rx (or "#" "@") (1+ (not (any blank "\"" "\n" "(" ")"))))
+    (message "my-highlight was run in buffer: %s" (buffer-name))
+    (highlight-regexp (rx (or "#" "@")
+                          (1+ (not (any blank "\"" "\n" "(" ")" ":"))))
                       'underline))
+  (add-hook 'text-mode-hook  #'my-highlight)
   (add-hook 'prog-mode-hook  #'my-highlight)
-  (add-hook 'skeme-mode-hook #'my-highlight))
+  (add-hook 'skeme-mode-hook #'my-highlight)
+  )
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
@@ -669,7 +680,7 @@ Still kinda sucks because it can't parse lists"
  '(font-latex-script-display (quote ((raise -0.2) raise 0.2)))
  '(package-selected-packages
    (quote
-    (racket-mode cider clojure-mode text-translator paredit xr texfrag lisp disable-mouse math-symbol-lists rainbow-identifiers spaceline avy smex ido-vertical-mode evil-numbers evil-lion evil-commentary rainbow-delimiters evil-surround evil use-package)))
+    (dockerfile-mode racket-mode cider clojure-mode text-translator paredit xr texfrag lisp disable-mouse math-symbol-lists rainbow-identifiers spaceline avy smex ido-vertical-mode evil-numbers evil-lion evil-commentary rainbow-delimiters evil-surround evil use-package)))
  '(sgml-xml-mode t))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.

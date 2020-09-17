@@ -149,7 +149,6 @@ We need this since the raise level does not get reset automatically"
       (backward-up-list)
       (+ (current-column) 1))))
 
-;; (load "scheme.el")  ; Load if you use `scheme-indent-function'
 (define-derived-mode skeme-mode prog-mode "Skeme"
   "Major mode for Skeme"
   (set (make-local-variable 'indent-line-function) 'skeme-indent-line)
@@ -159,8 +158,7 @@ We need this since the raise level does not get reset automatically"
                              nil nil nil nil
                              (font-lock-unfontify-region-function
                               .
-                              font-skeme-unfontify-region)))
-  )
+                              font-skeme-unfontify-region))))
 
 (setq skeme-script nil)
 (defun script-display ()
