@@ -441,7 +441,15 @@
   (message (buffer-file-name))
   (kill-new (file-truename buffer-file-name)))
 
-(progn  ; Miscellaneous key bindings
+(defun iv ()
+  (interactive)
+  (query-replace "iiiii" "v"))
+
+(defun vh ()
+  (interactive)
+  (query-replace "vvvvvvvvvvvv" "I"))
+
+(progn  ;key bindings
   (defun null-function ()
     (interactive)
     (message "This function does nothing"))
@@ -647,20 +655,18 @@ Still kinda sucks because it can't parse lists"
   (use-package dockerfile-mode
     :config (add-to-list 'auto-mode-alist '("Dockerfile\\'" . dockerfile-mode))))
 
-(progn  ;; Highlighting notes and tags
-  (if (functionp 'global-hi-lock-mode)
-      (global-hi-lock-mode 1)
-    (hi-lock-mode 1))
-  (defun my-highlight ()
-    (interactive)
-    (message "my-highlight was run in buffer: %s" (buffer-name))
-    (highlight-regexp (rx (or "#" "@")
-                          (1+ (not (any blank "\"" "\n" "(" ")" ":"))))
-                      'underline))
-  (add-hook 'text-mode-hook  #'my-highlight)
-  (add-hook 'prog-mode-hook  #'my-highlight)
-  (add-hook 'skeme-mode-hook #'my-highlight)
-  )
+(progn  ;;Highlighting notes and tags
+  (defun khoa-highlight ()
+    (let ((regexp-to-highlight
+           (rx (or "#" "@")
+               (1+ (not (any blank "\"" "\n" "(" ")" ":"))))))
+      (font-lock-add-keywords
+       nil
+       `((,regexp-to-highlight 0 'underline prepend)))))
+  
+  (add-hook 'skeme-mode-hook #'khoa-highlight)
+  (add-hook 'prog-mode-hook  #'khoa-highlight)
+  (add-hook 'text-mode-hook  #'khoa-highlight))
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
