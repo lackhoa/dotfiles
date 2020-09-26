@@ -697,7 +697,7 @@ Still kinda sucks because it can't parse lists"
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(default ((t (:family "DejaVu Sans Mono" :foundry "PfEd" :slant normal :weight normal :height 203 :width normal))))
+ '(default ((t (:inherit nil :extend nil :stipple nil :background "black" :foreground "wheat" :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 230 :width normal :foundry "nil"))))
  '(font-latex-subscript-face ((t (:height 0.7))))
  '(hl-line ((t (:box (:line-width 2 :color "yellow green" :style released-button)))))
  '(linum ((t (:inherit (shadow default) :height 100))))
