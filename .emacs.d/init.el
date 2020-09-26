@@ -396,22 +396,22 @@
 (progn  ;; Graph
   (defun dot (beg end)
     (interactive "r")
-    (write-region (buffer-substring beg end) nil "~/note/data/graph.dot" nil)
+    (write-region (buffer-substring beg end) nil "~/notes/data/graph.dot" nil)
     (call-interactively 'view-graph))
 
   (defun sdot (beg end)
     (interactive "r")
-    (write-region (buffer-substring beg end) nil "~/note/data/graph.scm" nil)
-    (if (= (shell-command "scheme --script ~/note/scheme-to-dot.scm") 0)
+    (write-region (buffer-substring beg end) nil "~/notes/data/graph.scm" nil)
+    (if (= (shell-command "scheme --script ~/notes/scheme-to-dot.scm") 0)
         (call-interactively 'view-graph)
       (message "That doesn't work!")))
 
   (defun view-graph ()
     (interactive)
     (;; Compile the dot file to svg
-     shell-command "dot -Tsvg ~/note/data/graph.dot -o ~/note/data/graph.svg")
+     shell-command "dot -Tsvg ~/notes/data/graph.dot -o ~/notes/data/graph.svg")
     (;; View the svg file
-     start-process-shell-command "my-process" nil "xviewer ~/note/data/graph.svg")))
+     start-process-shell-command "my-process" nil "xviewer ~/notes/data/graph.svg")))
 
 (progn  ;; Binary search
   (defun line-number ()
@@ -505,11 +505,11 @@
   (defalias 'init (lambda () (interactive)
                     (find-file  "~/.emacs.d/init.el")))
   (defalias 'fin (lambda () (interactive)
-                   (find-file  "~/note/fin.skm")))
+                   (find-file  "~/notes/fin.skm")))
   (defalias 'thought (lambda () (interactive)
-                       (find-file  "~/note/thought.skm")))
+                       (find-file  "~/notes/thought.skm")))
   (defalias 'medals (lambda () (interactive)
-                      (find-file  "~/note/medals.txt"))))
+                      (find-file  "~/notes/medals.txt"))))
 
 (progn  ;; Pro lisp Movements
   ;; Note: in order for jumps to work, you have to use #' in "evil-define-key"
@@ -687,11 +687,10 @@ Still kinda sucks because it can't parse lists"
    '(("\\*shell\\*" display-buffer-same-window)
      ("*Buffer List*" display-buffer-same-window)
      ("*Help*" display-buffer-same-window)))
- '(font-latex-script-display (quote ((raise -0.2) raise 0.2)))
+ '(font-latex-script-display '((raise -0.2) raise 0.2))
  '(ido-ignore-files nil)
  '(package-selected-packages
-   (quote
-    (terraform-mode dockerfile-mode racket-mode cider clojure-mode text-translator paredit xr texfrag lisp disable-mouse math-symbol-lists rainbow-identifiers spaceline avy smex ido-vertical-mode evil-numbers evil-lion evil-commentary rainbow-delimiters evil-surround evil use-package)))
+   '(terraform-mode dockerfile-mode racket-mode cider clojure-mode text-translator paredit xr texfrag lisp disable-mouse math-symbol-lists rainbow-identifiers spaceline avy smex ido-vertical-mode evil-numbers evil-lion evil-commentary rainbow-delimiters evil-surround evil use-package))
  '(sgml-xml-mode t))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.

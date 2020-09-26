@@ -11,6 +11,7 @@
         synTable))
 
 (progn  ;; Subscript/Superscript Highlighting
+  ;; (use-package auctex)  ;; run this when you first initialize emacs, it's gonna install the package but will give weird errors, then you comment it back again
   (load "font-latex.el")  ;; Stealing code from latex mode
 
   (defvar font-skeme-keywords nil
