@@ -38,3 +38,8 @@ alias texhash='texhash & texhash ~/texmf'
 function cdl {
     builtin cd "$@" && ls -F
     }
+
+### Following lines added by script ./init.sh on Wed Sep 23 12:08:01 EEST 2020:
+export HATCH_ROOT=/home/khoa/hatch-ops
+alias switch='. /home/khoa/hatch-ops/configuration/switch-env.sh'
+

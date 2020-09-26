@@ -294,8 +294,10 @@
             "*scratch*"
             "*Quail Completions*")))
 
-  (add-to-list 'ido-ignore-buffers  ;; Tell ido to ignore the weird asterisk buffers
-               my-skippable-buffers)
+  (;; Tell ido to ignore the weird asterisk buffers
+   add-to-list 'ido-ignore-buffers my-skippable-buffers)
+  (;; Idk why, but we gotta do this to show ".git" files
+   setq ido-ignore-files nil)
 
   (defun my-change-buffer (change-buffer)
     "Call CHANGE-BUFFER until current buffer is not in `my-skippable-buffers'."
@@ -653,13 +655,16 @@ Still kinda sucks because it can't parse lists"
                (electric-indent-mode -1)))
 
   (use-package dockerfile-mode
-    :config (add-to-list 'auto-mode-alist '("Dockerfile\\'" . dockerfile-mode))))
+    :config (add-to-list 'auto-mode-alist '("Dockerfile\\'" . dockerfile-mode)))
+
+  (use-package terraform-mode
+    :config (add-to-list 'auto-mode-alist '("*.tf" . terraform-mode))))
 
 (progn  ;;Highlighting notes and tags
   (defun khoa-highlight ()
     (let ((regexp-to-highlight
            (rx (or "#" "@")
-               (1+ (not (any blank "\"" "\n" "(" ")" ":"))))))
+               (1+ (not (any blank "\"" "\n" "(" ")" ":" ","))))))
       (font-lock-add-keywords
        nil
        `((,regexp-to-highlight 0 'underline prepend)))))
@@ -677,16 +682,16 @@ Still kinda sucks because it can't parse lists"
    [default default default italic underline success warning error])
  '(ansi-color-names-vector
    ["black" "#d55e00" "#009e73" "#f8ec59" "#0072b2" "#cc79a7" "#56b4e9" "white"])
- '(custom-enabled-themes (quote (wheatgrass)))
+ '(custom-enabled-themes '(wheatgrass))
  '(display-buffer-alist
-   (quote
-    (("\\*shell\\*" display-buffer-same-window)
+   '(("\\*shell\\*" display-buffer-same-window)
      ("*Buffer List*" display-buffer-same-window)
-     ("*Help*" display-buffer-same-window))))
+     ("*Help*" display-buffer-same-window)))
  '(font-latex-script-display (quote ((raise -0.2) raise 0.2)))
+ '(ido-ignore-files nil)
  '(package-selected-packages
    (quote
-    (dockerfile-mode racket-mode cider clojure-mode text-translator paredit xr texfrag lisp disable-mouse math-symbol-lists rainbow-identifiers spaceline avy smex ido-vertical-mode evil-numbers evil-lion evil-commentary rainbow-delimiters evil-surround evil use-package)))
+    (terraform-mode dockerfile-mode racket-mode cider clojure-mode text-translator paredit xr texfrag lisp disable-mouse math-symbol-lists rainbow-identifiers spaceline avy smex ido-vertical-mode evil-numbers evil-lion evil-commentary rainbow-delimiters evil-surround evil use-package)))
  '(sgml-xml-mode t))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
