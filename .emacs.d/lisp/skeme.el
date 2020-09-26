@@ -154,12 +154,13 @@ We need this since the raise level does not get reset automatically"
   "Major mode for Skeme"
   (set (make-local-variable 'indent-line-function) 'skeme-indent-line)
   (setq font-lock-multiline t)
-  ;; Uncomment if you want scripts by default
-  (setq font-lock-defaults '(font-skeme-keywords
-                             nil nil nil nil
-                             (font-lock-unfontify-region-function
-                              .
-                              font-skeme-unfontify-region))))
+  ;; Uncomment if you want scripts by default (it doesn't work for version 27.1 anyway)
+  ;; (setq font-lock-defaults '(font-skeme-keywords
+  ;;                            nil nil nil nil
+  ;;                            (font-lock-unfontify-region-function
+  ;;                             .
+  ;;                             font-skeme-unfontify-region)))
+  )
 
 (setq skeme-script nil)
 (defun script-display ()
