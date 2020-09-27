@@ -285,13 +285,15 @@
       (let ((buffer "*Completions*"))
         (and (get-buffer buffer) (kill-buffer buffer)))))
 
-  (defvar my-skippable-buffers  ;; Regexp to skip *XYZ* buffers
+  (defvar my-skippable-buffers  ;; Regexp to buffers
     ;; Note: not all *XYZ* buffers are bad
     (rx (or "*Messages*"
             "*scratch*"
-            "*Quail Completions*")))
+            "*Quail Completions*"
+            "*Buffer List*"
+            (seq "magit" (* (any))))))
 
-  (;; Tell ido to ignore the weird asterisk buffers
+  (;; Tell ido to ignore the weird buffers
    add-to-list 'ido-ignore-buffers my-skippable-buffers)
   (;; Idk why, but we gotta do this to show ".git" files
    setq ido-ignore-files nil)
