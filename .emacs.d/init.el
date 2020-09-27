@@ -1,3 +1,4 @@
+;; (server-start)  ;; This is for emacs client, which we're not using
 (require 'package)
 
 (when (version< emacs-version "27.0")
@@ -193,15 +194,11 @@
   (set-face-foreground 'show-paren-match "#def")
   (set-face-attribute 'show-paren-match nil :weight 'extra-bold))
 
-(use-package magit
-  :config
-  (progn  ;; https://www.manueluberti.eu/emacs/2018/02/17/magit-bury-buffer/
-    (defun mu-magit-kill-buffers (param)
-      "Restore window configuration and kill all Magit buffers."
-      (let ((buffers (magit-mode-get-buffers)))
-        (magit-restore-window-configuration)
-        (mapc #'kill-buffer buffers)))
-    (setq magit-bury-buffer-function #'mu-magit-kill-buffers)))
+(use-package exec-path-from-shell  ;; Something to enale magit?
+  :if (memq window-system '(mac ns))
+  :config (exec-path-from-shell-initialize))
+
+(use-package magit)
 
 (use-package expand-region
   :config
@@ -538,13 +535,20 @@
         (progn (forward-sexp) (forward-sexp) (backward-sexp))
       (message "%s" (error-message-string err))))
 
-  (evil-define-key 'normal 'global
+  (evil-define-key 'normal 'global  ;; Map the command key for mac too
     (kbd "M-h") #'backward-sexp
+    (kbd "s-h") #'backward-sexp
     (kbd "M-l") #'forward-sexp
+    (kbd "s-l") #'forward-sexp
     (kbd "M-k") #'my-backward-up-list
+    (kbd "s-k") #'my-backward-up-list
     (kbd "M-j") #'my-down-list
+    (kbd "s-j") #'my-down-list
     (kbd "M-;") #'my-end-of-list
-    (kbd "M-t") #'transpose-sexps)
+    (kbd "s-;") #'my-end-of-list
+    (kbd "M-t") #'transpose-sexps
+    (kbd "s-t") #'transpose-sexps
+    )
 
   ;; Modified movement for mhtml mode
   (evil-define-motion my-skip-tag-backward ()
@@ -690,7 +694,7 @@ Still kinda sucks because it can't parse lists"
  '(font-latex-script-display '((raise -0.2) raise 0.2))
  '(ido-ignore-files nil)
  '(package-selected-packages
-   '(terraform-mode dockerfile-mode racket-mode cider clojure-mode text-translator paredit xr texfrag lisp disable-mouse math-symbol-lists rainbow-identifiers spaceline avy smex ido-vertical-mode evil-numbers evil-lion evil-commentary rainbow-delimiters evil-surround evil use-package))
+   '(exec-path-from-shell terraform-mode dockerfile-mode racket-mode cider clojure-mode text-translator paredit xr texfrag lisp disable-mouse math-symbol-lists rainbow-identifiers spaceline avy smex ido-vertical-mode evil-numbers evil-lion evil-commentary rainbow-delimiters evil-surround evil use-package))
  '(sgml-xml-mode t))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.

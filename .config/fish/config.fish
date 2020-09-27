@@ -14,8 +14,6 @@ abbr gco         'git checkout'
 # abbr grep        'grep -C 10'
 abbr rm          'rm -rf'
 abbr cat         'bat'
-abbr rmk         'raco make'
-abbr rkt         'racket'
 abbr pull        'cd ~/ ; git pull
                 ; cd note/ ; git pull
                 ; cd ~/code/kara/ ; git pull'

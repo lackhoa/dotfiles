@@ -124,9 +124,5 @@ if [ -x /usr/bin/mint-fortune ]; then
      /usr/bin/mint-fortune
 fi
 
-# This is my local bin
-export PATH="$PATH:/home/khoa/bin"
-# This is tex path
-export PATH="$PATH:/usr/local/texlive/2017/bin/x86_64-linux"
 # Ignore case on completion
 bind 'set completion-ignore-case on'

@@ -8,38 +8,39 @@ if [ -n "$BASH_VERSION" ]; then
     fi
 fi
 
-# set PATH so it includes user's private bin directories
-PATH="$HOME/bin:$HOME/.local/bin:$PATH"
-
-# MY DOINGS: Aliases:
+# Aliases (#note: do not use space anywhere):
 alias cls='clear'
-alias desktop='cdl ~/Desktop'
 alias subl='/usr/bin/subl'
-alias add-alias='vim ~/.profile'
+alias add-alias='emacs ~/.profile'
 alias update-alias='source ~/.profile'
 alias cp='cp -vi'
 alias mv='mv -vi'
-alias cdw='cdl ~/Work'
 alias cdd='cdl ~/Downloads'
-alias cdc='cdl ~/Coq'
+alias gs='git status'
+alias gps='git push'
+alias gpl='git pull'
+alias gc='git commit'
+alias ga='git add'
+alias gd='git diff'
+alias gco='git checkout'
+alias rm='rm -rf'
+alias cat='bat'
+alias tar='tar -xzvf'
+alias apt='sudo apt'
+alias docker='sudo docker'
+alias dockerd='sudo dockerd & disown'
+alias terraform='sudo terraform'
+alias conky-conf='sudo emacs /etc/conky/conky.conf'
 
-# clean up stuff that were created less than 1 minute ago
-alias clean='find . -type f -cmin -1 -delete'
-alias conky-conf='sudo subl /etc/conky/conky.conf'
-
-# this does everything I want to do about updating
-# this command is stored in the root user's script path
-alias khoa-update='sudo sh /usr/local/sbin/khoa-update'
-
-#This command deals with updaing the hash of tex:
-alias texhash='texhash & texhash ~/texmf'
-
-#ls right after cd
+# ls right after cd
 function cdl {
     builtin cd "$@" && ls -F
-    }
+}
+
+# This is my local bin
+export PATH="$PATH:~/bin"
 
 ### Following lines added by script ./init.sh on Wed Sep 23 12:08:01 EEST 2020:
-export HATCH_ROOT=/home/khoa/hatch-ops
-alias switch='. /home/khoa/hatch-ops/configuration/switch-env.sh'
+export HATCH_ROOT='/home/khoa/hatch-ops'
+alias switch='~/hatch-ops/configuration/switch-env.sh'
 
