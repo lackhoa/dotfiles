@@ -670,7 +670,7 @@ Still kinda sucks because it can't parse lists"
   (defun khoa-highlight ()
     (let ((regexp-to-highlight
            (rx (or "#" "@")
-               (1+ (not (any blank "\"" "\n" "(" ")" ":" ","))))))
+               (1+ (not (any blank "\"" "\n" "(" ")" ":" "," "\\" "$"))))))
       (font-lock-add-keywords
        nil
        `((,regexp-to-highlight 0 'underline prepend)))))

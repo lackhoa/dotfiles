@@ -47,67 +47,47 @@ force_color_prompt=yes
 
 if [ -n "$force_color_prompt" ]; then
     if [ -x /usr/bin/tput ] && tput setaf 1 >&/dev/null; then
-	# We have color support; assume it's compliant with Ecma-48
-	# (ISO/IEC-6429). (Lack of such support is extremely rare, and such
-	# a case would tend to support setf rather than setaf.)
-	color_prompt=yes
+        # We have color support; assume it's compliant with Ecma-48
+	      # (ISO/IEC-6429). (Lack of such support is extremely rare, and such
+	      # a case would tend to support setf rather than setaf.)
+	      color_prompt=yes
     else
-	color_prompt=
+        color_prompt=
     fi
 fi
 
+# PS1 is a bash command, which is evaluated to become the prompt,
+# so that it can change dynamically
+# \h = host, \u -> user, w -> working directory
+PS1="${debian_chroot}"
 if [ "$color_prompt" = yes ]; then
-    if [[ ${EUID} == 0 ]] ; then
-        PS1='${debian_chroot:+($debian_chroot)}\[\033[01;31m\]\h\[\033[01;34m\] \W \$\[\033[00m\] '
-    else
-        PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\] \[\033[01;34m\]\w \$\[\033[00m\] '
-    fi
-else
-    PS1='${debian_chroot:+($debian_chroot)}\u@\h \w \$ '
+    reset_color="\[\033[00m\]"
+    user_color="\[\033[01;32m\]"
+    host_color="\[\033[01;31m\]"
+    dir_color="\[\033[01;33m\]"
+    vc_color="\[\033[01;34m\]"
 fi
+
+if [[ ${EUID} != 0 ]] ; then  # EUID = effective user id
+    PS1+="${user_color}\u"
+fi
+PS1+="@${host_color}\h "
+PS1+="${dir_color}\w "
+PS1+="${vc_color}\$(vcprompt)"  #note: We do not evaluate vcprompt here!
+PS1+="\$"
+PS1+=$reset_color
+PS1+=" "
+
 unset color_prompt force_color_prompt
 
-# If this is an xterm set the title to user@host:dir
+# If this is an xterm, set the window title to user@host:dir (MacOS should have taken care of it)
 case "$TERM" in
-xterm*|rxvt*)
-    PS1="\[\e]0;${debian_chroot:+($debian_chroot)}\u@\h \w\a\]$PS1"
-    ;;
-*)
-    ;;
+    xterm*|rxvt*)
+        PS1="\[\e]0;${debian_chroot}\u@\h \w\a\]$PS1"
+        ;;
+    *)
+        ;;
 esac
-
-# enable color support of ls and also add handy aliases
-if [ -x /usr/bin/dircolors ]; then
-    test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
-    alias ls='ls --color=auto'
-    #alias dir='dir --color=auto'
-    #alias vdir='vdir --color=auto'
-
-    alias grep='grep --color=auto'
-    alias fgrep='fgrep --color=auto'
-    alias egrep='egrep --color=auto'
-fi
-
-# colored GCC warnings and errors
-#export GCC_COLORS='error=01;31:warning=01;35:note=01;36:caret=01;32:locus=01:quote=01'
-
-# some more ls aliases
-alias ll='ls -alF'
-alias la='ls -A'
-alias l='ls -CF'
-
-# Add an "alert" alias for long running commands.  Use like so:
-#   sleep 10; alert
-alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
-
-# Alias definitions.
-# You may want to put all your additions into a separate file like
-# ~/.bash_aliases, instead of adding them here directly.
-# See /usr/share/doc/bash-doc/examples in the bash-doc package.
-
-if [ -f ~/.bash_aliases ]; then
-    . ~/.bash_aliases
-fi
 
 # enable programmable completion features (you don't need to enable
 # this, if it's already enabled in /etc/bash.bashrc and /etc/profile
@@ -126,3 +106,57 @@ fi
 
 # Ignore case on completion
 bind 'set completion-ignore-case on'
+
+# Aliases, they are here so that typing "bash" inside your login shell will preserve the aliases
+#note: do not use space anywhere in these!
+alias cls='clear'
+alias subl='/usr/bin/subl'
+alias add-alias='emacs ~/.profile'
+alias update-alias='source ~/.profile'
+alias cp='cp -vi'
+alias mv='mv -vi'
+alias cdd='cdl ~/Downloads'
+alias gs='git status'
+alias gl='git log'
+alias gps='git push'
+alias gpl='git pull'
+alias gc='git commit'
+alias ga='git add'
+alias gd='git diff'
+alias gco='git checkout'
+alias rm='rm -rf'
+alias cat='bat'
+alias tar='tar -xzvf'
+alias apt='sudo apt'
+alias docker='sudo docker'
+alias dockerd='sudo dockerd & disown'
+alias terraform='sudo terraform'
+alias conky-conf='sudo emacs /etc/conky/conky.conf'
+
+# enable color support of ls and also add handy aliases
+if [ -x /usr/bin/dircolors ]; then
+    test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
+    alias ls='ls --color=auto'
+    alias dir='dir --color=auto'
+    alias vdir='vdir --color=auto'
+    alias grep='grep --color=auto'
+    alias fgrep='fgrep --color=auto'
+    alias egrep='egrep --color=auto'
+fi
+
+# colored GCC warnings and errors
+#export GCC_COLORS='error=01;31:warning=01;35:note=01;36:caret=01;32:locus=01:quote=01'
+
+# some more ls aliases
+alias ll='ls -alF'
+alias la='ls -A'
+alias l='ls -CF'
+
+# Add an "alert" alias for long running commands.  Use like so:
+#   sleep 10; alert
+alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
+
+# ls right after cd
+function cdl {
+    builtin cd "$@" && ls -F
+}
