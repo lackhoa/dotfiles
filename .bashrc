@@ -18,6 +18,7 @@ shopt -s histappend
 # for setting history length see HISTSIZE and HISTFILESIZE in bash(1)
 HISTSIZE=1000
 HISTFILESIZE=2000
+export EDITOR=emacs
 
 # check the window size after each command and, if necessary,
 # update the values of LINES and COLUMNS.
@@ -160,3 +161,8 @@ alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo
 function cdl {
     builtin cd "$@" && ls -F
 }
+
+# # pyenv stuff, don't know what they do yet
+# eval "$(pyenv init -)"
+# eval "$(pyenv virtualenv-init -)"
+# pyenv activate hatch_ansible_3.8.5

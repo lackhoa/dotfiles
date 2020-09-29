@@ -392,13 +392,14 @@
   (define-key company-active-map (kbd "C-,") 'company-select-previous)
   (define-key company-search-map (kbd "C-,") 'company-select-previous))
 
-(progn  ;; Graph
+(progn  ;; Graphviz stuff
   (defun dot (beg end)
     (interactive "r")
     (write-region (buffer-substring beg end) nil "~/notes/data/graph.dot" nil)
     (call-interactively 'view-graph))
 
   (defun sdot (beg end)
+    ;; Instead of writing in "dot", we write in Scheme
     (interactive "r")
     (write-region (buffer-substring beg end) nil "~/notes/data/graph.scm" nil)
     (if (= (shell-command "scheme --script ~/notes/scheme-to-dot.scm") 0)
@@ -410,7 +411,7 @@
     (;; Compile the dot file to svg
      shell-command "dot -Tsvg ~/notes/data/graph.dot -o ~/notes/data/graph.svg")
     (;; View the svg file
-     start-process-shell-command "my-process" nil "xviewer ~/notes/data/graph.svg")))
+     start-process-shell-command "my-process" nil "open ~/notes/data/graph.svg")))
 
 (progn  ;; Binary search
   (defun line-number ()
@@ -664,7 +665,9 @@ Still kinda sucks because it can't parse lists"
     :config (add-to-list 'auto-mode-alist '("Dockerfile\\'" . dockerfile-mode)))
 
   (use-package terraform-mode
-    :config (add-to-list 'auto-mode-alist '("*.tf" . terraform-mode))))
+    :config
+    ;; #note This matches .tf, .tfstate, .tfstate.backup,...
+    (add-to-list 'auto-mode-alist `(,(rx ".tf") . terraform-mode))))
 
 (progn  ;;Highlighting notes and tags
   (defun khoa-highlight ()
