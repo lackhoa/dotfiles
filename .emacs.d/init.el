@@ -1,3 +1,4 @@
+;; Todo: implement backtick font-lock
 ;; (server-start)  ;; This is for emacs client, which we're not using
 (require 'package)
 
@@ -98,7 +99,7 @@
 
 (use-package disable-mouse
   :config
-  (global-disable-mouse-mode)
+  ;; (global-disable-mouse-mode)
   (mapc #'disable-mouse-in-keymap
         (list evil-insert-state-map
               ;; evil-emacs-state-map
@@ -451,6 +452,19 @@
   (interactive)
   (query-replace "vvvvvvvvvvvv" "I"))
 
+(progn  ;; Clean buffers that aren't backed by files 
+  (defun buffer-backed-by-file-p (buffer)
+    (let ((backing-file (buffer-file-name buffer)))
+      (if (buffer-modified-p buffer)
+          t
+        (if backing-file
+            (file-exists-p (buffer-file-name buffer))
+          t))))
+
+  (defun clean-buffers ()  ;; What the user runs
+    (interactive)
+    (mapc 'kill-buffer (-remove 'buffer-backed-by-file-p (buffer-list)))))
+
 (progn  ;key bindings
   (defun null-function ()
     (interactive)
@@ -667,7 +681,12 @@ Still kinda sucks because it can't parse lists"
   (use-package terraform-mode
     :config
     ;; #note This matches .tf, .tfstate, .tfstate.backup,...
-    (add-to-list 'auto-mode-alist `(,(rx ".tf") . terraform-mode))))
+    (add-to-list 'auto-mode-alist `(,(rx ".tf") . terraform-mode)))
+  
+  (use-package yaml-mode
+    :config
+    (add-to-list 'auto-mode-alist '("\\.yaml\\'" . yaml-mode))
+    (add-to-list 'auto-mode-alist '("\\.yml\\'" . yaml-mode))))
 
 (progn  ;;Highlighting notes and tags
   (defun khoa-highlight ()
@@ -699,7 +718,7 @@ Still kinda sucks because it can't parse lists"
  '(font-latex-script-display '((raise -0.2) raise 0.2))
  '(ido-ignore-files nil)
  '(package-selected-packages
-   '(exec-path-from-shell terraform-mode dockerfile-mode racket-mode cider clojure-mode text-translator paredit xr texfrag lisp disable-mouse math-symbol-lists rainbow-identifiers spaceline avy smex ido-vertical-mode evil-numbers evil-lion evil-commentary rainbow-delimiters evil-surround evil use-package))
+   '(yaml-mode exec-path-from-shell terraform-mode dockerfile-mode racket-mode cider clojure-mode text-translator paredit xr texfrag lisp disable-mouse math-symbol-lists rainbow-identifiers spaceline avy smex ido-vertical-mode evil-numbers evil-lion evil-commentary rainbow-delimiters evil-surround evil use-package))
  '(sgml-xml-mode t))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
