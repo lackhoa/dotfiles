@@ -3,7 +3,7 @@
 	ner = lackhoa
 	name = lackhoa
 [core]
-	editor = emacs
+	editor = vim
 	pager = diff-so-fancy | less --tabs=4 -RFX
 [diff]
 	tool = vimdiff

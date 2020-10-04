@@ -508,7 +508,14 @@
     (kbd "TAB") #'indent-region
     "A" (lambda () (interactive) (evil-end-of-visual-line)))
   (evil-define-key 'insert 'global (kbd "C-v") #'evil-paste-before)
-  (evil-define-key 'insert 'global (kbd "M-k") #'null-function))
+  (evil-define-key 'insert 'global (kbd "M-k") #'null-function)
+  
+  (when (eq system-type 'darwin) ;; mac specific settings
+    (setq mac-function-modifier 'control)
+    (setq mac-command-modifier 'meta)
+    (setq mac-right-command-modifier 'meta)
+    (setq mac-right-option-modifier 'control)
+    (evil-define-key 'insert 'global (kbd "M-v") #'evil-paste-after)))
 
 (progn  ; Command alias
   (defalias 'k 'kill-buffer-and-window)
