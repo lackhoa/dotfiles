@@ -1,6 +1,9 @@
 # ~/.bashrc: executed by bash(1) for non-login shells.
-# see /usr/share/doc/bash/examples/startup-files (in the package bash-doc)
-# for examples
+# see /usr/share/doc/bash/examples/startup-files (in the package bash-doc) for examples
+# This is executed for all interactive subshells, aka for each usage session
+
+# I know you like zsh, okay?
+export BASH_SILENCE_DEPRECATION_WARNING=1
 
 # If not running interactively, don't do anything
 case $- in
@@ -166,3 +169,8 @@ function cdl {
 # eval "$(pyenv init -)"
 # eval "$(pyenv virtualenv-init -)"
 # pyenv activate hatch_ansible_3.8.5
+
+# Rapey work forces me to put this crap in
+export HATCH_ROOT=${HOME}/hatch-ops
+alias switch='. ${HOME}/hatch-ops/configuration/switch-env.sh'
+

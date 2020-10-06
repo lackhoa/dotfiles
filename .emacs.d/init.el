@@ -74,6 +74,8 @@
 (use-package evil-commentary
   :config (evil-commentary-mode))
 
+(use-package sudo-edit)
+
 (progn  ;; Extempore
   (unless (fboundp 'eldoc-beginning-of-sexp)  ;; Hacking to get extempore-mode
     (defalias 'eldoc-beginning-of-sexp 'elisp--beginning-of-sexp))
@@ -515,7 +517,8 @@
     (setq mac-command-modifier 'meta)
     (setq mac-right-command-modifier 'meta)
     (setq mac-right-option-modifier 'control)
-    (evil-define-key 'insert 'global (kbd "M-v") #'evil-paste-after)))
+    (evil-define-key 'insert 'global (kbd "M-v") #'evil-paste-before)
+    (evil-define-key '(insert normal) 'global (kbd "M-q") #'save-buffers-kill-terminal)))
 
 (progn  ; Command alias
   (defalias 'k 'kill-buffer-and-window)
@@ -647,6 +650,8 @@ Still kinda sucks because it can't parse lists"
         (call-interactively 'newline)))))
 
 (progn  ;; Language modes & tweaks, language support
+  (electric-indent-mode)
+
   (progn  ;;Skeme, my own mode for note-taking
     (load "skeme"))
 
@@ -680,7 +685,7 @@ Still kinda sucks because it can't parse lists"
   (add-hook 'python-mode-hook
             '(lambda ()
                (aggressive-indent-mode -1)
-               (electric-indent-mode -1)))
+               (electric-indent-local-mode 'disable)))
 
   (use-package dockerfile-mode
     :config (add-to-list 'auto-mode-alist '("Dockerfile\\'" . dockerfile-mode)))
@@ -694,6 +699,38 @@ Still kinda sucks because it can't parse lists"
     :config
     (add-to-list 'auto-mode-alist '("\\.yaml\\'" . yaml-mode))
     (add-to-list 'auto-mode-alist '("\\.yml\\'" . yaml-mode))))
+
+(use-package multi-term
+  ;; Note: I can use "rename-uniquely" for now and go with term-mode
+  :config
+  (setq multi-term-program "/bin/bash")
+  (setq explicit-shell-file-name "/bin/bash")
+  ;; http://joelmccracken.github.io/entries/switching-between-term-mode-and-line-mode-in-emacs-term/
+  (defun term-toggle-mode ()
+    "Toggles term between line mode and char mode"
+    (interactive)
+    (if (term-in-line-mode)
+        (term-char-mode)
+      (term-line-mode)))
+  (progn
+    (evil-define-key 'insert term-raw-map (kbd "C-v") #'term-paste)
+    (if (eq system-type 'darwin)
+        (evil-define-key 'insert term-raw-map (kbd "M-v") #'term-paste)))
+
+  (progn  ;; Switch term mode based on state
+    ;; #Note: I tried to switch automatically using state entry hook, but no can do
+    (evil-define-key 'normal term-mode-map  (kbd "a") (lambda () (interactive)
+                                                        (call-interactively #'evil-append-line)
+                                                        (term-char-mode)))
+    (evil-define-key 'normal term-raw-map  (kbd "a")  (lambda () (interactive)
+                                                        (call-interactively #'evil-append-line)
+                                                        (term-char-mode)))
+    (evil-define-key 'insert term-raw-map (kbd "<escape>") (lambda () (interactive)
+                                                             (evil-normal-state)
+                                                             (term-line-mode)))
+    (evil-define-key 'insert term-mode-map (kbd "<escape>") (lambda () (interactive)
+                                                              (evil-normal-state)
+                                                              (term-line-mode)))))
 
 (progn  ;;Highlighting notes and tags
   (defun khoa-highlight ()
@@ -725,7 +762,7 @@ Still kinda sucks because it can't parse lists"
  '(font-latex-script-display '((raise -0.2) raise 0.2))
  '(ido-ignore-files nil)
  '(package-selected-packages
-   '(yaml-mode exec-path-from-shell terraform-mode dockerfile-mode racket-mode cider clojure-mode text-translator paredit xr texfrag lisp disable-mouse math-symbol-lists rainbow-identifiers spaceline avy smex ido-vertical-mode evil-numbers evil-lion evil-commentary rainbow-delimiters evil-surround evil use-package))
+   '(multi-term sudo-edit yaml-mode exec-path-from-shell terraform-mode dockerfile-mode racket-mode cider clojure-mode text-translator paredit xr texfrag lisp disable-mouse math-symbol-lists rainbow-identifiers spaceline avy smex ido-vertical-mode evil-numbers evil-lion evil-commentary rainbow-delimiters evil-surround evil use-package))
  '(sgml-xml-mode t))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
