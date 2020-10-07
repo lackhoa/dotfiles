@@ -165,9 +165,9 @@ function cdl {
     builtin cd "$@" && ls -F
 }
 
-# # pyenv stuff, don't know what they do yet
-# eval "$(pyenv init -)"
-# eval "$(pyenv virtualenv-init -)"
+# pyenv stuff, don't know what they do yet
+eval "$(pyenv init -)"
+eval "$(pyenv virtualenv-init -)"
 # pyenv activate hatch_ansible_3.8.5
 
 # Rapey work forces me to put this crap in

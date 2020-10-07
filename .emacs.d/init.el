@@ -454,6 +454,10 @@
   (interactive)
   (query-replace "vvvvvvvvvvvv" "I"))
 
+(defun xv ()
+  (interactive)
+  (query-replace "x" "vv"))
+
 (progn  ;; Clean buffers that aren't backed by files 
   (defun buffer-backed-by-file-p (buffer)
     (let ((backing-file (buffer-file-name buffer)))
@@ -686,6 +690,10 @@ Still kinda sucks because it can't parse lists"
             '(lambda ()
                (aggressive-indent-mode -1)
                (electric-indent-local-mode 'disable)))
+  (add-hook 'yaml-mode-hook
+            '(lambda ()
+               (aggressive-indent-mode -1)
+               (electric-indent-local-mode 'disable)))
 
   (use-package dockerfile-mode
     :config (add-to-list 'auto-mode-alist '("Dockerfile\\'" . dockerfile-mode)))
@@ -698,39 +706,41 @@ Still kinda sucks because it can't parse lists"
   (use-package yaml-mode
     :config
     (add-to-list 'auto-mode-alist '("\\.yaml\\'" . yaml-mode))
-    (add-to-list 'auto-mode-alist '("\\.yml\\'" . yaml-mode))))
+    (add-to-list 'auto-mode-alist '("\\.yml\\'" . yaml-mode)))
+  
+  (add-to-list 'auto-mode-alist '("\\.ts\\'" . javascript-mode)))
 
 (use-package multi-term
   ;; Note: I can use "rename-uniquely" for now and go with term-mode
   :config
   (setq multi-term-program "/bin/bash")
   (setq explicit-shell-file-name "/bin/bash")
-  ;; http://joelmccracken.github.io/entries/switching-between-term-mode-and-line-mode-in-emacs-term/
-  (defun term-toggle-mode ()
-    "Toggles term between line mode and char mode"
-    (interactive)
-    (if (term-in-line-mode)
-        (term-char-mode)
-      (term-line-mode)))
   (progn
+    (defun my-enable-term-line-mode (&rest ignored)
+      (term-line-mode))
+    (advice-add 'term :after #'my-enable-term-line-mode))
+
+  (progn  ;; Pasting in char mode
     (evil-define-key 'insert term-raw-map (kbd "C-v") #'term-paste)
     (if (eq system-type 'darwin)
         (evil-define-key 'insert term-raw-map (kbd "M-v") #'term-paste)))
 
-  (progn  ;; Switch term mode based on state
+  (evil-define-key  ;; Press "Enter" to send the whole line
+    'normal term-mode-map (kbd "RET") #'term-send-input)
+
+  (progn
+    (defun term-toggle-mode ()
+      "Toggles term between line mode and char mode"
+      (interactive)
+      (if (term-in-line-mode)
+          (term-char-mode)
+        (term-line-mode)))
     ;; #Note: I tried to switch automatically using state entry hook, but no can do
-    (evil-define-key 'normal term-mode-map  (kbd "a") (lambda () (interactive)
-                                                        (call-interactively #'evil-append-line)
-                                                        (term-char-mode)))
-    (evil-define-key 'normal term-raw-map  (kbd "a")  (lambda () (interactive)
-                                                        (call-interactively #'evil-append-line)
-                                                        (term-char-mode)))
-    (evil-define-key 'insert term-raw-map (kbd "<escape>") (lambda () (interactive)
-                                                             (evil-normal-state)
-                                                             (term-line-mode)))
-    (evil-define-key 'insert term-mode-map (kbd "<escape>") (lambda () (interactive)
-                                                              (evil-normal-state)
-                                                              (term-line-mode)))))
+    (evil-define-key '(normal insert) term-mode-map (kbd "C-c C-j") #'term-toggle-mode)
+    (evil-define-key '(normal insert) term-mode-map (kbd "C-c C-k") #'term-toggle-mode)
+    (evil-define-key '(normal insert) term-raw-map  (kbd "C-c C-j") #'term-toggle-mode)
+    (evil-define-key '(normal insert) term-raw-map  (kbd "C-c C-k") #'term-toggle-mode)
+    ))
 
 (progn  ;;Highlighting notes and tags
   (defun khoa-highlight ()
