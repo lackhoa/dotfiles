@@ -34,7 +34,7 @@
 
 (setq ring-bell-function 'ignore)  ; Something really annoying?
 
-(global-hl-line-mode)  ; Show where the cursor is
+;; (global-hl-line-mode)  ; Show where the cursor is, disabled because messes with line width
 
 (progn  ; Getting rid of really annoying stuffs
   (setq inhibit-startup-buffer-menu t)
@@ -60,11 +60,13 @@
 
   :config
   (evil-mode 1)
-  ;; Switch line highlighting off when in insert mode.
-  (add-hook 'evil-insert-state-entry-hook
-            '(lambda () (global-hl-line-mode -1)))
-  (add-hook 'evil-normal-state-entry-hook
-            '(lambda () (global-hl-line-mode 1)))
+
+  ;; Switch line highlighting off when in insert mode. (no thanks)
+  ;; (add-hook 'evil-insert-state-entry-hook
+  ;;           '(lambda () (global-hl-line-mode -1)))
+  ;; (add-hook 'evil-normal-state-entry-hook
+  ;;           '(lambda () (global-hl-line-mode 1)))
+
   ;; Auto-center search result
   (defadvice evil-search-next
       (after advice-for-evil-search-next activate))
@@ -478,6 +480,13 @@
 
   (global-set-key (kbd "C-,") #'my-prev-buffer)
   (global-set-key (kbd "C-.") #'my-next-buffer)
+  (global-set-key (kbd "C-s-H") #'ns-do-hide-emacs)
+  (global-set-key (kbd "s-j") #'evil-window-next)
+  (global-set-key (kbd "s-k") #'evil-window-prev)
+  (global-set-key (kbd "s-h") #'evil-window-prev)
+  (global-set-key (kbd "s-l") #'evil-window-next)
+  (global-set-key (kbd "s-0") #'evil-window-delete)
+  
   (evil-define-key '(normal visual) 'global
     "I" #'evil-first-non-blank)
   (evil-define-key 'normal 'global
@@ -509,7 +518,15 @@
     (kbd "\\")  #'null-function
     (kbd "TAB") (lambda () (interactive)
                   (save-excursion
-                    (evil-indent-line (line-beginning-position) (line-end-position)))))
+                    (evil-indent-line (line-beginning-position) (line-end-position))))
+    (kbd "C-M-k") (lambda () (interactive)
+                    (call-interactively #'evil-delete-whole-line)
+                    (evil-previous-line)
+                    (evil-paste-before 1))
+    (kbd "C-M-j") (lambda () (interactive)
+                    (call-interactively #'evil-delete-whole-line)
+                    (evil-next-line)
+                    (evil-paste-before 1)))
   (evil-define-key 'visual 'global
     (kbd "TAB") #'indent-region
     "A" (lambda () (interactive) (evil-end-of-visual-line)))
@@ -518,6 +535,7 @@
   
   (when (eq system-type 'darwin) ;; mac specific settings
     (setq mac-function-modifier 'control)
+    (setq mac-option-modifier 'super)
     (setq mac-command-modifier 'meta)
     (setq mac-right-command-modifier 'meta)
     (setq mac-right-option-modifier 'control)
@@ -568,18 +586,11 @@
 
   (evil-define-key 'normal 'global  ;; Map the command key for mac too
     (kbd "M-h") #'backward-sexp
-    (kbd "s-h") #'backward-sexp
     (kbd "M-l") #'forward-sexp
-    (kbd "s-l") #'forward-sexp
     (kbd "M-k") #'my-backward-up-list
-    (kbd "s-k") #'my-backward-up-list
     (kbd "M-j") #'my-down-list
-    (kbd "s-j") #'my-down-list
     (kbd "M-;") #'my-end-of-list
-    (kbd "s-;") #'my-end-of-list
-    (kbd "M-t") #'transpose-sexps
-    (kbd "s-t") #'transpose-sexps
-    )
+    (kbd "M-t") #'transpose-sexps)
 
   ;; Modified movement for mhtml mode
   (evil-define-motion my-skip-tag-backward ()
@@ -707,40 +718,59 @@ Still kinda sucks because it can't parse lists"
     :config
     (add-to-list 'auto-mode-alist '("\\.yaml\\'" . yaml-mode))
     (add-to-list 'auto-mode-alist '("\\.yml\\'" . yaml-mode)))
+
+  (use-package ansible
+    :config
+    (add-hook 'yaml-mode-hook '(lambda () (ansible 1))))
+
+  (use-package jinja2-mode
+    :config
+    (add-to-list 'auto-mode-alist '("\\.j2\\'" . jinja2-mode)))
   
   (add-to-list 'auto-mode-alist '("\\.ts\\'" . javascript-mode)))
 
-(use-package multi-term
-  ;; Note: I can use "rename-uniquely" for now and go with term-mode
-  :config
-  (setq multi-term-program "/bin/bash")
-  (setq explicit-shell-file-name "/bin/bash")
+(progn  ;; Terminal emulator
+  (use-package multi-term
+    ;; Note: I can use "rename-uniquely" for now and go with term-mode
+    :config
+    (setq multi-term-program "/bin/bash"))
   (progn
     (defun my-enable-term-line-mode (&rest ignored)
       (term-line-mode))
     (advice-add 'term :after #'my-enable-term-line-mode))
-
   (progn  ;; Pasting in char mode
     (evil-define-key 'insert term-raw-map (kbd "C-v") #'term-paste)
     (if (eq system-type 'darwin)
         (evil-define-key 'insert term-raw-map (kbd "M-v") #'term-paste)))
-
   (evil-define-key  ;; Press "Enter" to send the whole line
     'normal term-mode-map (kbd "RET") #'term-send-input)
-
-  (progn
-    (defun term-toggle-mode ()
-      "Toggles term between line mode and char mode"
-      (interactive)
-      (if (term-in-line-mode)
-          (term-char-mode)
-        (term-line-mode)))
+  (let ((term-toggle-mode (lambda ()
+                            (interactive)
+                            "Toggles term between line mode and char mode"
+                            (if (term-in-line-mode)
+                                (term-char-mode)
+                              (term-line-mode)))))
     ;; #Note: I tried to switch automatically using state entry hook, but no can do
-    (evil-define-key '(normal insert) term-mode-map (kbd "C-c C-j") #'term-toggle-mode)
-    (evil-define-key '(normal insert) term-mode-map (kbd "C-c C-k") #'term-toggle-mode)
-    (evil-define-key '(normal insert) term-raw-map  (kbd "C-c C-j") #'term-toggle-mode)
-    (evil-define-key '(normal insert) term-raw-map  (kbd "C-c C-k") #'term-toggle-mode)
-    ))
+    (evil-define-key '(normal insert) term-mode-map (kbd "C-c C-j") term-toggle-mode)
+    (evil-define-key '(normal insert) term-mode-map (kbd "C-c C-k") term-toggle-mode)
+    (evil-define-key '(normal insert) term-raw-map  (kbd "C-c C-j") term-toggle-mode)
+    (evil-define-key '(normal insert) term-raw-map  (kbd "C-c C-k") term-toggle-mode))
+  (setq term-buffer-maximum-size (lsh 1 14))
+  (eval-after-load 'term
+    '(evil-define-key 'insert term-raw-map
+       [C-delete] (lambda () (interactive) (term-send-raw-string "\ed"))
+       [C-backspace] (lambda () (interactive) (term-send-raw-string "\e\C-h"))
+       [M-backspace] (lambda () (interactive) (term-send-raw-string "\e\C-h"))
+       [C-left] (lambda () (interactive)
+                  (term-send-raw-string "\eb"))
+       [C-right] (lambda () (interactive)
+                   (term-send-raw-string "\ef"))
+       [M-left] (lambda () (interactive)
+                  (term-send-raw-string "\eb"))
+       [M-right] (lambda () (interactive)
+                   (term-send-raw-string "\ef"))))
+  (add-hook 'term-mode-hook (lambda () (goto-address-mode 1))))
+
 
 (progn  ;;Highlighting notes and tags
   (defun khoa-highlight ()
@@ -772,7 +802,7 @@ Still kinda sucks because it can't parse lists"
  '(font-latex-script-display '((raise -0.2) raise 0.2))
  '(ido-ignore-files nil)
  '(package-selected-packages
-   '(multi-term sudo-edit yaml-mode exec-path-from-shell terraform-mode dockerfile-mode racket-mode cider clojure-mode text-translator paredit xr texfrag lisp disable-mouse math-symbol-lists rainbow-identifiers spaceline avy smex ido-vertical-mode evil-numbers evil-lion evil-commentary rainbow-delimiters evil-surround evil use-package))
+   '(jinja2-mode jinja2 ansible multi-term sudo-edit yaml-mode exec-path-from-shell terraform-mode dockerfile-mode racket-mode cider clojure-mode text-translator paredit xr texfrag lisp disable-mouse math-symbol-lists rainbow-identifiers spaceline avy smex ido-vertical-mode evil-numbers evil-lion evil-commentary rainbow-delimiters evil-surround evil use-package))
  '(sgml-xml-mode t))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.

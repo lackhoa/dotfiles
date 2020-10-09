@@ -14,3 +14,12 @@ fi
 PATH+=":${HOME}/bin"
 PATH+=":${HOME}/.local/bin"
 PATH+=":${HOME}/Library/Python/2.7/bin"
+
+# Adding all keys in my ssh directory to ssh agents
+SSH_DIR=${HOME}/.ssh
+for identity in ${SSH_DIR}/*; do
+    if [ -f ${identity} ] && [ ${identity} != "${SSH_DIR}/config" ] && [ ${identity} != "${SSH_DIR}/known_hosts" ]; then
+        chmod 400 ${identity}
+        ssh-add ${identity}
+    fi
+done

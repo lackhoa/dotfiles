@@ -132,9 +132,6 @@ alias rm='rm -frv'
 alias cat='bat'
 alias tar='tar -xzvf'
 alias apt='sudo apt'
-alias docker='sudo docker'
-alias dockerd='sudo dockerd & disown'
-alias terraform='sudo terraform'
 alias conky-conf='sudo emacs /etc/conky/conky.conf'
 
 # enable color support of ls and also add handy aliases
@@ -165,12 +162,13 @@ function cdl {
     builtin cd "$@" && ls -F
 }
 
+
+
+### Rapey work forces me to put this crap in
 # pyenv stuff, don't know what they do yet
 eval "$(pyenv init -)"
 eval "$(pyenv virtualenv-init -)"
-# pyenv activate hatch_ansible_3.8.5
+pyenv activate 3.8.5/envs/hatch_ansible_3.8.5
 
-# Rapey work forces me to put this crap in
 export HATCH_ROOT=${HOME}/hatch-ops
 alias switch='. ${HOME}/hatch-ops/configuration/switch-env.sh'
-
