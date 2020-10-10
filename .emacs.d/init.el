@@ -1,4 +1,3 @@
-;; Todo: auto-complete manual activation
 ;; (server-start)  ;; This is for emacs client, which we're not using
 (defun void ()
   (interactive)
@@ -474,7 +473,7 @@
 (progn  ;key bindings
   (global-set-key (kbd "M-,") #'my-prev-buffer)
   (global-set-key (kbd "M-.") #'my-next-buffer)
-  (global-set-key (kbd "C-s-H") #'ns-do-hide-emacs)
+  (global-set-key (kbd "M-H") #'ns-do-hide-emacs)
   (global-set-key (kbd "s-j") #'evil-window-next)
   (global-set-key (kbd "s-k") #'evil-window-prev)
   (global-set-key (kbd "s-h") #'evil-window-prev)
@@ -485,7 +484,8 @@
     "I" #'evil-first-non-blank)
   (evil-define-key 'normal 'global
     "A" (lambda () (interactive)
-          (evil-end-of-visual-line))
+          (evil-end-of-line)
+          (evil-backward-char))
     (kbd "<right>") #'my-next-buffer
     (kbd "<left>") #'my-prev-buffer
     (kbd "<up>") #'evil-scroll-line-up
@@ -521,9 +521,11 @@
                     (call-interactively #'evil-delete-whole-line)
                     (evil-next-line)
                     (evil-paste-before 1)))
+
   (evil-define-key 'visual 'global
     (kbd "TAB") #'indent-region
-    "A" (lambda () (interactive) (evil-end-of-visual-line)))
+    "A" (lambda () (interactive) (evil-end-of-line)))
+
   (evil-define-key 'insert 'global
     (kbd "C-v") #'evil-paste-before
     (kbd "M-k") #'void)
