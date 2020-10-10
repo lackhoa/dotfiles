@@ -1,5 +1,9 @@
-;; Todo: implement backtick font-lock
+;; Todo: auto-complete manual activation
 ;; (server-start)  ;; This is for emacs client, which we're not using
+(defun void ()
+  (interactive)
+  (message "Void function called (you made a typing mistake)"))
+
 (require 'package)
 
 (when (version< emacs-version "27.0")
@@ -148,7 +152,7 @@
   (evil-define-key  ;; Binding to `S' would conflict with `evil-surround' hackery
     'visual 'global (kbd "f") #'evil-avy-goto-char))
 
-(use-package ido-vertical-mode ; Ido-mode: a regexp smart search framework
+(use-package ido-grid-mode  ;; Ido-mode: a regexp smart search framework
   :init
   (ido-mode 1)
   (setq ido-enable-flex-matching t
@@ -156,12 +160,11 @@
         ido-everywhere t
         ido-use-filename-at-point 'guess)
   :config
-  (ido-vertical-mode 1)
-  (setq ido-vertical-define-keys 'C-n-C-p-up-down-left-right)
-  ;; I wanted it to be "C-w" but somehow it doesn't work
-  (define-key ido-common-completion-map (kbd "C-e") 'backward-kill-word))
+  (ido-grid-mode 1)  ;; The normal "ido" layout is insufferable
+  (define-key  ;; I wanted it to be "C-w" but somehow it doesn't work
+    ido-common-completion-map (kbd "C-e") #'backward-kill-word))
 
-(use-package smex  ; Command completion, using Ido above
+(use-package smex  ; Command completion with Ido
   :init (smex-initialize)
   :config
   (global-set-key (kbd "M-x") #'smex)
@@ -215,8 +218,8 @@
   :config
   (evil-define-key 'normal 'global "P" #'popup-kill-ring)
   ;; For some reason, evil-define-key doesn't work here
-  (define-key popup-kill-ring-keymap (kbd "C-.") 'popup-kill-ring-next)
-  (define-key popup-kill-ring-keymap (kbd "C-,") 'popup-kill-ring-previous))
+  (define-key popup-kill-ring-keymap (kbd "M-.") 'popup-kill-ring-next)
+  (define-key popup-kill-ring-keymap (kbd "M-,") 'popup-kill-ring-previous))
 
 (desktop-save-mode 1)  ; Save current desktop configs on exit
 
@@ -289,7 +292,6 @@
    '(lambda ()
       (let ((buffer "*Completions*"))
         (and (get-buffer buffer) (kill-buffer buffer)))))
-
   (defvar my-skippable-buffers  ;; Regexp to buffers
     ;; Note: not all *XYZ* buffers are bad
     (rx (or "*Messages*"
@@ -297,12 +299,10 @@
             "*Quail Completions*"
             "*Buffer List*"
             (seq "magit" (* (any))))))
-
   (;; Tell ido to ignore the weird buffers
    add-to-list 'ido-ignore-buffers my-skippable-buffers)
   (;; Idk why, but we gotta do this to show ".git" files
    setq ido-ignore-files nil)
-
   (defun my-change-buffer (change-buffer)
     "Call CHANGE-BUFFER until current buffer is not in `my-skippable-buffers'."
     (let ((initial (current-buffer)))
@@ -314,12 +314,10 @@
             (when (eq (current-buffer) first-change)
               (switch-to-buffer initial)
               (throw 'loop t)))))))
-
   (defun my-next-buffer ()
     "Variant of `next-buffer' that skips `my-skippable-buffers'."
     (interactive)
     (my-change-buffer 'next-buffer))
-
   (defun my-prev-buffer ()
     "Variant of `previous-buffer' that skips `my-skippable-buffers'."
     (interactive)
@@ -391,11 +389,11 @@
   (setq company-show-numbers t)
   :config
   (add-hook 'after-init-hook 'global-company-mode)
-  (add-hook 'skeme-mode-hook (lambda () (company-mode -1)))
-  (define-key company-active-map (kbd "C-.") 'company-select-next)
-  (define-key company-search-map (kbd "C-.") 'company-select-next)
-  (define-key company-active-map (kbd "C-,") 'company-select-previous)
-  (define-key company-search-map (kbd "C-,") 'company-select-previous))
+  (define-key company-active-map (kbd "M-.") #'company-select-next)
+  (define-key company-search-map (kbd "M-.") #'company-select-next)
+  (define-key company-active-map (kbd "M-,") #'company-select-previous)
+  (define-key company-search-map (kbd "M-,") #'company-select-previous)
+  (evil-define-key 'insert 'global (kbd "TAB") #'company-complete))
 
 (progn  ;; Graphviz stuff
   (defun dot (beg end)
@@ -474,12 +472,8 @@
     (mapc 'kill-buffer (-remove 'buffer-backed-by-file-p (buffer-list)))))
 
 (progn  ;key bindings
-  (defun null-function ()
-    (interactive)
-    (message "This function does nothing"))
-
-  (global-set-key (kbd "C-,") #'my-prev-buffer)
-  (global-set-key (kbd "C-.") #'my-next-buffer)
+  (global-set-key (kbd "M-,") #'my-prev-buffer)
+  (global-set-key (kbd "M-.") #'my-next-buffer)
   (global-set-key (kbd "C-s-H") #'ns-do-hide-emacs)
   (global-set-key (kbd "s-j") #'evil-window-next)
   (global-set-key (kbd "s-k") #'evil-window-prev)
@@ -513,9 +507,9 @@
                     (open-line 1)))
     (kbd "C-a") #'mark-whole-buffer
     (kbd "DEL") #'backward-delete-char-untabify
-    (kbd "C-,") #'my-prev-buffer
-    (kbd "C-.") #'my-next-buffer
-    (kbd "\\")  #'null-function
+    (kbd "M-,") #'my-prev-buffer
+    (kbd "M-.") #'my-next-buffer
+    (kbd "\\")  #'void
     (kbd "TAB") (lambda () (interactive)
                   (save-excursion
                     (evil-indent-line (line-beginning-position) (line-end-position))))
@@ -530,9 +524,9 @@
   (evil-define-key 'visual 'global
     (kbd "TAB") #'indent-region
     "A" (lambda () (interactive) (evil-end-of-visual-line)))
-  (evil-define-key 'insert 'global (kbd "C-v") #'evil-paste-before)
-  (evil-define-key 'insert 'global (kbd "M-k") #'null-function)
-  
+  (evil-define-key 'insert 'global
+    (kbd "C-v") #'evil-paste-before
+    (kbd "M-k") #'void)
   (when (eq system-type 'darwin) ;; mac specific settings
     (setq mac-function-modifier 'control)
     (setq mac-option-modifier 'super)
@@ -544,7 +538,7 @@
 
 (progn  ; Command alias
   (defalias 'k 'kill-buffer-and-window)
-  (defalias '\; 'null-function)
+  (defalias '\; #'void)
   (defalias 'f 'ido-find-file)
   (defalias 'b 'ido-switch-buffer)
   (defalias 'ls 'buffer-menu)
@@ -734,10 +728,17 @@ Still kinda sucks because it can't parse lists"
     ;; Note: I can use "rename-uniquely" for now and go with term-mode
     :config
     (setq multi-term-program "/bin/bash"))
-  (progn
-    (defun my-enable-term-line-mode (&rest ignored)
-      (term-line-mode))
-    (advice-add 'term :after #'my-enable-term-line-mode))
+  (defadvice ansi-term (after advice-term-line-mode activate)
+    (term-line-mode))
+  (add-hook 'term-mode-hook  ;; All `term` hooks also get transferred to `multi-term`
+            (lambda ()
+              (interactive)
+              (goto-address-mode 1)  ;; Highlight addresses
+              (cd "~/")              ;; At least I wanna open new files from the home directory
+              (term-line-mode)       ;; Default to "line mode": Would be cool if it worked...
+              ))
+  (evil-define-key 'insert term-raw-map  ;; At least we can auto-switch when entering normal state
+    (kbd "<escape>") (lambda () (interactive) (term-line-mode) (evil-normal-state)))
   (progn  ;; Pasting in char mode
     (evil-define-key 'insert term-raw-map (kbd "C-v") #'term-paste)
     (if (eq system-type 'darwin)
@@ -751,11 +752,10 @@ Still kinda sucks because it can't parse lists"
                                 (term-char-mode)
                               (term-line-mode)))))
     ;; #Note: I tried to switch automatically using state entry hook, but no can do
-    (evil-define-key '(normal insert) term-mode-map (kbd "C-c C-j") term-toggle-mode)
-    (evil-define-key '(normal insert) term-mode-map (kbd "C-c C-k") term-toggle-mode)
-    (evil-define-key '(normal insert) term-raw-map  (kbd "C-c C-j") term-toggle-mode)
-    (evil-define-key '(normal insert) term-raw-map  (kbd "C-c C-k") term-toggle-mode))
-  (setq term-buffer-maximum-size (lsh 1 14))
+    (evil-define-key '(normal insert) term-mode-map
+      (kbd "C-c C-j") term-toggle-mode
+      (kbd "C-c C-k") term-toggle-mode))
+  (setq term-buffer-maximum-size (lsh 1 14))  ;; 16384 lines
   (eval-after-load 'term
     '(evil-define-key 'insert term-raw-map
        [C-delete] (lambda () (interactive) (term-send-raw-string "\ed"))
@@ -768,8 +768,7 @@ Still kinda sucks because it can't parse lists"
        [M-left] (lambda () (interactive)
                   (term-send-raw-string "\eb"))
        [M-right] (lambda () (interactive)
-                   (term-send-raw-string "\ef"))))
-  (add-hook 'term-mode-hook (lambda () (goto-address-mode 1))))
+                   (term-send-raw-string "\ef")))))
 
 
 (progn  ;;Highlighting notes and tags
