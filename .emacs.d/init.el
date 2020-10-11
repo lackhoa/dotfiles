@@ -1,9 +1,8 @@
 ;; (server-start)  ;; This is for emacs client, which we're not using
-(defun void ()
-  (interactive)
-  (message "Void function called (you made a typing mistake)"))
 
 (require 'package)
+
+(defun void () (interactive) (message "That does nothing!"))
 
 (when (version< emacs-version "27.0")
   (package-initialize))
@@ -392,7 +391,9 @@
   (define-key company-search-map (kbd "M-.") #'company-select-next)
   (define-key company-active-map (kbd "M-,") #'company-select-previous)
   (define-key company-search-map (kbd "M-,") #'company-select-previous)
-  (evil-define-key 'insert 'global (kbd "TAB") #'company-complete))
+  (evil-define-key 'insert 'global (kbd "TAB") #'company-complete)
+  (define-key company-active-map (kbd "<return>")  ;; Can't use (kbd "RET")???
+    (lambda () (interactive) (newline-and-indent))))
 
 (progn  ;; Graphviz stuff
   (defun dot (beg end)
@@ -540,7 +541,7 @@
 
 (progn  ; Command alias
   (defalias 'k 'kill-buffer-and-window)
-  (defalias '\; #'void)
+  (defalias '\; 'void)
   (defalias 'f 'ido-find-file)
   (defalias 'b 'ido-switch-buffer)
   (defalias 'ls 'buffer-menu)
@@ -725,7 +726,7 @@ Still kinda sucks because it can't parse lists"
   
   (add-to-list 'auto-mode-alist '("\\.ts\\'" . javascript-mode)))
 
-(progn  ;; Terminal emulator
+(progn  ;;Terminal emulator
   (use-package multi-term
     ;; Note: I can use "rename-uniquely" for now and go with term-mode
     :config
@@ -755,6 +756,9 @@ Still kinda sucks because it can't parse lists"
                               (term-line-mode)))))
     ;; #Note: I tried to switch automatically using state entry hook, but no can do
     (evil-define-key '(normal insert) term-mode-map
+      (kbd "C-c C-j") term-toggle-mode
+      (kbd "C-c C-k") term-toggle-mode)
+    (evil-define-key '(normal insert) term-raw-map
       (kbd "C-c C-j") term-toggle-mode
       (kbd "C-c C-k") term-toggle-mode))
   (setq term-buffer-maximum-size (lsh 1 14))  ;; 16384 lines
