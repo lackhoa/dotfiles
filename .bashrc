@@ -131,7 +131,6 @@ alias gco='git checkout'
 alias rm='rm -frv'
 alias cat='bat'
 alias tar='tar -xzvf'
-alias apt='sudo apt'
 alias conky-conf='sudo emacs /etc/conky/conky.conf'
 
 # enable color support of ls and also add handy aliases

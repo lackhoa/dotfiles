@@ -290,7 +290,7 @@
    '(lambda ()
       (let ((buffer "*Completions*"))
         (and (get-buffer buffer) (kill-buffer buffer)))))
-  (defvar my-skippable-buffers  ;; Regexp to buffers
+  (defvar my-ignored-buffers  ;; Regexp to buffers
     ;; Note: not all *XYZ* buffers are bad
     (rx (or "*Messages*"
             "*scratch*"
@@ -298,28 +298,37 @@
             "*Buffer List*"
             (seq "magit" (* (any))))))
   (;; Tell ido to ignore the weird buffers
-   add-to-list 'ido-ignore-buffers my-skippable-buffers)
+   add-to-list 'ido-ignore-buffers my-ignored-buffers)
   (;; Idk why, but we gotta do this to show ".git" files
    setq ido-ignore-files nil)
   (defun my-change-buffer (change-buffer)
-    "Call CHANGE-BUFFER until current buffer is not in `my-skippable-buffers'."
+    "Call CHANGE-BUFFER until current buffer is not in `my-ignored-buffers'."
     (let ((initial (current-buffer)))
       (funcall change-buffer)
       (let ((first-change (current-buffer)))
         (catch 'loop
-          (while (string-match my-skippable-buffers (buffer-name))
+          (while (string-match my-ignored-buffers (buffer-name))
             (funcall change-buffer)
             (when (eq (current-buffer) first-change)
               (switch-to-buffer initial)
               (throw 'loop t)))))))
   (defun my-next-buffer ()
-    "Variant of `next-buffer' that skips `my-skippable-buffers'."
+    "Variant of `next-buffer' that skips `my-ignored-buffers'."
     (interactive)
     (my-change-buffer 'next-buffer))
   (defun my-prev-buffer ()
-    "Variant of `previous-buffer' that skips `my-skippable-buffers'."
+    "Variant of `previous-buffer' that skips `my-ignored-buffers'."
     (interactive)
-    (my-change-buffer 'previous-buffer)))
+    (my-change-buffer 'previous-buffer))
+  (defun my--kill-buffer ()
+    ;; #Todo: Test this
+    "Kill buffer and switch to a non-ignored buffer"
+    (interactive)
+    (kill-buffer (buffer-name))
+    (when (string-match my-ignored-buffers (buffer-name))
+      (my-prev-buffer)))
+  (defalias 'k 'my--kill-buffer)
+  )
 
 (let ((sif 'scheme-indent-function))  ; Customize Scheme Indentation
   (put 'defun sif 'defun)
@@ -392,6 +401,9 @@
   (define-key company-active-map (kbd "M-,") #'company-select-previous)
   (define-key company-search-map (kbd "M-,") #'company-select-previous)
   (evil-define-key 'insert 'global (kbd "TAB") #'company-complete)
+  (define-key company-active-map (kbd "<escape>") (lambda () (interactive)
+                                                    (company-abort)
+                                                    (evil-normal-state)))
   (define-key company-active-map (kbd "<return>")  ;; Can't use (kbd "RET")???
     (lambda () (interactive) (newline-and-indent))))
 
@@ -540,7 +552,6 @@
     (evil-define-key '(insert normal) 'global (kbd "M-q") #'save-buffers-kill-terminal)))
 
 (progn  ; Command alias
-  (defalias 'k 'kill-buffer-and-window)
   (defalias '\; 'void)
   (defalias 'f 'ido-find-file)
   (defalias 'b 'ido-switch-buffer)
@@ -724,13 +735,16 @@ Still kinda sucks because it can't parse lists"
     :config
     (add-to-list 'auto-mode-alist '("\\.j2\\'" . jinja2-mode)))
   
-  (add-to-list 'auto-mode-alist '("\\.ts\\'" . javascript-mode)))
+  (add-to-list 'auto-mode-alist '("\\.ts\\'" . javascript-mode))
+  
+  (use-package groovy-mode))
 
 (progn  ;;Terminal emulator
   (use-package multi-term
     ;; Note: I can use "rename-uniquely" for now and go with term-mode
     :config
     (setq multi-term-program "/bin/bash"))
+  (defalias 'term 'multi-term)
   (defadvice ansi-term (after advice-term-line-mode activate)
     (term-line-mode))
   (add-hook 'term-mode-hook  ;; All `term` hooks also get transferred to `multi-term`
@@ -776,12 +790,13 @@ Still kinda sucks because it can't parse lists"
        [M-right] (lambda () (interactive)
                    (term-send-raw-string "\ef")))))
 
-
 (progn  ;;Highlighting notes and tags
   (defun khoa-highlight ()
     (let ((regexp-to-highlight
-           (rx (or "#" "@")
-               (1+ (not (any blank "\"" "\n" "(" ")" ":" "," "\\" "$"))))))
+           (rx (or "note" "Note" "NOTE"
+                   "important" "Important"
+                   (and (or "#" "@")
+                        (1+ (not (any blank "\"" "\n" "(" ")" ":" "," "\\" "$"))))))))
       (font-lock-add-keywords
        nil
        `((,regexp-to-highlight 0 'underline prepend)))))
@@ -807,7 +822,7 @@ Still kinda sucks because it can't parse lists"
  '(font-latex-script-display '((raise -0.2) raise 0.2))
  '(ido-ignore-files nil)
  '(package-selected-packages
-   '(jinja2-mode jinja2 ansible multi-term sudo-edit yaml-mode exec-path-from-shell terraform-mode dockerfile-mode racket-mode cider clojure-mode text-translator paredit xr texfrag lisp disable-mouse math-symbol-lists rainbow-identifiers spaceline avy smex ido-vertical-mode evil-numbers evil-lion evil-commentary rainbow-delimiters evil-surround evil use-package))
+   '(groovy-mode jinja2-mode jinja2 ansible multi-term sudo-edit yaml-mode exec-path-from-shell terraform-mode dockerfile-mode racket-mode cider clojure-mode text-translator paredit xr texfrag lisp disable-mouse math-symbol-lists rainbow-identifiers spaceline avy smex ido-vertical-mode evil-numbers evil-lion evil-commentary rainbow-delimiters evil-surround evil use-package))
  '(sgml-xml-mode t))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
