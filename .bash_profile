@@ -10,12 +10,11 @@ if [ -n "$BASH_VERSION" ]; then  # If running bash
     fi
 fi
 
-# My custom scripts, which is source-controlled
-PATH+=":${HOME}/bin"
+PATH+=":${HOME}/bin" # My custom scripts, which is source-controlled
 PATH+=":${HOME}/.local/bin"
 PATH+=":${HOME}/Library/Python/2.7/bin"
 
-# Adding all keys in my ssh directory to ssh agents
+# Adding all keys in my ssh directory to ssh agents (why wouldn't I want that? You think I have only one SSH key?)
 SSH_DIR=${HOME}/.ssh
 for identity in ${SSH_DIR}/*; do
     if [ -f ${identity} ] && [ ${identity} != "${SSH_DIR}/config" ] && [ ${identity} != "${SSH_DIR}/known_hosts" ]; then

@@ -160,14 +160,3 @@ alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo
 function cdl {
     builtin cd "$@" && ls -F
 }
-
-
-
-### Rapey work forces me to put this crap in
-# pyenv stuff, don't know what they do yet
-eval "$(pyenv init -)"
-eval "$(pyenv virtualenv-init -)"
-pyenv activate 3.8.5/envs/hatch_ansible_3.8.5
-
-export HATCH_ROOT=${HOME}/hatch-ops
-alias switch='. ${HOME}/hatch-ops/configuration/switch-env.sh'
