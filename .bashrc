@@ -80,7 +80,7 @@ PS1+="${dir_color}\w "
 PS1+="${vc_color}\$(vcprompt)"  #note: We do not evaluate vcprompt here!
 PS1+="\$"
 PS1+=$reset_color
-PS1+=" "
+PS1+="\n"
 
 unset color_prompt force_color_prompt
 

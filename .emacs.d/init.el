@@ -309,7 +309,7 @@
           (while (string-match my-ignored-buffers (buffer-name))
             (funcall change-buffer)
             (when (eq (current-buffer) first-change)
-              (switch-to-buffer initial)
+              (switch-to-buffer "*scratch*")  ;; Switch here b/c this buffer is the most well-behaved
               (throw 'loop t)))))))
   (defun my-next-buffer ()
     "Variant of `next-buffer' that skips `my-ignored-buffers'."
@@ -461,13 +461,13 @@
   (interactive)
   (query-replace "iiiii" "v"))
 
-(defun vh ()
+(defun vx ()
   (interactive)
-  (query-replace "vvvvvvvvvvvv" "I"))
+  (query-replace "vv" "x"))
 
-(defun xv ()
+(defun xh ()
   (interactive)
-  (query-replace "x" "vv"))
+  (query-replace "xxxxxx" "I"))
 
 (progn  ;; Clean buffers that aren't backed by files 
   (defun buffer-backed-by-file-p (buffer)
@@ -490,6 +490,10 @@
   (global-set-key (kbd "s-k") #'evil-window-prev)
   (global-set-key (kbd "s-h") #'evil-window-prev)
   (global-set-key (kbd "s-l") #'evil-window-next)
+  (global-set-key (kbd "s-<down>") #'evil-window-next)
+  (global-set-key (kbd "s-<up>") #'evil-window-prev)
+  (global-set-key (kbd "s-<left>") #'evil-window-prev)
+  (global-set-key (kbd "s-<right>") #'evil-window-next)
   (global-set-key (kbd "s-0") #'evil-window-delete)
   
   (evil-define-key '(normal visual) 'global
@@ -540,7 +544,12 @@
 
   (evil-define-key 'insert 'global
     (kbd "C-v") #'evil-paste-before
-    (kbd "M-k") #'void)
+    (kbd "M-k") #'void
+    (kbd ")")   (lambda () (interactive) (insert-char ?\( ) (insert-char ?\) ))
+    (kbd "]")   (lambda () (interactive) (insert-char ?\[ ) (insert-char ?\] ))
+    (kbd "}")   (lambda () (interactive) (insert-char ?\{ ) (insert-char ?\} ))
+    )
+
   (when (eq system-type 'darwin) ;; mac specific settings
     (setq mac-function-modifier 'control)
     (setq mac-option-modifier 'super)
@@ -703,6 +712,7 @@ Still kinda sucks because it can't parse lists"
     (interactive "sTag: ")
     (insert (format "<%s></%s>" arg arg)))
   (evil-define-key '(normal insert) html-mode-map (kbd "C-t") #'my-insert-tag)
+  (evil-define-key '(normal insert) nxml-mode-map (kbd "C-t") #'my-insert-tag)
 
   (add-hook 'python-mode-hook
             '(lambda ()
@@ -743,6 +753,7 @@ Still kinda sucks because it can't parse lists"
     ;; Note: I can use "rename-uniquely" for now and go with term-mode
     :config
     (setq multi-term-program "/bin/bash"))
+  (setq term-suppress-hard-newline t)  ;; Do not insert the imaginary linebreak when the text gets long
   (defalias 'term 'multi-term)
   (defadvice ansi-term (after advice-term-line-mode activate)
     (term-line-mode))
@@ -779,6 +790,7 @@ Still kinda sucks because it can't parse lists"
     '(evil-define-key 'insert term-raw-map
        [C-delete] (lambda () (interactive) (term-send-raw-string "\ed"))
        [C-backspace] (lambda () (interactive) (term-send-raw-string "\e\C-h"))
+       [backspace] (lambda () (interactive) (term-send-backspace))
        [M-backspace] (lambda () (interactive) (term-send-raw-string "\e\C-h"))
        [C-left] (lambda () (interactive)
                   (term-send-raw-string "\eb"))
@@ -793,7 +805,8 @@ Still kinda sucks because it can't parse lists"
   (defun khoa-highlight ()
     (let ((regexp-to-highlight
            (rx (or "note" "Note" "NOTE"
-                   "important" "Important"
+                   "important" "Important" "IMPORTANT"
+                   "todo" "Todo" "TODO"
                    (and (or "#" "@")
                         (1+ (not (any blank "\"" "\n" "(" ")" ":" "," "\\" "$"))))))))
       (font-lock-add-keywords
