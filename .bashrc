@@ -119,7 +119,6 @@ alias add-alias='emacs ~/.profile'
 alias update-alias='source ~/.profile'
 alias cp='cp -vi'
 alias mv='mv -vi'
-alias cdd='cdl ~/Downloads'
 alias gs='git status'
 alias gl='git log'
 alias gps='git push'
@@ -156,7 +155,20 @@ alias l='ls -CF'
 #   sleep 10; alert
 alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
 
-# ls right after cd
+# Notify terminal about current context
+if [ -n "${INSIDE_EMACS}" ]
+then
+    ansi_term_esc="\033AnSiT"
+    printf ${ansi_term_esc}'h %s\n' $HOSTNAME
+    printf ${ansi_term_esc}'u %s\n' $(whoami)
+    printf ${ansi_term_esc}'c %s\n' $PWD
+    function cd {
+        command cd "$@"
+        printf ${ansi_term_esc}'c %s\n' $PWD
+    }
+fi
+
+# ls right after cd (note that cd has to succeed)
 function cdl {
-    builtin cd "$@" && ls -F
+    cd "$@" && ls -F
 }

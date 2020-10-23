@@ -1,3 +1,4 @@
+;; Switch to ivy https://irreal.org/blog/?p=8142
 ;; (server-start)  ;; This is for emacs client, which we're not using
 
 (require 'package)
@@ -483,18 +484,19 @@
     (mapc 'kill-buffer (-remove 'buffer-backed-by-file-p (buffer-list)))))
 
 (progn  ;key bindings
-  (global-set-key (kbd "M-,") #'my-prev-buffer)
-  (global-set-key (kbd "M-.") #'my-next-buffer)
-  (global-set-key (kbd "M-H") #'ns-do-hide-emacs)
-  (global-set-key (kbd "s-j") #'evil-window-next)
-  (global-set-key (kbd "s-k") #'evil-window-prev)
-  (global-set-key (kbd "s-h") #'evil-window-prev)
-  (global-set-key (kbd "s-l") #'evil-window-next)
-  (global-set-key (kbd "s-<down>") #'evil-window-next)
-  (global-set-key (kbd "s-<up>") #'evil-window-prev)
-  (global-set-key (kbd "s-<left>") #'evil-window-prev)
+  (global-set-key (kbd "M-,")       #'my-prev-buffer)
+  (global-set-key (kbd "M-.")       #'my-next-buffer)
+  (global-set-key (kbd "M-H")       #'ns-do-hide-emacs)
+  (global-set-key (kbd "s-j")       #'evil-window-next)
+  (global-set-key (kbd "s-k")       #'evil-window-prev)
+  (global-set-key (kbd "s-h")       #'evil-window-prev)
+  (global-set-key (kbd "s-l")       #'evil-window-next)
+  (global-set-key (kbd "s-<down>")  #'evil-window-next)
+  (global-set-key (kbd "s-<up>")    #'evil-window-prev)
+  (global-set-key (kbd "s-<left>")  #'evil-window-prev)
   (global-set-key (kbd "s-<right>") #'evil-window-next)
-  (global-set-key (kbd "s-0") #'evil-window-delete)
+  (global-set-key (kbd "s-0")       #'evil-window-delete)
+  (global-set-key (kbd "s-x")       #'evil-window-delete)
   
   (evil-define-key '(normal visual) 'global
     "I" #'evil-first-non-blank)
@@ -742,7 +744,9 @@ Still kinda sucks because it can't parse lists"
 
   (use-package jinja2-mode
     :config
-    (add-to-list 'auto-mode-alist '("\\.j2\\'" . jinja2-mode)))
+    ;; This mode doesn't work, guys!
+    (add-to-list 'auto-mode-alist '("\\.j2\\'" . jinja2-mode))
+    )
   
   (add-to-list 'auto-mode-alist '("\\.ts\\'" . javascript-mode))
   
@@ -754,14 +758,12 @@ Still kinda sucks because it can't parse lists"
     :config
     (setq multi-term-program "/bin/bash"))
   (setq term-suppress-hard-newline t)  ;; Do not insert the imaginary linebreak when the text gets long
-  (defalias 'term 'multi-term)
   (defadvice ansi-term (after advice-term-line-mode activate)
     (term-line-mode))
   (add-hook 'term-mode-hook  ;; All `term` hooks also get transferred to `multi-term`
             (lambda ()
               (interactive)
               (goto-address-mode 1)  ;; Highlight addresses
-              (cd "~/")              ;; At least I wanna open new files from the home directory
               (term-line-mode)       ;; Default to "line mode": Would be cool if it worked...
               ))
   (evil-define-key 'insert term-raw-map  ;; At least we can auto-switch when entering normal state
@@ -799,7 +801,26 @@ Still kinda sucks because it can't parse lists"
        [M-left] (lambda () (interactive)
                   (term-send-raw-string "\eb"))
        [M-right] (lambda () (interactive)
-                   (term-send-raw-string "\ef")))))
+                   (term-send-raw-string "\ef"))))
+  
+  (progn  ;; Setup the most convenient behavior for "term"
+    (defun last-term-buffer (l)
+      "Return most recently used term buffer."
+      (when l
+        (if (eq 'term-mode (with-current-buffer (car l) major-mode))
+            (car l) (last-term-buffer (cdr l)))))
+
+    (defun get-term ()
+      "Switch to the term buffer last used, or create a new one if
+    none exists, or if the current buffer is already a term."
+      (interactive)
+      (let ((b (last-term-buffer (buffer-list))))
+        (if (or (not b) (eq 'term-mode major-mode))
+            (multi-term)
+          (switch-to-buffer b))))
+
+    (defalias 'term 'get-term))
+  )
 
 (progn  ;;Highlighting notes and tags
   (defun khoa-highlight ()
