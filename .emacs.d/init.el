@@ -57,23 +57,8 @@
 ;;; Packages
 ;; This is why I'm here
 (use-package evil
-  :init
-  (setq evil-regexp-search nil)
-
   :config
-  (evil-mode 1)
-
-  ;; Switch line highlighting off when in insert mode. (no thanks)
-  ;; (add-hook 'evil-insert-state-entry-hook
-  ;;           '(lambda () (global-hl-line-mode -1)))
-  ;; (add-hook 'evil-normal-state-entry-hook
-  ;;           '(lambda () (global-hl-line-mode 1)))
-
-  ;; Auto-center search result
-  (defadvice evil-search-next
-      (after advice-for-evil-search-next activate))
-  (defadvice evil-search-previous
-      (after advice-for-evil-search-previous activate)))
+  (evil-mode 1))
 
 (use-package evil-commentary
   :config (evil-commentary-mode))
@@ -150,26 +135,47 @@
   (evil-define-key  ;; Binding to `S' would conflict with `evil-surround' hackery
     'visual 'global (kbd "f") #'evil-avy-goto-char))
 
-(use-package ido-grid-mode  ;; Ido-mode: a regexp smart search framework
-  :init
-  (ido-mode 1)
-  (setq ido-enable-flex-matching t
-        ido-create-new-buffer 'always
-        ido-everywhere t
-        ido-use-filename-at-point 'guess)
-  :config
-  (ido-grid-mode 1)  ;; The normal "ido" layout is insufferable
-  (define-key  ;; I wanted it to be "C-w" but somehow it doesn't work
-    ido-common-completion-map (kbd "C-e") #'backward-kill-word))
+;; (use-package ido-grid-mode  ;; Ido-mode: a regexp smart search framework
+;;   :init
+;;   (ido-mode 1)
+;;   (setq ido-enable-flex-matching t
+;;         ido-create-new-buffer 'always
+;;         ido-everywhere t
+;;         ido-use-filename-at-point 'guess)
+;;   :config
+;;   (ido-grid-mode 1)  ;; The normal "ido" layout is insufferable
+;;   (define-key  ;; I wanted it to be "C-w" but somehow it doesn't work
+;;     ido-common-completion-map (kbd "C-e") #'backward-kill-word))
 
-(use-package smex  ; Command completion with Ido
-  :init (smex-initialize)
+;; (use-package smex  ; Command completion with Ido
+;;   :init (smex-initialize)
+;;   :config
+;;   (global-set-key (kbd "M-x") #'smex)
+;;   ;; Somehow evil is in motion state when opening help buffers?
+;;   (evil-define-key 'motion Buffer-menu-mode-map ";" #'smex)
+;;   (evil-define-key 'motion help-mode-map ";" #'smex)
+;;   (evil-define-key '(normal visual) 'global ";" #'smex))
+
+(use-package counsel
   :config
-  (global-set-key (kbd "M-x") #'smex)
-  ;; Somehow evil is in motion state when opening help buffers?
-  (evil-define-key 'motion Buffer-menu-mode-map ";" #'smex)
-  (evil-define-key 'motion help-mode-map ";" #'smex)
-  (evil-define-key '(normal visual) 'global ";" #'smex))
+  (ivy-mode 1)
+  (setq ivy-use-virtual-buffers t)
+  (setq ivy-wrap t)
+  ;; These keys make perfect sense since "M-<" and "M->" goes to the beginning and end
+  (define-key ivy-minibuffer-map (kbd "M-.") #'ivy-next-line)
+  (define-key ivy-minibuffer-map (kbd "M-,") #'ivy-previous-line)
+
+  (counsel-mode 1)
+  (setq ivy-count-format "[%d/%d] ")  ;; This is so that it shows the index of the current match
+  (evil-define-key 'motion Buffer-menu-mode-map ";" #'counsel-M-x)
+  (evil-define-key 'motion help-mode-map ";" #'counsel-M-x)
+  (evil-define-key '(normal visual) 'global ";" #'counsel-M-x)
+  (evil-define-key 'normal 'global "P" #'counsel-yank-pop)
+  (defalias 'f 'counsel-find-file)
+  (defalias 'b 'counsel-switch-buffer)
+
+  (evil-define-key 'normal 'global (kbd "/") #'swiper-isearch)
+  )
 
 (use-package aggressive-indent  ; Resource-inatensive: Use with caution!
   :config
@@ -212,12 +218,12 @@
     "q" #'er/expand-region
     "Q" #'er/contract-region))
 
-(use-package popup-kill-ring
-  :config
-  (evil-define-key 'normal 'global "P" #'popup-kill-ring)
-  ;; For some reason, evil-define-key doesn't work here
-  (define-key popup-kill-ring-keymap (kbd "M-.") 'popup-kill-ring-next)
-  (define-key popup-kill-ring-keymap (kbd "M-,") 'popup-kill-ring-previous))
+;; (use-package popup-kill-ring
+;;   :config
+;;   (evil-define-key 'normal 'global "P" #'popup-kill-ring)
+;;   ;; For some reason, evil-define-key doesn't work here
+;;   (define-key popup-kill-ring-keymap (kbd "M-.") 'popup-kill-ring-next)
+;;   (define-key popup-kill-ring-keymap (kbd "M-,") 'popup-kill-ring-previous))
 
 (desktop-save-mode 1)  ; Save current desktop configs on exit
 
@@ -290,6 +296,7 @@
    '(lambda ()
       (let ((buffer "*Completions*"))
         (and (get-buffer buffer) (kill-buffer buffer)))))
+
   (defvar my-ignored-buffers  ;; Regexp to buffers
     ;; Note: not all *XYZ* buffers are bad
     (rx (or "*Messages*"
@@ -297,10 +304,15 @@
             "*Quail Completions*"
             "*Buffer List*"
             (seq "magit" (* (any))))))
-  (;; Tell ido to ignore the weird buffers
-   add-to-list 'ido-ignore-buffers my-ignored-buffers)
-  (;; Idk why, but we gotta do this to show ".git" files
-   setq ido-ignore-files nil)
+
+  (add-to-list 'ivy-ignore-buffers my-ignored-buffers)
+
+  ;; (;; Tell ido to ignore the weird buffers
+  ;;  add-to-list 'ido-ignore-buffers my-ignored-buffers)
+
+  ;; (;; Idk why, but we gotta do this to show ".git" files
+  ;;  setq ido-ignore-files nil)
+
   (defun my-change-buffer (change-buffer)
     "Call CHANGE-BUFFER until current buffer is not in `my-ignored-buffers'."
     (let ((initial (current-buffer)))
@@ -312,6 +324,7 @@
             (when (eq (current-buffer) first-change)
               (switch-to-buffer "*scratch*")  ;; Switch here b/c this buffer is the most well-behaved
               (throw 'loop t)))))))
+
   (defun my-next-buffer ()
     "Variant of `next-buffer' that skips `my-ignored-buffers'."
     (interactive)
@@ -321,7 +334,7 @@
     (interactive)
     (my-change-buffer 'previous-buffer))
   (defun my--kill-buffer ()
-    ;; #Todo: Test this
+    ;; #check: Test this
     "Kill buffer and switch to a non-ignored buffer"
     (interactive)
     (kill-buffer (buffer-name))
@@ -563,8 +576,8 @@
 
 (progn  ; Command alias
   (defalias '\; 'void)
-  (defalias 'f 'ido-find-file)
-  (defalias 'b 'ido-switch-buffer)
+  ;; (defalias 'f 'ido-find-file)
+  ;; (defalias 'b 'ido-switch-buffer)
   (defalias 'ls 'buffer-menu)
   (defalias 'init (lambda () (interactive)
                     (find-file  "~/.emacs.d/init.el")))
@@ -853,9 +866,8 @@ Still kinda sucks because it can't parse lists"
      ("*Buffer List*" display-buffer-same-window)
      ("*Help*" display-buffer-same-window)))
  '(font-latex-script-display '((raise -0.2) raise 0.2))
- '(ido-ignore-files nil)
  '(package-selected-packages
-   '(groovy-mode jinja2-mode jinja2 ansible multi-term sudo-edit yaml-mode exec-path-from-shell terraform-mode dockerfile-mode racket-mode cider clojure-mode text-translator paredit xr texfrag lisp disable-mouse math-symbol-lists rainbow-identifiers spaceline avy smex ido-vertical-mode evil-numbers evil-lion evil-commentary rainbow-delimiters evil-surround evil use-package))
+   '(groovy-mode jinja2-mode jinja2 ansible multi-term sudo-edit yaml-mode exec-path-from-shell terraform-mode dockerfile-mode racket-mode cider clojure-mode text-translator paredit xr texfrag lisp disable-mouse math-symbol-lists rainbow-identifiers spaceline avy evil-numbers evil-lion evil-commentary rainbow-delimiters evil-surround evil use-package))
  '(sgml-xml-mode t))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
