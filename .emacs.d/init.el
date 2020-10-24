@@ -1,4 +1,5 @@
 ;; Switch to ivy https://irreal.org/blog/?p=8142
+;; Learn to use the debugger
 ;; (server-start)  ;; This is for emacs client, which we're not using
 
 (require 'package)
@@ -12,10 +13,11 @@
       ;; All archives should be "http://...", but somehow melpa is using tls wtf?
       ;; Anywa, install "gnutls-bin" and it'll be good
       (let ((proto "http://"))
-        `(("elpy"         . ,(concat proto "jorgenschaefer.github.io/packages/"))
+        `(("gnu"          . ,(concat proto "elpa.gnu.org/packages/"))
           ("melpa"        . ,(concat proto "melpa.org/packages/"))
-          ("gnu"          . ,(concat proto "elpa.gnu.org/packages/"))
-          ("melpa-stable" . ,(concat proto "stable.melpa.org/packages/")))))
+          ("melpa-stable" . ,(concat proto "stable.melpa.org/packages/"))
+          ("elpy"         . ,(concat proto "jorgenschaefer.github.io/packages/"))
+          )))
 
 (unless (package-installed-p 'use-package)
   (package-refresh-contents)
@@ -161,11 +163,13 @@
   (ivy-mode 1)
   (setq ivy-use-virtual-buffers t)
   (setq ivy-wrap t)
+  (setq ivy-ffap-url-functions nil)
   ;; These keys make perfect sense since "M-<" and "M->" goes to the beginning and end
   (define-key ivy-minibuffer-map (kbd "M-.") #'ivy-next-line)
   (define-key ivy-minibuffer-map (kbd "M-,") #'ivy-previous-line)
 
   (counsel-mode 1)
+  (setq counsel-find-file-at-point t)
   (setq ivy-count-format "[%d/%d] ")  ;; This is so that it shows the index of the current match
   (evil-define-key 'motion Buffer-menu-mode-map ";" #'counsel-M-x)
   (evil-define-key 'motion help-mode-map ";" #'counsel-M-x)
@@ -178,12 +182,7 @@
   )
 
 (use-package aggressive-indent  ; Resource-inatensive: Use with caution!
-  :config
-  (add-hook 'prog-mode-hook #'aggressive-indent-mode)
-  (add-hook 'text-mode-hook #'aggressive-indent-mode)
-  (add-hook 'skeme-mode-hook (lambda () (aggressive-indent-mode -1)))
-  (add-hook 'markdown-mode-hook (lambda () (aggressive-indent-mode -1)))
-  (add-hook 'clojure-mode-hook (lambda () (aggressive-indent-mode -1))))
+  )
 
 (column-number-mode 1)  ; Show columns
 
@@ -297,15 +296,18 @@
       (let ((buffer "*Completions*"))
         (and (get-buffer buffer) (kill-buffer buffer)))))
 
-  (defvar my-ignored-buffers  ;; Regexp to buffers
-    ;; Note: not all *XYZ* buffers are bad
-    (rx (or "*Messages*"
-            "*scratch*"
-            "*Quail Completions*"
-            "*Buffer List*"
-            (seq "magit" (* (any))))))
+  (defun buffer-ignored-p (&optional buf-or-str-input)
+    (let* ((buf-or-str (or buf-or-str-input (buffer-name)))
+           (buf (get-buffer buf-or-str)))
+      (if buf
+        (or (member (buffer-name buf)
+                  '("*scratch*" "*Quail Completions*" "*Buffer List*"))
+            (string-match (rx "magit" (* (any))) (buffer-name buf))
+            (memq (with-current-buffer buf major-mode)
+                  '(dired-mode help-mode)))
+        nil)))
 
-  (add-to-list 'ivy-ignore-buffers my-ignored-buffers)
+  (add-to-list 'ivy-ignore-buffers #'buffer-ignored-p)
 
   ;; (;; Tell ido to ignore the weird buffers
   ;;  add-to-list 'ido-ignore-buffers my-ignored-buffers)
@@ -314,23 +316,23 @@
   ;;  setq ido-ignore-files nil)
 
   (defun my-change-buffer (change-buffer)
-    "Call CHANGE-BUFFER until current buffer is not in `my-ignored-buffers'."
+    "Call CHANGE-BUFFER until current buffer is not ignored'."
     (let ((initial (current-buffer)))
       (funcall change-buffer)
       (let ((first-change (current-buffer)))
         (catch 'loop
-          (while (string-match my-ignored-buffers (buffer-name))
+          (while (buffer-ignored-p)
             (funcall change-buffer)
             (when (eq (current-buffer) first-change)
               (switch-to-buffer "*scratch*")  ;; Switch here b/c this buffer is the most well-behaved
               (throw 'loop t)))))))
 
   (defun my-next-buffer ()
-    "Variant of `next-buffer' that skips `my-ignored-buffers'."
+    "Variant of `next-buffer' that skips ignored buffers"
     (interactive)
     (my-change-buffer 'next-buffer))
   (defun my-prev-buffer ()
-    "Variant of `previous-buffer' that skips `my-ignored-buffers'."
+    "Variant of `previous-buffer' that skips ignored buffers"
     (interactive)
     (my-change-buffer 'previous-buffer))
   (defun my--kill-buffer ()
@@ -338,7 +340,7 @@
     "Kill buffer and switch to a non-ignored buffer"
     (interactive)
     (kill-buffer (buffer-name))
-    (when (string-match my-ignored-buffers (buffer-name))
+    (when (buffer-ignored-p)
       (my-prev-buffer)))
   (defalias 'k 'my--kill-buffer)
   )
@@ -374,8 +376,6 @@
 (defun ranline ()
   (interactive)
   (goto-line (+ 1 (random (line-count)))))
-
-(setq ffap-url-regexp nil)           ; disable URL features in ffap
 
 (progn  ; Finnish stuff
   (evil-define-key 'visual 'global (kbd "C-f" )
@@ -763,22 +763,30 @@ Still kinda sucks because it can't parse lists"
   
   (add-to-list 'auto-mode-alist '("\\.ts\\'" . javascript-mode))
   
-  (use-package groovy-mode))
+  (use-package groovy-mode)
+  
+  (use-package nginx-mode))
 
 (progn  ;;Terminal emulator
   (use-package multi-term
     ;; Note: I can use "rename-uniquely" for now and go with term-mode
     :config
     (setq multi-term-program "/bin/bash"))
+
+  (setq term-buffer-maximum-size (lsh 1 14))  ;; 16384 lines
+
   (setq term-suppress-hard-newline t)  ;; Do not insert the imaginary linebreak when the text gets long
+
   (defadvice ansi-term (after advice-term-line-mode activate)
     (term-line-mode))
+
   (add-hook 'term-mode-hook  ;; All `term` hooks also get transferred to `multi-term`
             (lambda ()
               (interactive)
               (goto-address-mode 1)  ;; Highlight addresses
               (term-line-mode)       ;; Default to "line mode": Would be cool if it worked...
               ))
+
   (evil-define-key 'insert term-raw-map  ;; At least we can auto-switch when entering normal state
     (kbd "<escape>") (lambda () (interactive) (term-line-mode) (evil-normal-state)))
   (progn  ;; Pasting in char mode
@@ -800,7 +808,7 @@ Still kinda sucks because it can't parse lists"
     (evil-define-key '(normal insert) term-raw-map
       (kbd "C-c C-j") term-toggle-mode
       (kbd "C-c C-k") term-toggle-mode))
-  (setq term-buffer-maximum-size (lsh 1 14))  ;; 16384 lines
+
   (eval-after-load 'term
     '(evil-define-key 'insert term-raw-map
        [C-delete] (lambda () (interactive) (term-send-raw-string "\ed"))
@@ -816,7 +824,7 @@ Still kinda sucks because it can't parse lists"
        [M-right] (lambda () (interactive)
                    (term-send-raw-string "\ef"))))
   
-  (progn  ;; Setup the most convenient behavior for "term"
+  (progn  ;; Setup the most convenient behavior for the command "term"
     (defun last-term-buffer (l)
       "Return most recently used term buffer."
       (when l
@@ -867,7 +875,7 @@ Still kinda sucks because it can't parse lists"
      ("*Help*" display-buffer-same-window)))
  '(font-latex-script-display '((raise -0.2) raise 0.2))
  '(package-selected-packages
-   '(groovy-mode jinja2-mode jinja2 ansible multi-term sudo-edit yaml-mode exec-path-from-shell terraform-mode dockerfile-mode racket-mode cider clojure-mode text-translator paredit xr texfrag lisp disable-mouse math-symbol-lists rainbow-identifiers spaceline avy evil-numbers evil-lion evil-commentary rainbow-delimiters evil-surround evil use-package))
+   '(counsel ivy nginx-mode groovy-mode jinja2-mode jinja2 ansible multi-term sudo-edit yaml-mode exec-path-from-shell terraform-mode dockerfile-mode racket-mode cider clojure-mode text-translator paredit xr texfrag lisp disable-mouse math-symbol-lists rainbow-identifiers spaceline avy evil-numbers evil-lion evil-commentary rainbow-delimiters evil-surround evil use-package))
  '(sgml-xml-mode t))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
