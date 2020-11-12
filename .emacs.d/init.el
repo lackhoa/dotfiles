@@ -1,5 +1,8 @@
-;; Switch to ivy https://irreal.org/blog/?p=8142
+;; Python and eval-after-load
+;; Show parent directory in the mode line
 ;; Learn to use the debugger
+;; s-x should delete buffer when it's sole window
+
 ;; (server-start)  ;; This is for emacs client, which we're not using
 
 (require 'package)
@@ -59,8 +62,16 @@
 ;;; Packages
 ;; This is why I'm here
 (use-package evil
+  :init
+  (setq evil-want-keybinding nil)
   :config
   (evil-mode 1))
+
+(use-package evil-collection
+  :after evil
+  :ensure t
+  :config
+  (evil-collection-init))
 
 (use-package evil-commentary
   :config (evil-commentary-mode))
@@ -75,20 +86,19 @@
     :config
     (setq extempore-path "~/extempore/")
     (evil-define-key 'normal extempore-mode-map (kbd "X")
-      (lambda ()
-        (interactive)
+      (lambda () (interactive)
         (if (use-region-p)
             (extempore-send-region (region-beginning) (region-end))
           (extempore-send-definition))))))
 
 (progn  ;; Emacs Lisp
-  (evil-define-key 'normal emacs-lisp-mode-map (kbd "X")
-    (lambda ()
-      (interactive)
+  (evil-define-key 'normal 'global (kbd "X")
+    (lambda () (interactive)
       (save-excursion
         (let ((beg (point))
               (end (progn (forward-sexp) (point))))
-          (eval-region beg end))))))
+          (eval-region beg end)))
+      (message "Evalulated"))))
 
 (use-package disable-mouse
   :config
@@ -158,15 +168,18 @@
 ;;   (evil-define-key 'motion help-mode-map ";" #'smex)
 ;;   (evil-define-key '(normal visual) 'global ";" #'smex))
 
-(use-package counsel
+(use-package counsel  ;;Ivy
   :config
   (ivy-mode 1)
-  (setq ivy-use-virtual-buffers t)
+  ;; (setq ivy-use-virtual-buffers t)  ;; Disabled because it's annoying
   (setq ivy-wrap t)
   (setq ivy-ffap-url-functions nil)
+  (setq ffap-machine-p-known 'accept)  ;; No pinging please!
+  (setq ivy-extra-directories nil)  ;; No, I don't need those dot directories
   ;; These keys make perfect sense since "M-<" and "M->" goes to the beginning and end
   (define-key ivy-minibuffer-map (kbd "M-.") #'ivy-next-line)
   (define-key ivy-minibuffer-map (kbd "M-,") #'ivy-previous-line)
+  (define-key ivy-minibuffer-map (kbd "<return>") 'ivy-alt-done)  ;; please don't open "dired" on directory
 
   (counsel-mode 1)
   (setq counsel-find-file-at-point t)
@@ -177,8 +190,6 @@
   (evil-define-key 'normal 'global "P" #'counsel-yank-pop)
   (defalias 'f 'counsel-find-file)
   (defalias 'b 'counsel-switch-buffer)
-
-  (evil-define-key 'normal 'global (kbd "/") #'swiper-isearch)
   )
 
 (use-package aggressive-indent  ; Resource-inatensive: Use with caution!
@@ -210,6 +221,23 @@
   :config (exec-path-from-shell-initialize))
 
 (use-package magit)
+
+(use-package evil-magit
+  :after evil
+  :after magit)
+
+(progn  ;; ediff
+ (setq ediff-window-setup-function  ;; Open new frame in mac is suicide
+       #'ediff-setup-windows-plain)
+
+ (defun ediff-copy-both-to-C ()
+   (interactive)
+   (ediff-copy-diff ediff-current-difference nil 'C nil
+                    (concat
+                     (ediff-get-region-contents ediff-current-difference 'A ediff-control-buffer)
+                     (ediff-get-region-contents ediff-current-difference 'B ediff-control-buffer))))
+ (defun add-d-to-ediff-mode-map () (define-key ediff-mode-map "d" 'ediff-copy-both-to-C))
+ (add-hook 'ediff-keymap-setup-hook 'add-d-to-ediff-mode-map))
 
 (use-package expand-region
   :config
@@ -304,7 +332,7 @@
                   '("*scratch*" "*Quail Completions*" "*Buffer List*"))
             (string-match (rx "magit" (* (any))) (buffer-name buf))
             (memq (with-current-buffer buf major-mode)
-                  '(dired-mode help-mode)))
+                  '(dired-mode)))
         nil)))
 
   (add-to-list 'ivy-ignore-buffers #'buffer-ignored-p)
@@ -363,15 +391,22 @@
     "Just search the marked region, that's all"
     (interactive "r")
     (evil-normal-state)
-    (evil-search (buffer-substring beg end) t))
-  (evil-define-key 'visual 'global "*" 'search-marked-forward)
-
+    (evil-search (buffer-substring beg end) t evil-regexp-search))
   (defun search-marked-backward (beg end)
     "Just search backward the marked region, that's all"
     (interactive "r")
     (evil-normal-state)
-    (evil-search (buffer-substring beg end) nil))
-  (evil-define-key 'visual 'global "#" 'search-marked-backward))
+    (evil-search (buffer-substring beg end) nil evil-regexp-search))
+
+  (evil-define-key 'visual 'global
+    "*" #'search-marked-forward
+    "#" #'search-marked-backward))
+
+(defun my-evil-search (string &rest e)
+  ;; Use this function to place search-text, so that you can eval and search it
+  ;; Always search forward
+  (evil-normal-state)
+  (apply #'evil-search string t evil-regexp-search e))
 
 (defun ranline ()
   (interactive)
@@ -407,6 +442,7 @@
 (use-package company
   :init
   (setq company-show-numbers t)
+  (setq company-idle-delay nil)  ;; No idle completion
   :config
   (add-hook 'after-init-hook 'global-company-mode)
   (define-key company-active-map (kbd "M-.") #'company-select-next)
@@ -417,8 +453,9 @@
   (define-key company-active-map (kbd "<escape>") (lambda () (interactive)
                                                     (company-abort)
                                                     (evil-normal-state)))
-  (define-key company-active-map (kbd "<return>")  ;; Can't use (kbd "RET")???
-    (lambda () (interactive) (newline-and-indent))))
+  ;; (define-key company-active-map (kbd "<return>")  ;; Can't use (kbd "RET")???
+  ;;   (lambda () (interactive) (newline-and-indent)))
+  )
 
 (progn  ;; Graphviz stuff
   (defun dot (beg end)
@@ -471,17 +508,18 @@
   (message (buffer-file-name))
   (kill-new (file-truename buffer-file-name)))
 
-(defun iv ()
-  (interactive)
-  (query-replace "iiiii" "v"))
+(progn  ;; My medal BS
+  (defun iv ()
+    (interactive)
+    (query-replace "iiiii" "v"))
 
-(defun vx ()
-  (interactive)
-  (query-replace "vv" "x"))
+  (defun vx ()
+    (interactive)
+    (query-replace "vv" "x"))
 
-(defun xh ()
-  (interactive)
-  (query-replace "xxxxxx" "I"))
+  (defun xh ()
+    (interactive)
+    (query-replace "xxxxxx" "I")))
 
 (progn  ;; Clean buffers that aren't backed by files 
   (defun buffer-backed-by-file-p (buffer)
@@ -509,10 +547,16 @@
   (global-set-key (kbd "s-<left>")  #'evil-window-prev)
   (global-set-key (kbd "s-<right>") #'evil-window-next)
   (global-set-key (kbd "s-0")       #'evil-window-delete)
-  (global-set-key (kbd "s-x")       #'evil-window-delete)
+  (global-set-key (kbd "s-x")       (lambda () (interactive)
+                                      (if (= (length (window-list)) 1)
+                                          (my--kill-buffer)
+                                        (evil-window-delete))))
   
   (evil-define-key '(normal visual) 'global
-    "I" #'evil-first-non-blank)
+    "I" #'evil-first-non-blank
+    (kbd "RET") #'evil-write-all
+    )
+
   (evil-define-key 'normal 'global
     "A" (lambda () (interactive)
           (evil-end-of-line)
@@ -523,7 +567,6 @@
     (kbd "<down>") #'evil-scroll-line-down
     "a" #'evil-append-line
     "p" #'evil-paste-before
-    (kbd "RET") #'evil-write-all
     (kbd "K") (lambda () (interactive)
                 (save-excursion (call-interactively 'newline)))
     (kbd "SPC") (lambda () (interactive)
@@ -551,7 +594,13 @@
     (kbd "C-M-j") (lambda () (interactive)
                     (call-interactively #'evil-delete-whole-line)
                     (evil-next-line)
-                    (evil-paste-before 1)))
+                    (evil-paste-before 1))
+    (kbd "C-o") (lambda () (interactive)
+                  (let ((old-buffer (buffer-name)))
+                    (evil-jump-backward)
+                    (unless (equal (buffer-name) old-buffer)
+                      (message "`evil-jump-backward` jumped cross-buffer, negating it")
+                      (switch-to-buffer old-buffer)))))
 
   (evil-define-key 'visual 'global
     (kbd "TAB") #'indent-region
@@ -729,14 +778,48 @@ Still kinda sucks because it can't parse lists"
   (evil-define-key '(normal insert) html-mode-map (kbd "C-t") #'my-insert-tag)
   (evil-define-key '(normal insert) nxml-mode-map (kbd "C-t") #'my-insert-tag)
 
-  (add-hook 'python-mode-hook
-            '(lambda ()
-               (aggressive-indent-mode -1)
-               (electric-indent-local-mode 'disable)))
-  (add-hook 'yaml-mode-hook
-            '(lambda ()
-               (aggressive-indent-mode -1)
-               (electric-indent-local-mode 'disable)))
+  (use-package highlight-indentation
+    :config
+    (set-face-background 'highlight-indentation-face "#434343")
+    (set-face-background 'highlight-indentation-current-column-face "#737373"))
+
+  (use-package indent-tools
+    :config
+    (evil-define-motion evil-motion-indent-tools-goto-parent ()
+      :type exclusive
+      :jump t
+      (indent-tools-goto-parent))
+    (evil-define-motion evil-motion-indent-tools-goto-child ()
+      :type exclusive
+      :jump t
+      (indent-tools-goto-child))
+    (evil-define-motion evil-motion-indent-tools-goto-previous-sibling ()
+      :type exclusive
+      (indent-tools-goto-previous-sibling))
+    (evil-define-motion evil-motion-indent-tools-goto-next-sibling ()
+      :type exclusive
+      (indent-tools-goto-next-sibling))
+    (evil-define-motion evil-motion-indent-tools-goto-end-of-tree ()
+      :type exclusive
+      (indent-tools-goto-end-of-tree))
+
+    (defun indent-lang-movement (mode-map)
+      (evil-define-key 'normal mode-map (kbd "M-l") #'evil-motion-indent-tools-goto-next-sibling)
+      (evil-define-key 'normal mode-map (kbd "M-h") #'evil-motion-indent-tools-goto-previous-sibling)
+      (evil-define-key 'normal mode-map (kbd "M-k") #'evil-motion-indent-tools-goto-parent)
+      (evil-define-key 'normal mode-map (kbd "M-j") #'evil-motion-indent-tools-goto-child)
+      (evil-define-key 'normal mode-map (kbd "M-;") #'evil-motion-indent-tools-goto-end-of-tree))
+
+    (eval-after-load "python-mode"
+      (indent-lang-movement 'python-mode-map)))
+
+  (defun my-config-indentation-languages ()
+    (aggressive-indent-mode -1)
+    (electric-indent-local-mode 'disable)
+    (highlight-indentation-mode)
+    (highlight-indentation-current-column-mode))
+
+  (add-hook 'python-mode-hook #'my-config-indentation-languages)
 
   (use-package dockerfile-mode
     :config (add-to-list 'auto-mode-alist '("Dockerfile\\'" . dockerfile-mode)))
@@ -749,7 +832,9 @@ Still kinda sucks because it can't parse lists"
   (use-package yaml-mode
     :config
     (add-to-list 'auto-mode-alist '("\\.yaml\\'" . yaml-mode))
-    (add-to-list 'auto-mode-alist '("\\.yml\\'" . yaml-mode)))
+    (add-to-list 'auto-mode-alist '("\\.yml\\'" . yaml-mode))
+    (add-hook 'yaml-mode-hook   #'my-config-indentation-languages)
+    (indent-lang-movement yaml-mode-map))
 
   (use-package ansible
     :config
@@ -759,7 +844,10 @@ Still kinda sucks because it can't parse lists"
     :config
     ;; This mode doesn't work, guys!
     (add-to-list 'auto-mode-alist '("\\.j2\\'" . jinja2-mode))
-    )
+    ;; If I know what it is then I'll just use the darn mode
+    (add-to-list 'auto-mode-alist '("\\conf.j2\\'" . conf-mode))
+    (add-to-list 'auto-mode-alist '("\\json.j2\\'" . javascript-mode))
+    (add-to-list 'auto-mode-alist '("\\yaml.j2\\'" . yaml-mode)))
   
   (add-to-list 'auto-mode-alist '("\\.ts\\'" . javascript-mode))
   
@@ -775,8 +863,6 @@ Still kinda sucks because it can't parse lists"
 
   (setq term-buffer-maximum-size (lsh 1 14))  ;; 16384 lines
 
-  (setq term-suppress-hard-newline t)  ;; Do not insert the imaginary linebreak when the text gets long
-
   (defadvice ansi-term (after advice-term-line-mode activate)
     (term-line-mode))
 
@@ -785,16 +871,22 @@ Still kinda sucks because it can't parse lists"
               (interactive)
               (goto-address-mode 1)  ;; Highlight addresses
               (term-line-mode)       ;; Default to "line mode": Would be cool if it worked...
+              (setq term-suppress-hard-newline t)  ;; Do not insert the imaginary linebreak when the text gets long
               ))
 
-  (evil-define-key 'insert term-raw-map  ;; At least we can auto-switch when entering normal state
-    (kbd "<escape>") (lambda () (interactive) (term-line-mode) (evil-normal-state)))
+  ;; (evil-define-key 'insert term-raw-map  ;; auto-switch when entering normal state
+  ;;   (kbd "<escape>") (lambda () (interactive) (term-line-mode) (evil-normal-state)))
   (progn  ;; Pasting in char mode
     (evil-define-key 'insert term-raw-map (kbd "C-v") #'term-paste)
     (if (eq system-type 'darwin)
         (evil-define-key 'insert term-raw-map (kbd "M-v") #'term-paste)))
   (evil-define-key  ;; Press "Enter" to send the whole line
-    'normal term-mode-map (kbd "RET") #'term-send-input)
+    'normal term-mode-map (kbd "RET")
+    (lambda () (interactive)
+      (term-send-input)
+      ;; #WTF Somehow doing this will prevent the terminal from scrolling down? (I'll take it for now)
+      (message "term-send-input finished executing")
+      ))
   (let ((term-toggle-mode (lambda ()
                             (interactive)
                             "Toggles term between line mode and char mode"
@@ -849,8 +941,9 @@ Still kinda sucks because it can't parse lists"
            (rx (or "note" "Note" "NOTE"
                    "important" "Important" "IMPORTANT"
                    "todo" "Todo" "TODO"
-                   (and (or "#" "@")
-                        (1+ (not (any blank "\"" "\n" "(" ")" ":" "," "\\" "$"))))))))
+                   "example" "Example" "EXAMPLE"
+                   (and (or "#" "@" ";")
+                        (1+ (not (any blank "\"" "\n" "(" ")" "[" "]" ":" "," "\\" "$" "?"))))))))
       (font-lock-add-keywords
        nil
        `((,regexp-to-highlight 0 'underline prepend)))))
@@ -858,6 +951,10 @@ Still kinda sucks because it can't parse lists"
   (add-hook 'skeme-mode-hook #'khoa-highlight)
   (add-hook 'prog-mode-hook  #'khoa-highlight)
   (add-hook 'text-mode-hook  #'khoa-highlight))
+
+(defun time ()
+  (interactive)
+  (insert (current-time-string)))
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
@@ -875,7 +972,7 @@ Still kinda sucks because it can't parse lists"
      ("*Help*" display-buffer-same-window)))
  '(font-latex-script-display '((raise -0.2) raise 0.2))
  '(package-selected-packages
-   '(counsel ivy nginx-mode groovy-mode jinja2-mode jinja2 ansible multi-term sudo-edit yaml-mode exec-path-from-shell terraform-mode dockerfile-mode racket-mode cider clojure-mode text-translator paredit xr texfrag lisp disable-mouse math-symbol-lists rainbow-identifiers spaceline avy evil-numbers evil-lion evil-commentary rainbow-delimiters evil-surround evil use-package))
+   '(evil-magit indent-tools highlight-indentation csv-mode counsel ivy nginx-mode groovy-mode jinja2-mode jinja2 ansible multi-term sudo-edit yaml-mode exec-path-from-shell terraform-mode dockerfile-mode racket-mode cider clojure-mode text-translator paredit xr texfrag lisp disable-mouse math-symbol-lists rainbow-identifiers spaceline avy evil-numbers evil-lion evil-commentary rainbow-delimiters evil-surround evil use-package))
  '(sgml-xml-mode t))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.

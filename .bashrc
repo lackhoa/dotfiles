@@ -5,6 +5,10 @@
 # I know you like zsh, okay?
 export BASH_SILENCE_DEPRECATION_WARNING=1
 
+# Annoying git log error in emacs terminal
+export LC_CTYPE=en_US.UTF-8
+export LC_ALL=en_US.UTF-8
+
 # If not running interactively, don't do anything
 case $- in
     *i*) ;;
@@ -131,6 +135,7 @@ alias rm='rm -frv'
 alias cat='bat'
 alias tar='tar -xzvf'
 alias conky-conf='sudo emacs /etc/conky/conky.conf'
+alias k=kubectl
 
 # enable color support of ls and also add handy aliases
 if [ -x /usr/bin/dircolors ]; then
@@ -172,3 +177,6 @@ fi
 function cdl {
     cd "$@" && ls -F
 }
+
+# Working
+alias work='source ~/.hatch-profile'
