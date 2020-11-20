@@ -119,8 +119,6 @@ bind 'set completion-ignore-case on'
 #note: do not use space anywhere in these!
 alias cls='clear'
 alias subl='/usr/bin/subl'
-alias add-alias='emacs ~/.profile'
-alias update-alias='source ~/.profile'
 alias cp='cp -vi'
 alias mv='mv -vi'
 alias gs='git status'
@@ -134,8 +132,13 @@ alias gco='git checkout'
 alias rm='rm -frv'
 alias cat='bat'
 alias tar='tar -xzvf'
-alias conky-conf='sudo emacs /etc/conky/conky.conf'
+
 alias k=kubectl
+alias kus=kustomize
+alias kctx='kubectl config current-context'
+alias kc='kubectl config use-context'
+alias ap='ansible-playbook'
+alias tf='terraform'
 
 # enable color support of ls and also add handy aliases
 if [ -x /usr/bin/dircolors ]; then
@@ -171,6 +174,14 @@ then
         command cd "$@"
         printf ${ansi_term_esc}'c %s\n' $PWD
     }
+    function pushd {
+        command pushd "$@"
+        printf ${ansi_term_esc}'c %s\n' $PWD
+    }
+    function popd {
+        command popd "$@"
+        printf ${ansi_term_esc}'c %s\n' $PWD
+    }
 fi
 
 # ls right after cd (note that cd has to succeed)
@@ -180,3 +191,7 @@ function cdl {
 
 # Working
 alias work='source ~/.hatch-profile'
+# Some stupid go and ksops stuff 
+export XDG_CONFIG_HOME=$HOME/.config
+export GOPATH=/Users/$USER/go
+export PATH=$GOPATH/bin:$PATH

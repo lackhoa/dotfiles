@@ -2,6 +2,7 @@
 ;; Show parent directory in the mode line
 ;; Learn to use the debugger
 ;; s-x should delete buffer when it's sole window
+;; Company is broken: hit "enter" but it adds new line?
 
 ;; (server-start)  ;; This is for emacs client, which we're not using
 
@@ -71,7 +72,12 @@
   :after evil
   :ensure t
   :config
-  (evil-collection-init))
+  (evil-collection-init)
+  (setq evil-collection-term-sync-state-and-mode-p nil)
+  (evil-collection-define-key 'normal 'term-mode-map
+    (kbd "p") #'evil-paste-before  ;; default is term-paste
+    (kbd "$") #'evil-end-of-line   ;; default is... who cares it's stupid either way
+    ))
 
 (use-package evil-commentary
   :config (evil-commentary-mode))
@@ -98,7 +104,7 @@
         (let ((beg (point))
               (end (progn (forward-sexp) (point))))
           (eval-region beg end)))
-      (message "Evalulated"))))
+      (message "Evaluated"))))
 
 (use-package disable-mouse
   :config
@@ -179,7 +185,6 @@
   ;; These keys make perfect sense since "M-<" and "M->" goes to the beginning and end
   (define-key ivy-minibuffer-map (kbd "M-.") #'ivy-next-line)
   (define-key ivy-minibuffer-map (kbd "M-,") #'ivy-previous-line)
-  (define-key ivy-minibuffer-map (kbd "<return>") 'ivy-alt-done)  ;; please don't open "dired" on directory
 
   (counsel-mode 1)
   (setq counsel-find-file-at-point t)
@@ -327,13 +332,16 @@
   (defun buffer-ignored-p (&optional buf-or-str-input)
     (let* ((buf-or-str (or buf-or-str-input (buffer-name)))
            (buf (get-buffer buf-or-str)))
+      ;; Temporary Decommission
       (if buf
-        (or (member (buffer-name buf)
-                  '("*scratch*" "*Quail Completions*" "*Buffer List*"))
-            (string-match (rx "magit" (* (any))) (buffer-name buf))
-            (memq (with-current-buffer buf major-mode)
+          (or
+           (member (buffer-name buf)
+                   '("*Quail Completions*"))
+           ;; (string-match (rx "magit" (* (any))) (buffer-name buf))
+           (memq (with-current-buffer buf major-mode)
                   '(dired-mode)))
-        nil)))
+        nil)
+      ))
 
   (add-to-list 'ivy-ignore-buffers #'buffer-ignored-p)
 
@@ -635,7 +643,9 @@
   (defalias 'thought (lambda () (interactive)
                        (find-file  "~/notes/thought.skm")))
   (defalias 'medals (lambda () (interactive)
-                      (find-file  "~/notes/medals.txt"))))
+                      (find-file  "~/notes/medals.txt")))
+  (defalias 'bashrc (lambda () (interactive)
+                      (find-file  "~/.bashrc"))))
 
 (progn  ;; Pro lisp Movements
   ;; Note: in order for jumps to work, you have to use #' in "evil-define-key"
@@ -834,7 +844,17 @@ Still kinda sucks because it can't parse lists"
     (add-to-list 'auto-mode-alist '("\\.yaml\\'" . yaml-mode))
     (add-to-list 'auto-mode-alist '("\\.yml\\'" . yaml-mode))
     (add-hook 'yaml-mode-hook   #'my-config-indentation-languages)
-    (indent-lang-movement yaml-mode-map))
+    (indent-lang-movement yaml-mode-map)
+    (;; https://github.com/syl20bnr/spacemacs/issues/751 
+     add-hook 'yaml-mode-hook '(lambda () (setq evil-shift-width 2))))
+
+  (use-package jsonnet-mode
+    :config
+    ;; (add-hook 'jsonnet-mode-hook  ;; reformat before save
+    ;;           (lambda ()
+    ;;             (add-hook 'before-save-hook (lambda () (jsonnet-reformat-buffer))
+    ;;                       nil 'make-it-local)))
+    )
 
   (use-package ansible
     :config
@@ -853,7 +873,12 @@ Still kinda sucks because it can't parse lists"
   
   (use-package groovy-mode)
   
-  (use-package nginx-mode))
+  (use-package nginx-mode)
+
+  (add-hook 'java-mode-hook
+            (lambda ()
+              (setq tab-width 4)
+              (electric-indent-local-mode 'disable))))
 
 (progn  ;;Terminal emulator
   (use-package multi-term
@@ -872,6 +897,7 @@ Still kinda sucks because it can't parse lists"
               (goto-address-mode 1)  ;; Highlight addresses
               (term-line-mode)       ;; Default to "line mode": Would be cool if it worked...
               (setq term-suppress-hard-newline t)  ;; Do not insert the imaginary linebreak when the text gets long
+              ;; (toggle-truncate-lines t)
               ))
 
   ;; (evil-define-key 'insert term-raw-map  ;; auto-switch when entering normal state
@@ -933,6 +959,11 @@ Still kinda sucks because it can't parse lists"
           (switch-to-buffer b))))
 
     (defalias 'term 'get-term))
+
+  (evil-collection-define-key 'normal 'term-mode-map
+    (kbd "p") #'evil-paste-before  ;; default is term-paste
+    (kbd "$") #'evil-end-of-line   ;; default is... who cares it's stupid either way
+    )
   )
 
 (progn  ;;Highlighting notes and tags
@@ -972,7 +1003,7 @@ Still kinda sucks because it can't parse lists"
      ("*Help*" display-buffer-same-window)))
  '(font-latex-script-display '((raise -0.2) raise 0.2))
  '(package-selected-packages
-   '(evil-magit indent-tools highlight-indentation csv-mode counsel ivy nginx-mode groovy-mode jinja2-mode jinja2 ansible multi-term sudo-edit yaml-mode exec-path-from-shell terraform-mode dockerfile-mode racket-mode cider clojure-mode text-translator paredit xr texfrag lisp disable-mouse math-symbol-lists rainbow-identifiers spaceline avy evil-numbers evil-lion evil-commentary rainbow-delimiters evil-surround evil use-package))
+   '(jsonnet-mode evil-magit indent-tools highlight-indentation csv-mode counsel ivy nginx-mode groovy-mode jinja2-mode jinja2 ansible multi-term sudo-edit yaml-mode exec-path-from-shell terraform-mode dockerfile-mode racket-mode cider clojure-mode text-translator paredit xr texfrag lisp disable-mouse math-symbol-lists rainbow-identifiers spaceline avy evil-numbers evil-lion evil-commentary rainbow-delimiters evil-surround evil use-package))
  '(sgml-xml-mode t))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
