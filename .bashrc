@@ -64,6 +64,17 @@ if [ -n "$force_color_prompt" ]; then
     fi
 fi
 
+# kubectl context
+__kube_ps1()
+{
+    # Get current context
+    CONTEXT=$(cat ~/.kube/config | grep "current-context:" | sed "s/current-context: //")
+
+    if [ -n "$CONTEXT" ]; then
+        echo "[k8s:${CONTEXT}] "
+    fi
+}
+
 # PS1 is a bash command, which is evaluated to become the prompt,
 # so that it can change dynamically
 # \h = host, \u -> user, w -> working directory
@@ -74,6 +85,8 @@ if [ "$color_prompt" = yes ]; then
     host_color="\[\033[01;31m\]"
     dir_color="\[\033[01;33m\]"
     vc_color="\[\033[01;34m\]"
+    aws_color="\[\033[01;35m\]"
+    kube_color="\[\033[01;36m\]"
 fi
 
 if [[ ${EUID} != 0 ]] ; then  # EUID = effective user id
@@ -82,6 +95,8 @@ fi
 PS1+="@${host_color}\h "
 PS1+="${dir_color}\w "
 PS1+="${vc_color}\$(vcprompt)"  #note: We do not evaluate vcprompt here!
+PS1+="${aws_color}[aws:\$AWS_PROFILE] "
+PS1+="${kube_color}\$(__kube_ps1)"
 PS1+="\$"
 PS1+=$reset_color
 PS1+="\n"
@@ -117,6 +132,7 @@ bind 'set completion-ignore-case on'
 
 # Aliases, they are here so that typing "bash" inside your login shell will preserve the aliases
 #note: do not use space anywhere in these!
+alias sudo='sudo '  # Make aliases work in sudo
 alias cls='clear'
 alias subl='/usr/bin/subl'
 alias cp='cp -vi'
@@ -135,10 +151,9 @@ alias tar='tar -xzvf'
 
 alias k=kubectl
 alias kus=kustomize
-alias kctx='kubectl config current-context'
-alias kc='kubectl config use-context'
 alias ap='ansible-playbook'
 alias tf='terraform'
+alias watch='watch '
 
 # enable color support of ls and also add handy aliases
 if [ -x /usr/bin/dircolors ]; then
@@ -190,8 +205,18 @@ function cdl {
 }
 
 # Working
-alias work='source ~/.hatch-profile'
-# Some stupid go and ksops stuff 
-export XDG_CONFIG_HOME=$HOME/.config
-export GOPATH=/Users/$USER/go
-export PATH=$GOPATH/bin:$PATH
+alias work='source ~/.hatch-profile.sh'
+work
+
+function kc {
+    if [ -z $1 ]
+    then
+        kubectl config current-context
+    else
+        kubectl config use-context $@
+    fi
+}
+
+function ac {
+    export AWS_PROFILE=$1
+}
