@@ -68,6 +68,15 @@
   :config
   (evil-mode 1))
 
+(require 'evil-little-word)
+(evil-define-key 'normal 'global (kbd "w") #'evil-forward-little-word-begin)
+(evil-define-key 'normal 'global (kbd "b") #'evil-backward-little-word-begin)
+(evil-define-key 'operator 'global (kbd "w") #'evil-forward-little-word-begin)
+(evil-define-key 'operator 'global (kbd "b") #'evil-backward-little-word-begin)
+(evil-define-key 'visual 'global (kbd "w") #'evil-forward-little-word-begin)
+(evil-define-key 'visual 'global (kbd "b") #'evil-backward-little-word-begin)
+(evil-define-key 'visual 'global (kbd "i w") #'evil-inner-little-word)
+
 (use-package evil-commentary
   :config (evil-commentary-mode))
 
@@ -992,7 +1001,7 @@ Still kinda sucks because it can't parse lists"
      ("*Help*" display-buffer-same-window)))
  '(font-latex-script-display '((raise -0.2) raise 0.2))
  '(package-selected-packages
-   '(go-mode jsonnet-mode indent-tools highlight-indentation csv-mode counsel ivy nginx-mode groovy-mode ansible multi-term sudo-edit yaml-mode exec-path-from-shell terraform-mode dockerfile-mode racket-mode cider clojure-mode text-translator paredit xr texfrag lisp disable-mouse math-symbol-lists rainbow-identifiers spaceline avy evil-numbers evil-lion evil-commentary rainbow-delimiters evil-surround evil use-package))
+   '(evil-little-word ac-html-angular angular-mode go-mode jsonnet-mode indent-tools highlight-indentation csv-mode counsel ivy nginx-mode groovy-mode ansible multi-term sudo-edit yaml-mode exec-path-from-shell terraform-mode dockerfile-mode racket-mode cider clojure-mode text-translator paredit xr texfrag lisp disable-mouse math-symbol-lists rainbow-identifiers spaceline avy evil-numbers evil-lion evil-commentary rainbow-delimiters evil-surround evil use-package))
  '(sgml-xml-mode t))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
