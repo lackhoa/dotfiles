@@ -176,7 +176,7 @@
 (use-package counsel  ;;Ivy
   :config
   (ivy-mode 1)
-  ;; (setq ivy-use-virtual-buffers t)  ;; Disabled because it's annoying
+  (setq ivy-use-virtual-buffers t)  ;; Disabled because it's annoying
   (setq ivy-wrap t)
   (setq ivy-ffap-url-functions nil)
   (setq ffap-machine-p-known 'accept)  ;; No pinging please!
@@ -328,16 +328,12 @@
   (defun buffer-ignored-p (&optional buf-or-str-input)
     (let* ((buf-or-str (or buf-or-str-input (buffer-name)))
            (buf (get-buffer buf-or-str)))
-      ;; Temporary Decommission
-      (if buf
-          (or
-           (member (buffer-name buf)
-                   '("*Quail Completions*"))
-           (string-match (rx "magit" (* (any))) (buffer-name buf))
-           (memq (with-current-buffer buf major-mode)
-                  '(dired-mode)))
-        nil)
-      ))
+      (or
+       (member (buffer-name buf) '("*Quail Completions*"))
+       (string-match (rx "magit" (* (any))) (buffer-name buf))
+       (if (not buf) nil  ;; buffer can be virtual buffer, so you won't be able to `get-buffer` it
+         (memq (with-current-buffer buf major-mode)
+               '(dired-mode magit-mode))))))
 
   (add-to-list 'ivy-ignore-buffers #'buffer-ignored-p)
 
@@ -540,8 +536,9 @@
             (not (file-exists-p (buffer-file-name buffer)))
           nil))))
 
-  (defun clean-buffer-list ()  ;; What the user runs
+  (defun cls ()  ;; What the user runs
     (interactive)
+    (clean-buffer-list)
     (let* ((bad (seq-filter 'buffer-not-backed-by-file-p (buffer-list))))
       (print bad)  ;; Print first because names won't be preserved otherwise
       (mapc 'kill-buffer bad))))
@@ -647,7 +644,9 @@
   (defalias 'thought (lambda () (interactive)
                        (find-file  "~/notes/thought.skm")))
   (defalias 'bashrc (lambda () (interactive)
-                      (find-file  "~/.bashrc"))))
+                      (find-file  "~/.bashrc")))
+  (defalias 'known-host (lambda () (interactive)
+                          (find-file  "~/.ssh/known_hosts"))))
 
 (progn  ;; Pro lisp Movements
   ;; Note: in order for jumps to work, you have to use #' in "evil-define-key"
@@ -923,12 +922,12 @@ Still kinda sucks because it can't parse lists"
                                 (term-char-mode)
                               (term-line-mode)))))
     ;; #Note: I tried to switch automatically using state entry hook, but no can do
-    (evil-define-key '(normal insert) term-mode-map
-      (kbd "C-o") term-toggle-mode
-      (kbd "C-o") term-toggle-mode)
-    (evil-define-key '(normal insert) term-raw-map
-      (kbd "C-o") term-toggle-mode
-      (kbd "C-o") term-toggle-mode))
+    (evil-define-key 'normal term-mode-map
+      (kbd "SPC") term-toggle-mode
+      (kbd "SPC") term-toggle-mode)
+    (evil-define-key 'normal term-raw-map
+      (kbd "SPC") term-toggle-mode
+      (kbd "SPC") term-toggle-mode))
 
   (eval-after-load 'term
     '(evil-define-key 'insert term-raw-map
@@ -971,6 +970,9 @@ Still kinda sucks because it can't parse lists"
                    "important" "Important" "IMPORTANT"
                    "todo" "Todo" "TODO"
                    "example" "Example" "EXAMPLE"
+                   "error" "Error" "ERROR"
+                   "nocheckin" "Nocheckin" "NOCHECKIN"
+                   "warn" "Warn" "WARN"
                    (and (or "#" "@" ";")
                         (1+ (not (any blank "\"" "\n" "(" ")" "[" "]" ":" "," "\\" "$" "?"))))))))
       (font-lock-add-keywords
@@ -1001,7 +1003,7 @@ Still kinda sucks because it can't parse lists"
      ("*Help*" display-buffer-same-window)))
  '(font-latex-script-display '((raise -0.2) raise 0.2))
  '(package-selected-packages
-   '(evil-little-word ac-html-angular angular-mode go-mode jsonnet-mode indent-tools highlight-indentation csv-mode counsel ivy nginx-mode groovy-mode ansible multi-term sudo-edit yaml-mode exec-path-from-shell terraform-mode dockerfile-mode racket-mode cider clojure-mode text-translator paredit xr texfrag lisp disable-mouse math-symbol-lists rainbow-identifiers spaceline avy evil-numbers evil-lion evil-commentary rainbow-delimiters evil-surround evil use-package))
+   '(typescript-mode evil-little-word ac-html-angular angular-mode go-mode jsonnet-mode indent-tools highlight-indentation csv-mode counsel ivy nginx-mode groovy-mode ansible multi-term sudo-edit yaml-mode exec-path-from-shell terraform-mode dockerfile-mode racket-mode cider clojure-mode text-translator paredit xr texfrag lisp disable-mouse math-symbol-lists rainbow-identifiers spaceline avy evil-numbers evil-lion evil-commentary rainbow-delimiters evil-surround evil use-package))
  '(sgml-xml-mode t))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
